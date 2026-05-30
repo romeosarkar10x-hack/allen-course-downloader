@@ -6,8 +6,8 @@
     "main": "fetch.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "format:check": "prettier **/*.{html,css,js,jsx,json,yml,yaml} --check --debug-check --ignore-path .prettierignore",
-        "format": "prettier **/*.{html,css,js,jsx,json,yml,yaml} --write --ignore-path .prettierignore",
+        "format:check": "prettier \"**/*.{html,css,js,jsx,json,yml,yaml}\" --check --debug-check --ignore-path .prettierignore",
+        "format": "prettier \"**/*.{html,css,js,jsx,json,yml,yaml}\" --write --ignore-path .prettierignore",
         "lint": "eslint --flag unstable_native_nodejs_ts_config . -f json | node-jq -r '.[].filePath'"
     },
     "repository": {
