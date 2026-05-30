@@ -9,6 +9,8 @@ export default defineConfig({
         coverage: {
             provider: "v8",
             reportsDirectory: "coverage",
+            reporter: ["html", "lcov", "text"],
+            cleanOnRerun: true,
         },
     },
 });
