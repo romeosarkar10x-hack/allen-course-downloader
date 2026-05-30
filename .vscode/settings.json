@@ -1,33 +1,21 @@
 {
-    "editor.formatOnSave": true,
-    "editor.tabSize": 4,
     "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "editor.indentSize": "tabSize",
+    "editor.formatOnSave": false,
 
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-
-    "[css]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-
-    "[javascript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-
-    "[json]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "tailwindCSS.experimental.configFile": "src/index.css",
+    "emeraldwalk.runonsave": {
+        "commands": [
+            {
+                "match": "\\.(js|ts|tsx|css|json|jsonc|yml|yaml|html)$",
+                "cmd": "pnpx prettier --write ${file}"
+            }
+        ]
     },
 
     "[yaml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-
-    "[yml]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+        "editor.tabSize": 4,
+        "editor.indentSize": "tabSize"
     }
 }

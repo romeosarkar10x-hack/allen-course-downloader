@@ -1,12 +1,3 @@
 {
-    "recommendations": [
-        "esbenp.prettier-vscode",
-        "dbaeumer.vscode-eslint",
-        "github.vscode-github-actions",
-        "me-dutour-mathieu.vscode-github-actions",
-
-        "ms-vscode.vscode-typescript-next",
-
-        "catppuccin.catppuccin-vsc-pack"
-    ]
+    "recommendations": ["emeraldwalk.RunOnSave"]
 }
