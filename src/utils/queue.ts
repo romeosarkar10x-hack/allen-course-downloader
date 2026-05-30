@@ -1,26 +1,20 @@
-class QueueNode {
-    constructor(value, nextNode) {
-        if (value === undefined) {
-            value = null;
-        }
-
-        if (nextNode === undefined) {
-            nextNode = null;
-        }
-
+class QueueNode<T> {
+    public value: T;
+    public nextNode: QueueNode<T> | null;
+    constructor(value: T, nextNode?: QueueNode<T>) {
         this.value = value;
-        this.nextNode = nextNode;
+        this.nextNode = nextNode ?? null;
     }
 
     getValue() {
         return this.value;
     }
 
-    setValue(value) {
+    setValue(value: T) {
         this.value = value;
     }
 
-    setNextNode(nextNode) {
+    setNextNode(nextNode: QueueNode<T>) {
         this.nextNode = nextNode;
     }
 
@@ -29,73 +23,53 @@ class QueueNode {
     }
 }
 
-class Queue {
+export class Queue<T> {
+    private frontNode: QueueNode<T> | null;
+    private backNode: QueueNode<T> | null;
+
     constructor() {
-        this._front = this._back = null;
+        this.frontNode = this.backNode = null;
     }
 
-    front() {
-        if (this._front == null) {
+    front(): T | null {
+        if (this.frontNode === null) {
             return null;
         }
 
-        return this._front.getValue();
+        return this.frontNode.getValue();
     }
 
-    back() {
-        if (this._back == null) {
+    back(): T | null {
+        if (this.backNode === null) {
             return null;
         }
 
-        return this._back.getValue();
+        return this.backNode.getValue();
     }
 
-    push(element) {
+    push(element: T): void {
         const node = new QueueNode(element);
 
-        if (this._front == null) {
-            this._front = this._back = node;
+        if (this.frontNode === null) {
+            this.frontNode = this.backNode = node;
         } else {
-            this._back.setNextNode(node);
-            this._back = node;
+            this.backNode!.setNextNode(node);
+            this.backNode = node;
         }
     }
 
-    pop() {
-        if (this._front == null) {
-            throw Error("Cannot pop from an empty queue.");
+    pop(): T {
+        if (this.frontNode === null) {
+            throw Error("Cannot pop from an empty queue");
         }
 
-        const popped = this._front;
-        this._front = popped.getNextNode();
+        const popped = this.frontNode;
+        this.frontNode = popped.getNextNode();
 
-        if (this._front == null) {
-            this._back = null;
+        if (this.frontNode === null) {
+            this.backNode = null;
         }
 
         return popped.getValue();
     }
 }
-
-/*
-const queue = new Queue();
-queue.push(1);
-console.log(queue.front(), queue.back());
-
-queue.push(2);
-console.log(queue.front(), queue.back());
-
-queue.push(3);
-console.log(queue.front(), queue.back());
-
-console.log(queue.pop());
-console.log(queue.front(), queue.back());
-
-console.log(queue.pop());
-console.log(queue.front(), queue.back());
-
-console.log(queue.pop());
-console.log(queue.front(), queue.back());
-*/
-
-export default Queue;
