@@ -6,5 +6,9 @@ export default defineConfig({
         alias: {
             "@": "src/",
         },
+        coverage: {
+            provider: "v8",
+            reportsDirectory: "coverage",
+        },
     },
 });
