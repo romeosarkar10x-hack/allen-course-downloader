@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Queue } from "@/utils/queue.ts";
+import { Queue, QueueNode } from "@/utils/queue.ts";
 
 describe("Queue", () => {
     describe("empty queue", () => {
@@ -150,6 +150,14 @@ describe("Queue", () => {
             expect(queue.back()).toBe(3);
             expect(queue.pop()).toBe(2);
             expect(queue.pop()).toBe(3);
+        });
+    });
+
+    describe("QueueNode.setValue()", () => {
+        test("setValue() updates the node's value", () => {
+            const node = new QueueNode<number>(1);
+            node.setValue(99);
+            expect(node.getValue()).toBe(99);
         });
     });
 
