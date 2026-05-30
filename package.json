@@ -27,7 +27,8 @@
         "eslint": "^10.4.0",
         "globals": "^17.6.0",
         "node-jq": "^6.3.1",
-        "prettier": "^3.8.3"
+        "prettier": "^3.8.3",
+        "vitest": "^4.1.7"
     },
     "dependencies": {
         "dotenv": "^16.6.1",
