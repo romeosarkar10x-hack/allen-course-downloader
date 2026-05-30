@@ -1,5 +1,5 @@
 import { uri, batchID, selectedBatchList, selectedCourseID, stream, taxonomyID } from "./config.js";
-import RateLimiter from "./utils/RateLimiter.js";
+import RateLimiter from "./utils/rate-limiter.js";
 // const subject_id = "2"; // 354 for Physics, 152 for Maths, 2 for Chemistry
 
 const commonParams = new URLSearchParams();
