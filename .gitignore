@@ -1,7 +1,8 @@
 node_modules/
 dist/
 build/
-temp/
+
+tmp/
 out/
 
-.env
+/.env
