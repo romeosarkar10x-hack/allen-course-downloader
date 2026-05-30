@@ -8,7 +8,7 @@
         "test": "echo \"Error: no test specified\" && exit 1",
         "format:check": "prettier **/*.{html,css,js,jsx,json,yml,yaml} --check --debug-check --ignore-path .prettierignore",
         "format": "prettier **/*.{html,css,js,jsx,json,yml,yaml} --write --ignore-path .prettierignore",
-        "lint": "eslint ."
+        "lint": "eslint --flag unstable_native_nodejs_ts_config . -f json | node-jq -r '.[].filePath'"
     },
     "repository": {
         "type": "git",
@@ -21,9 +21,14 @@
     },
     "homepage": "https://github.com/romeosarkar10x-hack/allen-playlist-downloader.js#readme",
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.4.0",
+        "globals": "^17.6.0",
+        "node-jq": "^6.3.1",
         "prettier": "^3.8.3"
     },
     "dependencies": {
-        "dotenv": "^16.6.1"
+        "dotenv": "^16.6.1",
+        "typescript-eslint": "^8.60.0"
     }
 }
