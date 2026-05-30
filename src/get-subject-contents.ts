@@ -1,4 +1,4 @@
-import getChapterContents from "./getChapterContents.js";
+import getChapterContents from "./get-chapter-contents.js";
 import { uri, headers, commonParams } from "./globals.js";
 import { rateLimiter } from "./globals.js";
 

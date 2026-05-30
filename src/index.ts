@@ -1,10 +1,10 @@
 import fs from "fs";
 import { outputCourseMapPathname, selectedCourseID } from "./config.js";
-import getCourseContents from "./getCourseContents.js";
+import getCourseContents from "./get-course-contents.js";
 import filter from "./filter.js";
 import recurse from "./recurse.js";
 import download from "./download.js";
-import PersistentState from "./utilities/PersistentState.js";
+import PersistentState from "./utils/PersistentState.js";
 
 (async function main() {
     const course = new PersistentState(`out/${selectedCourseID}.json`, getCourseContents);
