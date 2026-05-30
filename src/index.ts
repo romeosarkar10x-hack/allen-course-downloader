@@ -4,7 +4,7 @@ import getCourseContents from "./get-course-contents.js";
 import filter from "./filter.js";
 import recurse from "./recurse.js";
 import download from "./download.js";
-import PersistentState from "./utils/PersistentState.js";
+import PersistentState from "./utils/persistent-state.js";
 
 (async function main() {
     const course = new PersistentState(`out/${selectedCourseID}.json`, getCourseContents);
