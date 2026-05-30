@@ -1,4 +1,4 @@
-class QueueNode<T> {
+export class QueueNode<T> {
     public value: T;
     public nextNode: QueueNode<T> | null;
     constructor(value: T, nextNode?: QueueNode<T>) {
