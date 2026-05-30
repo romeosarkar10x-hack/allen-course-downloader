@@ -1,4 +1,6 @@
-export default {
+import { type Config } from "prettier";
+
+const config: Config = {
     tabWidth: 4,
     printWidth: 120,
     semi: true,
@@ -9,3 +11,5 @@ export default {
     htmlWhitespaceSensitivity: "strict",
     singleAttributePerLine: true,
 };
+
+export default config;
