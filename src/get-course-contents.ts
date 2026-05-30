@@ -1,5 +1,5 @@
-import { subjects, selectedCourseID } from "./config.js";
-import getSubjectContents from "./get-subject-contents.js";
+import { subjects, selectedCourseID } from "./config";
+import getSubjectContents from "./get-subject-contents";
 
 export default async function getCourseContents() {
     // const subjects = [{ title: "Chemistry", subjectID: "2" }];

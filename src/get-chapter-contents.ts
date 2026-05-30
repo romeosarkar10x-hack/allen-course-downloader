@@ -1,5 +1,5 @@
-import { uri, headers, commonParams } from "./globals.js";
-import { rateLimiter } from "./globals.js";
+import { uri, headers, commonParams } from "./globals";
+import { rateLimiter } from "./globals";
 
 export default async function getChapterContents({ topicID, subjectID }) {
     const params = new URLSearchParams(commonParams);

@@ -1,7 +1,7 @@
 import https from "https";
 import fs from "fs/promises";
 import crypto from "crypto";
-import AsyncFileWriter from "./async-file-writer.js";
+import AsyncFileWriter from "./async-file-writer";
 
 class RateLimiter {
     constructor(nConcurrentRequests, eventHandler) {

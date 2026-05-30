@@ -1,6 +1,6 @@
-import getChapterContents from "./get-chapter-contents.js";
-import { uri, headers, commonParams } from "./globals.js";
-import { rateLimiter } from "./globals.js";
+import getChapterContents from "./get-chapter-contents";
+import { uri, headers, commonParams } from "./globals";
+import { rateLimiter } from "./globals";
 
 export default async function getSubjectContents(subjectID) {
     const params = new URLSearchParams(commonParams);

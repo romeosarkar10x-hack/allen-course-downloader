@@ -1,9 +1,9 @@
 import fs from "fs";
-import { outputCourseMapPathname, selectedCourseID } from "./config.js";
+import { outputCourseMapPathname, selectedCourseID } from "./config";
 import getCourseContents from "./get-course-contents.js";
-import filter from "./filter.js";
-import recurse from "./recurse.js";
-import download from "./download.js";
+import filter from "./filter";
+import recurse from "./recurse";
+import download from "./download";
 import PersistentState from "./utils/persistent-state.js";
 
 (async function main() {

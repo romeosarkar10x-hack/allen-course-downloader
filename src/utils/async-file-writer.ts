@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import Queue from "./queue.js";
+import Queue from "./queue";
 
 class AsyncFileWriter {
     constructor(pathname) {

@@ -1,7 +1,7 @@
 import fs from "fs";
-import { outputDirPathname, selectedCourseID } from "./config.js";
-import { rateLimiter } from "./globals.js";
-import PersistentState from "./utils/persistent-state.js";
+import { outputDirPathname, selectedCourseID } from "./config";
+import { rateLimiter } from "./globals";
+import PersistentState from "./utils/persistent-state";
 
 const metadataFilePathname = `${outputDirPathname}/metadata.json`;
 const downloadsMetadataState = new PersistentState(metadataFilePathname);
