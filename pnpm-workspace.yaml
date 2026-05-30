@@ -1,2 +1,3 @@
 allowBuilds:
   node-jq: true
+shellEmulator: true
