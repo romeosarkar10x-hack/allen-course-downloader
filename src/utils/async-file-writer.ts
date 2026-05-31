@@ -1,73 +1,47 @@
 import fs from "fs/promises";
-import Queue from "./queue";
+import type { Mode } from "fs";
 
-class AsyncFileWriter {
-    constructor(pathname) {
-        if (pathname == null) {
-            throw Error("Property '_writes' may not exist on type 'FileWriter'");
-        }
+export class AsyncFileWriter {
+    private lastChunkWritePromise: Promise<void> | null;
+    private fileHandlePromise: Promise<fs.FileHandle>;
 
-        this.pathname = pathname;
-        this._writes = new Queue();
-
-        const self = this;
-
-        async function _initialize() {
-            self.file = await fs.open(self.pathname, "w");
-        }
-
-        this._initialize = _initialize();
+    constructor(
+        public pathname: string,
+        flags?: string | number,
+        mode?: Mode,
+    ) {
+        this.lastChunkWritePromise = null;
+        this.fileHandlePromise = fs.open(pathname, flags ?? "w", mode);
     }
 
-    async _write(chunk, awaitFor) {
-        await this._initialize;
+    private async doWrite<TBuffer extends NodeJS.ArrayBufferView | Uint8Array>(
+        chunk: TBuffer,
+        awaitFor: Promise<void> | null,
+    ): Promise<void> {
+        const fileHandle = await this.fileHandlePromise!;
         await awaitFor;
 
-        let numBytesToWrite = chunk.length;
+        let numBytesToWrite = chunk.byteLength;
+        let totalNumBytesWritten = 0;
 
         while (numBytesToWrite) {
-            const { bytesWritten } = await this.file.write(chunk);
-            numBytesToWrite -= bytesWritten;
+            const { bytesWritten: numBytesWritten } = await fileHandle.write(chunk, totalNumBytesWritten);
+            numBytesToWrite -= numBytesWritten;
+            totalNumBytesWritten += numBytesWritten;
         }
     }
 
-    async write(chunk) {
-        this._writes.push(this._write(chunk, this._writes.back()));
-        await this._writes.back();
-    }
-
-    async abort() {
-        await this._writes.back();
-        await this.file.truncate(0);
-        await this.file.close();
-        await fs.unlink(this.pathname);
+    write<TBuffer extends NodeJS.ArrayBufferView | Uint8Array>(chunk: TBuffer) {
+        this.lastChunkWritePromise = this.doWrite(chunk, this.lastChunkWritePromise);
     }
 
     async close() {
-        await this._writes.back();
-        await this.file.close();
+        const fileHandle = await this.fileHandlePromise;
+
+        try {
+            await this.lastChunkWritePromise;
+        } finally {
+            await fileHandle.close();
+        }
     }
 }
-
-/*
-(async function test() {
-    const asyncFileWriter = new AsyncFileWriter("test-file");
-    asyncFileWriter.write("Hello world!\n");
-    asyncFileWriter.write("0!\n");
-    asyncFileWriter.write("1!\n");
-    asyncFileWriter.write("2!\n");
-    asyncFileWriter.write("3!\n");
-    asyncFileWriter.write("4!\n");
-    asyncFileWriter.write("5!\n");
-    asyncFileWriter.write("6!\n");
-    asyncFileWriter.write("7!\n");
-    asyncFileWriter.write("8!\n");
-    asyncFileWriter.write("9!\n");
-
-    await asyncFileWriter.abort();
-
-    console.log("Done!");
-})();
-*/
-
-export default AsyncFileWriter;
