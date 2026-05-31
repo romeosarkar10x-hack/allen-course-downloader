@@ -70,16 +70,18 @@ class RateLimiter {
         // console.log("URL", obj.uri);
         const httpsURL = new URL(obj.uri);
 
+        const reqHeaders = { ...obj.options?.headers };
+        if (obj.options?.body) {
+            reqHeaders["Content-Length"] = Buffer.byteLength(obj.options.body);
+        }
+
         obj.req = https.request({
             hostname: httpsURL.hostname,
             port: httpsURL.port,
             path: httpsURL.pathname + httpsURL.search,
             agent: self.httpsAgent,
             method: obj?.options?.method || "GET",
-            headers: {
-                ...obj.options?.headers,
-                "Content-Length": obj.options?.body ? Buffer.byteLength(obj.options.body) : 0,
-            },
+            headers: reqHeaders,
         });
 
         if (obj.options?.body) {
