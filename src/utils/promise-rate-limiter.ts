@@ -15,7 +15,7 @@ export class PromiseRateLimiter {
     private numActive = 0;
     private tasks = new Set<TaskMetadata>();
 
-    constructor(public concurrency: number) {
+    constructor(private concurrency: number) {
         this.concurrency = Math.max(1, Math.floor(concurrency));
     }
 
@@ -43,8 +43,10 @@ export class PromiseRateLimiter {
                     this.numActive--;
                     this.tick();
                 });
-        } catch {
+        } catch (error) {
+            reject(error);
             this.numActive--;
+            this.tick();
         }
     }
 
