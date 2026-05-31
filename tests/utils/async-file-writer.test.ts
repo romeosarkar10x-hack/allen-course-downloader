@@ -1,6 +1,6 @@
 import { describe, test, expect, vi, beforeEach, type MockedFunction } from "vitest";
 import fs from "fs/promises";
-import { AsyncFileWriter } from "@/utils/async-file-writer.ts";
+import { AsyncFileWriter } from "@/utils/async-file-writer";
 
 // ---------------------------------------------------------------------------
 // Mock fs/promises so no real disk I/O happens
@@ -68,9 +68,7 @@ describe("AsyncFileWriter", () => {
         test("writes all bytes in a single fileHandle.write() call", async () => {
             const chunk = Buffer.from("hello");
 
-            const fakeHandle = makeFakeHandle((_buf, _offset) =>
-                Promise.resolve({ bytesWritten: chunk.byteLength }),
-            );
+            const fakeHandle = makeFakeHandle((_buf, _offset) => Promise.resolve({ bytesWritten: chunk.byteLength }));
             mockedOpen.mockResolvedValue(fakeHandle);
 
             const writer = new AsyncFileWriter("/tmp/out.bin");
@@ -108,12 +106,12 @@ describe("AsyncFileWriter", () => {
             const order: string[] = [];
 
             let resolveFirst!: () => void;
-            const firstWriteStarted = new Promise<void>((res) => {
+            const firstWriteStarted = new Promise<void>(res => {
                 resolveFirst = res;
             });
 
             let resolveFirstWrite!: () => void;
-            const firstWriteGate = new Promise<void>((res) => {
+            const firstWriteGate = new Promise<void>(res => {
                 resolveFirstWrite = res;
             });
 
@@ -152,9 +150,7 @@ describe("AsyncFileWriter", () => {
         test("write() with a Uint8Array (non-Buffer ArrayBufferView)", async () => {
             const chunk = new Uint8Array([1, 2, 3]);
 
-            const fakeHandle = makeFakeHandle((_buf, _offset) =>
-                Promise.resolve({ bytesWritten: chunk.byteLength }),
-            );
+            const fakeHandle = makeFakeHandle((_buf, _offset) => Promise.resolve({ bytesWritten: chunk.byteLength }));
             mockedOpen.mockResolvedValue(fakeHandle);
 
             const writer = new AsyncFileWriter("/tmp/out.bin");
@@ -169,9 +165,7 @@ describe("AsyncFileWriter", () => {
     describe("close()", () => {
         test("closes the file handle after all writes complete", async () => {
             const chunk = Buffer.from("data");
-            const fakeHandle = makeFakeHandle((_buf, _offset) =>
-                Promise.resolve({ bytesWritten: chunk.byteLength }),
-            );
+            const fakeHandle = makeFakeHandle((_buf, _offset) => Promise.resolve({ bytesWritten: chunk.byteLength }));
             mockedOpen.mockResolvedValue(fakeHandle);
 
             const writer = new AsyncFileWriter("/tmp/out.bin");

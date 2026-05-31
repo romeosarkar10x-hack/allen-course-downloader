@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { Queue, QueueNode } from "@/utils/queue.ts";
+import { Queue, QueueNode } from "@/utils/queue";
 
 describe("Queue", () => {
     describe("empty queue", () => {
