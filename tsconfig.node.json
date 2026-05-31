@@ -1,7 +1,7 @@
 {
     // Visit https://aka.ms/tsconfig to read more about this file
     "compilerOptions": {
-        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.test.tsbuildinfo",
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
         // File Layout
         // "rootDir": "./src",
         // "outDir": "./dist",
@@ -40,11 +40,8 @@
         "moduleDetection": "force",
         "skipLibCheck": true,
 
-        "noEmit": true,
-        "paths": {
-            "@/*": ["./src/*"]
-        }
+        "noEmit": true
     },
 
-    "include": ["tests/**/*.ts"]
+    "include": ["src/**/*.ts"]
 }
