@@ -1,157 +1,159 @@
 import fs from "fs/promises";
 
-class PersistentState {
+export class PersistentState<T> {
+    private fileHandlePromise: Promise<fs.FileHandle>;
+    private statePromise: Promise<T>;
+    private lastWrite: Promise<void> | null = null;
+    private lastSetState: Promise<void> | null = null;
+
     constructor(
-        pathname,
-        resolver = async () => {
-            return {};
-        },
+        public pathname: string,
+        public serializer: (state: T) => Uint8Array | Promise<Uint8Array>,
+        public deserializer: (serialized: Uint8Array) => T | Promise<T>,
+        defaultState: T | Promise<T>,
     ) {
-        this.pathname = pathname;
-        this.promises = [];
-
-        const self = this;
-
-        this.promises.push(
-            (async function initialize() {
-                /* Open file */
-                try {
-                    await self._openFile();
-                } catch (err) {
-                    console.log(`Failed to open file \`${pathname}\` [ ${err.message} ] for reading/writing`);
-                    throw err;
-                }
-
-                /* Parse state */
-                try {
-                    self.state = JSON.parse(await self._readFile());
-                    // console.log("parsed state:", self.state);
-                } catch (err) {
-                    console.log(`Failed to parse file \`${pathname}\` [ ${err.message} ]`);
-                    console.log(`Error restoring state from file \`${pathname}\``);
-
-                    /* Fallback to default state */
-                    self.state = await resolver();
-                    // console.log("state:", self.state);
-
-                    try {
-                        await self._writeFile(self.state);
-                    } catch (err) {
-                        console.log(`Error opening file \`${pathname}\` for writing`);
-                        console.log(err);
-                    }
-                }
-            })(),
-        );
-
-        // this.promises.push(initialize());
+        this.fileHandlePromise = this.openFile();
+        this.statePromise = this.initializeState(defaultState);
     }
 
-    async getStateObj() {
-        await this.promises[0];
-        return this.state;
-    }
+    private async openFile() {
+        let fileExists = false;
 
-    _stringify(obj) {
-        return JSON.stringify(obj, null, 4);
-    }
-
-    async _openFile() {
         try {
-            this._fileHandle = await fs.open(this.pathname, "r+");
-        } catch (err) {
-            console.log(`Failed to open file \`${this.pathname}\` for reading/writing`);
-            try {
-                this._fileHandle = await fs.open(this.pathname, "w");
-            } catch (err) {
-                console.log(`Failed to open file \`${this.pathname}\` for writing`);
-                throw err;
+            await fs.access(this.pathname, fs.constants.F_OK);
+            fileExists = true;
+        } catch {
+            console.warn(`File '${this.pathname}' does not exists`);
+            // Ignore error
+        }
+
+        try {
+            if (fileExists) {
+                await fs.access(this.pathname, fs.constants.R_OK | fs.constants.W_OK);
             }
-        }
-    }
-
-    async _readFile() {
-        return await this._fileHandle.readFile({ encoding: "utf8" });
-    }
-
-    async _writeFile(obj, awaitFor) {
-        await awaitFor;
-
-        if (this._fileHandle == null) {
-            console.log("Error saving `state` to file; File is not open for writing");
-            throw Error("File is not open for writing");
-        }
-
-        if (awaitFor != null) {
-            await this._fileHandle.truncate(0);
-        }
-
-        await this._fileHandle.write(this._stringify(obj), 0);
-    }
-
-    async setStateObj(arg) {
-        if (this.closed) {
-            throw Error("File has been closed");
-        }
-
-        if (typeof arg == "function") {
-            // console.log("setStateObj this.state:", this.state);
-            this.state = await arg(this.state);
-            // console.log("Function!!", this.state);
-        } else {
-            this.state = arg;
+        } catch (error) {
+            console.error(`File '${this.pathname}' exists but is not readable / writable by the current process`);
+            throw error;
         }
 
         try {
-            this.promises.push(this._writeFile(this.state, this.promises.at(-1)));
-            await this.promises.at(-1);
-        } catch (err) {
-            console.log("Error setting state");
-            throw err;
+            if (fileExists) {
+                // Can fail due to some non-permission reason like EMFILE (too many open files), transient fs error, the file got unlinked between access and open
+                return await fs.open(this.pathname, "r+");
+            }
+        } catch (error) {
+            console.error(`Failed to open file \`${this.pathname}\` for reading / writing`);
+            throw error;
+        }
+
+        try {
+            return await fs.open(this.pathname, "w+");
+        } catch (error) {
+            console.error(`Failed to open file \`${this.pathname}\` for writing`);
+            throw error;
         }
     }
 
-    async close() {
-        if (!this._fileHandle) {
-            return;
+    private async initializeState(defaultState: T | Promise<T>): Promise<T> {
+        const fileHandle = await this.fileHandlePromise;
+        let serialized: Uint8Array;
+
+        const fileStats = await fileHandle.stat();
+
+        try {
+            if (fileStats.size === 0) {
+                return defaultState;
+            }
+
+            serialized = await PersistentState.readFile(fileHandle);
+        } catch (error) {
+            console.error(`Failed to read file '${this.pathname}'`);
+            return defaultState;
         }
 
-        await this.promises.at(-1);
+        try {
+            return await this.deserializer(serialized);
+        } catch (error) {
+            console.error(`Failed to deserialize state from file '${this.pathname}'`);
+            return defaultState;
+        }
+    }
 
-        delete this.pathname;
-        delete this.promises;
+    async getState() {
+        return await this.statePromise;
+    }
 
-        await this._fileHandle.close();
+    private static async readFile(fileHandle: fs.FileHandle): Promise<Uint8Array> {
+        return new Uint8Array(await fileHandle.readFile());
+    }
 
-        delete this._fileHandle;
+    private async write(serialized: Uint8Array) {
+        try {
+            await this.lastWrite;
+        } catch {
+            // Ignore error
+        }
 
-        this.closed = true;
+        const fileHandle = await this.fileHandlePromise;
+        await fileHandle.truncate(0);
+
+        let numBytesToWrite = serialized.byteLength;
+        let totalNumBytesWritten = 0;
+
+        while (numBytesToWrite) {
+            const { bytesWritten: numBytesWritten } = await fileHandle.write(
+                serialized,
+                totalNumBytesWritten,
+                numBytesToWrite,
+                totalNumBytesWritten,
+            );
+
+            totalNumBytesWritten += numBytesWritten;
+            numBytesToWrite -= numBytesWritten;
+        }
+    }
+
+    async setState(newState: T | Promise<T>): Promise<void> {
+        const newStateAwaited = await newState;
+        this.statePromise = Promise.resolve(newState);
+
+        let serialized: Uint8Array;
+
+        try {
+            serialized = await this.serializer(newStateAwaited);
+        } catch (error) {
+            console.error(`Failed to serialized state`);
+            throw error;
+        }
+
+        this.lastWrite = this.write(serialized);
+        await this.lastWrite;
+    }
+
+    async close(): Promise<void> {
+        const fileHandle = await this.fileHandlePromise;
+        await this.lastWrite;
+        await fileHandle.close();
     }
 }
 
 /*
-const persistentState = new PersistentState("obj", () => {
-    return { message: "Hello world!", date: new Date().toLocaleString(), count: 2 };
-});
+    Writes are not crash-safe (this defeats the whole purpose)
+        await fileHandle.truncate(0);
+        // ... write loop ...
+    This is the big one given "restored if the process is killed." truncate(0) followed by a series of write()s is not atomic.
+    If the process dies (or the disk errors) between the truncate and the end of the write loop,
+    the file is left empty or partially written — i.e. you've corrupted exactly the data you were trying to protect, and on restart initializeState falls back to defaultState.
 
-persistentState.setStateObj({ count: 8 });
-persistentState.setStateObj(obj => {
-    return {
-        ...obj,
-        message: "Hello world!",
-    };
-});
-*/
+    The standard fix is write-to-temp + atomic rename:
+        const tmp = `${this.pathname}.tmp`;
+        await fs.writeFile(tmp, serialized);
+        // optionally fsync the tmp file here
+        await fs.rename(tmp, this.pathname);  // atomic on POSIX
 
-/*
-persistentState.setStateObj({ message: "Hello gadha!" });
-persistentState.setStateObj({ count: 9 });
-persistentState.setStateObj({ count: 10 });
-persistentState.setStateObj({ count: 11 });
-persistentState.setStateObj({ count: 12 });
-persistentState.setStateObj({ count: 13 });
-persistentState.setStateObj({ count: 14 });
-persistentState.setStateObj({ count: new Date().toLocaleString() });
-*/
+    rename is atomic, so a reader/restart always sees either the old complete file or the new complete file, never a torn one.
+    (This does mean reopening/replacing your long-lived handle, which is a reasonable tradeoff for durability.)
 
-export default PersistentState;
+    Related: there's no fsync/datasync anywhere. A SIGKILL is fine without it (the OS page cache survives a process death),
+    but a power loss / kernel panic can lose buffered writes. If you care about that, add fileHandle.sync() before declaring a write durable.
+ */
