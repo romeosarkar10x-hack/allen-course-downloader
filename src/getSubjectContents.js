@@ -30,41 +30,30 @@ export default async function getSubjectContents(subjectID) {
     const res = await rateLimiter.getResponse(reqID);
     const obj = JSON.parse(Buffer.concat(res.buffers).toString());
 
-    const list = obj.data.tab_data[0].tab_info.page_data.page_content.widgets[1].data.list.map(e => {
-        return { title: e.title, cards: e.cards };
-    });
+    // New API: chapters are in a flat list under widgets[1].data.data.chapters_list.chapters
+    // Each chapter uses 'name' instead of 'title', and there are no module groups
+    const chapters = obj.data.page_content.widgets[1].data.data.chapters_list.chapters;
 
-    const modules = list.map(chapters => {
+    const chapterList = chapters.map(chapter => {
         return {
-            title: chapters.title,
-            cards: chapters.cards.map(chapter => {
-                return {
-                    title: chapter.title,
-                    topicID: chapter.action.data.query.topic_id,
-                    subjectID,
-                };
-            }),
+            title: chapter.name,
+            topicID: chapter.action.data.query.topic_id,
+            subjectID,
         };
     });
 
-    // console.log(JSON.stringify(modules, null, 2));
-    // console.log(list);
-
     const promises = [];
 
-    modules.forEach(({ cards }) => {
-        cards.forEach(chapter => {
-            promises.push(getChapterContents(chapter));
-            chapter.cards = promises.length - 1;
-        });
+    chapterList.forEach(chapter => {
+        promises.push(getChapterContents(chapter));
+        chapter.cards = promises.length - 1;
     });
 
     const promisesResolved = await Promise.all(promises);
-    modules.forEach(({ cards }) => {
-        cards.forEach(chapter => {
-            chapter.cards = promisesResolved[chapter.cards];
-        });
+    chapterList.forEach(chapter => {
+        chapter.cards = promisesResolved[chapter.cards];
     });
 
-    return modules;
+    // Return as a single module (flat structure — no module grouping in new API)
+    return [{ title: "Chapters", cards: chapterList }];
 }
