@@ -61,7 +61,7 @@ async function flushPromises(rounds = 20) {
 }
 
 // ===========================================================================
-describe("PersistentState", () => {
+describe("persistent-state", () => {
     // -----------------------------------------------------------------------
     describe("openFile() — fs.access() existence check", () => {
         test("when F_OK access succeeds, fileExists is set to true and R_OK|W_OK is checked", async () => {
@@ -76,11 +76,7 @@ describe("PersistentState", () => {
             // First call: F_OK, second call: R_OK | W_OK
             expect(mockedAccess).toHaveBeenCalledTimes(2);
             expect(mockedAccess).toHaveBeenNthCalledWith(1, "/tmp/state.bin", fs.constants.F_OK);
-            expect(mockedAccess).toHaveBeenNthCalledWith(
-                2,
-                "/tmp/state.bin",
-                fs.constants.R_OK | fs.constants.W_OK,
-            );
+            expect(mockedAccess).toHaveBeenNthCalledWith(2, "/tmp/state.bin", fs.constants.R_OK | fs.constants.W_OK);
         });
 
         test("when F_OK access fails, logs console.warn and skips the R_OK|W_OK check entirely", async () => {
@@ -99,9 +95,7 @@ describe("PersistentState", () => {
             expect(mockedAccess).toHaveBeenCalledWith("/tmp/state.bin", fs.constants.F_OK);
 
             // console.warn fires for missing file
-            expect(console.warn).toHaveBeenCalledWith(
-                expect.stringContaining("does not exists"),
-            );
+            expect(console.warn).toHaveBeenCalledWith(expect.stringContaining("does not exists"));
 
             // r+ is never attempted when fileExists=false — only w is called
             expect(mockedOpen).toHaveBeenCalledOnce();
@@ -111,9 +105,7 @@ describe("PersistentState", () => {
         test("when R_OK|W_OK access fails, logs console.error and throws (never reaches fs.open)", async () => {
             const permError = new Error("EACCES");
             // F_OK succeeds, R_OK|W_OK fails
-            mockedAccess
-                .mockResolvedValueOnce(undefined)
-                .mockRejectedValueOnce(permError);
+            mockedAccess.mockResolvedValueOnce(undefined).mockRejectedValueOnce(permError);
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
             await expect(ps.getState()).rejects.toThrow("EACCES");
@@ -216,12 +208,7 @@ describe("PersistentState", () => {
             mockedOpen.mockResolvedValue(handle);
 
             // Pass a raw string, not a Promise<string>
-            const ps = new PersistentState(
-                "/tmp/state.bin",
-                textSerializer,
-                textDeserializer,
-                "plain-default",
-            );
+            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, "plain-default");
             expect(await ps.getState()).toBe("plain-default");
             await ps.close();
         });

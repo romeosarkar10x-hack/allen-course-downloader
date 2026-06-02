@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 // ---------------------------------------------------------------------------
-describe("AsyncFileWriter", () => {
+describe("async-file-writer", () => {
     // -----------------------------------------------------------------------
     describe("constructor", () => {
         test("opens the file with the given pathname and default flag 'w'", async () => {

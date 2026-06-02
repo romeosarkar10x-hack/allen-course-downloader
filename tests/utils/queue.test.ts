@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import { Queue, QueueNode } from "@/utils/queue";
 
-describe("Queue", () => {
+describe("queue", () => {
     describe("empty queue", () => {
         test("front() returns null on empty queue", () => {
             const queue = new Queue<number>();

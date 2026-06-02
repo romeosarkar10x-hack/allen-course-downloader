@@ -26,7 +26,7 @@ beforeEach(() => {
 });
 
 // ===========================================================================
-describe("PromiseRateLimiter", () => {
+describe("promise-rate-limiter", () => {
     // -----------------------------------------------------------------------
     describe("constructor — concurrency clamping (Math.max)", () => {
         test("concurrency=5 is preserved", () => {
@@ -83,16 +83,14 @@ describe("PromiseRateLimiter", () => {
 
         test("rejects with the task's rejection reason", async () => {
             const limiter = new PromiseRateLimiter(1);
-            await expect(
-                limiter.schedule(() => Promise.reject(new Error("task failed"))),
-            ).rejects.toThrow("task failed");
+            await expect(limiter.schedule(() => Promise.reject(new Error("task failed")))).rejects.toThrow(
+                "task failed",
+            );
         });
 
         test("rejects with non-Error rejection reasons", async () => {
             const limiter = new PromiseRateLimiter(1);
-            await expect(
-                limiter.schedule(() => Promise.reject("string reason")),
-            ).rejects.toBe("string reason");
+            await expect(limiter.schedule(() => Promise.reject("string reason"))).rejects.toBe("string reason");
         });
 
         test("executes the task function exactly once", async () => {
@@ -150,7 +148,12 @@ describe("PromiseRateLimiter", () => {
             const executionOrder: number[] = [];
             const promises = [];
             for (let i = 0; i < 5; i++) {
-                promises.push(limiter.schedule(async () => { executionOrder.push(i); return i; }));
+                promises.push(
+                    limiter.schedule(async () => {
+                        executionOrder.push(i);
+                        return i;
+                    }),
+                );
             }
             const results = await Promise.all(promises);
             expect(executionOrder).toEqual([0, 1, 2, 3, 4]);
@@ -160,19 +163,36 @@ describe("PromiseRateLimiter", () => {
         test("three sequential tasks complete in order", async () => {
             const limiter = new PromiseRateLimiter(1);
             const log: string[] = [];
-            const g1 = deferred(), g2 = deferred(), g3 = deferred();
+            const g1 = deferred(),
+                g2 = deferred(),
+                g3 = deferred();
 
-            const p1 = limiter.schedule(async () => { log.push("s1"); await g1.promise; log.push("e1"); });
-            const p2 = limiter.schedule(async () => { log.push("s2"); await g2.promise; log.push("e2"); });
-            const p3 = limiter.schedule(async () => { log.push("s3"); await g3.promise; log.push("e3"); });
+            const p1 = limiter.schedule(async () => {
+                log.push("s1");
+                await g1.promise;
+                log.push("e1");
+            });
+            const p2 = limiter.schedule(async () => {
+                log.push("s2");
+                await g2.promise;
+                log.push("e2");
+            });
+            const p3 = limiter.schedule(async () => {
+                log.push("s3");
+                await g3.promise;
+                log.push("e3");
+            });
 
             await flushPromises();
             expect(log).toEqual(["s1"]);
-            g1.resolve(); await flushPromises();
+            g1.resolve();
+            await flushPromises();
             expect(log).toEqual(["s1", "e1", "s2"]);
-            g2.resolve(); await flushPromises();
+            g2.resolve();
+            await flushPromises();
             expect(log).toEqual(["s1", "e1", "s2", "e2", "s3"]);
-            g3.resolve(); await Promise.all([p1, p2, p3]);
+            g3.resolve();
+            await Promise.all([p1, p2, p3]);
             expect(log).toEqual(["s1", "e1", "s2", "e2", "s3", "e3"]);
         });
     });
@@ -184,10 +204,26 @@ describe("PromiseRateLimiter", () => {
             const log: string[] = [];
             const gates = [deferred(), deferred(), deferred(), deferred()];
 
-            const p1 = limiter.schedule(async () => { log.push("s1"); await gates[0].promise; log.push("e1"); });
-            const p2 = limiter.schedule(async () => { log.push("s2"); await gates[1].promise; log.push("e2"); });
-            const p3 = limiter.schedule(async () => { log.push("s3"); await gates[2].promise; log.push("e3"); });
-            const p4 = limiter.schedule(async () => { log.push("s4"); await gates[3].promise; log.push("e4"); });
+            const p1 = limiter.schedule(async () => {
+                log.push("s1");
+                await gates[0].promise;
+                log.push("e1");
+            });
+            const p2 = limiter.schedule(async () => {
+                log.push("s2");
+                await gates[1].promise;
+                log.push("e2");
+            });
+            const p3 = limiter.schedule(async () => {
+                log.push("s3");
+                await gates[2].promise;
+                log.push("e3");
+            });
+            const p4 = limiter.schedule(async () => {
+                log.push("s4");
+                await gates[3].promise;
+                log.push("e4");
+            });
 
             await flushPromises();
             // First 3 tasks started in parallel, 4th is queued
@@ -199,27 +235,45 @@ describe("PromiseRateLimiter", () => {
             expect(log).toContain("e1");
             expect(log).toContain("s4");
 
-            gates[1].resolve(); gates[2].resolve(); gates[3].resolve();
+            gates[1].resolve();
+            gates[2].resolve();
+            gates[3].resolve();
             await Promise.all([p1, p2, p3, p4]);
         });
 
         test("concurrency=2 allows exactly 2 concurrent tasks", async () => {
             const limiter = new PromiseRateLimiter(2);
             const log: string[] = [];
-            const g1 = deferred(), g2 = deferred(), g3 = deferred();
+            const g1 = deferred(),
+                g2 = deferred(),
+                g3 = deferred();
 
-            const p1 = limiter.schedule(async () => { log.push("s1"); await g1.promise; log.push("e1"); });
-            const p2 = limiter.schedule(async () => { log.push("s2"); await g2.promise; log.push("e2"); });
-            const p3 = limiter.schedule(async () => { log.push("s3"); await g3.promise; log.push("e3"); });
+            const p1 = limiter.schedule(async () => {
+                log.push("s1");
+                await g1.promise;
+                log.push("e1");
+            });
+            const p2 = limiter.schedule(async () => {
+                log.push("s2");
+                await g2.promise;
+                log.push("e2");
+            });
+            const p3 = limiter.schedule(async () => {
+                log.push("s3");
+                await g3.promise;
+                log.push("e3");
+            });
 
             await flushPromises();
             expect(log).toEqual(["s1", "s2"]); // Only 2 started
 
-            g1.resolve(); await flushPromises();
+            g1.resolve();
+            await flushPromises();
             expect(log).toContain("e1");
             expect(log).toContain("s3"); // 3rd starts after 1st finishes
 
-            g2.resolve(); g3.resolve();
+            g2.resolve();
+            g3.resolve();
             await Promise.all([p1, p2, p3]);
         });
     });
@@ -229,8 +283,14 @@ describe("PromiseRateLimiter", () => {
         test("automatically picks up next task after one completes", async () => {
             const limiter = new PromiseRateLimiter(1);
             const results: number[] = [];
-            const p1 = limiter.schedule(async () => { results.push(1); return 1; });
-            const p2 = limiter.schedule(async () => { results.push(2); return 2; });
+            const p1 = limiter.schedule(async () => {
+                results.push(1);
+                return 1;
+            });
+            const p2 = limiter.schedule(async () => {
+                results.push(2);
+                return 2;
+            });
             await Promise.all([p1, p2]);
             expect(results).toEqual([1, 2]);
         });
@@ -240,8 +300,13 @@ describe("PromiseRateLimiter", () => {
             const log: string[] = [];
             const gate = deferred();
 
-            const p1 = limiter.schedule(async () => { log.push("task-1"); await gate.promise; });
-            const p2 = limiter.schedule(async () => { log.push("task-2"); });
+            const p1 = limiter.schedule(async () => {
+                log.push("task-1");
+                await gate.promise;
+            });
+            const p2 = limiter.schedule(async () => {
+                log.push("task-2");
+            });
 
             await flushPromises();
             expect(log).toEqual(["task-1"]);
@@ -297,7 +362,9 @@ describe("PromiseRateLimiter", () => {
         test("rejects the scheduled promise with the thrown error", async () => {
             const limiter = new PromiseRateLimiter(1);
             await expect(
-                limiter.schedule(() => { throw new Error("sync-boom"); }),
+                limiter.schedule(() => {
+                    throw new Error("sync-boom");
+                }),
             ).rejects.toThrow("sync-boom");
         });
 
@@ -305,7 +372,9 @@ describe("PromiseRateLimiter", () => {
             const limiter = new PromiseRateLimiter(1);
 
             await expect(
-                limiter.schedule(() => { throw new Error("sync"); }),
+                limiter.schedule(() => {
+                    throw new Error("sync");
+                }),
             ).rejects.toThrow("sync");
 
             const result = await limiter.schedule(async () => "recovered");
@@ -316,8 +385,13 @@ describe("PromiseRateLimiter", () => {
             const limiter = new PromiseRateLimiter(1);
             const log: string[] = [];
 
-            const p1 = limiter.schedule(() => { throw new Error("sync"); });
-            const p2 = limiter.schedule(async () => { log.push("task-2"); return "ok"; });
+            const p1 = limiter.schedule(() => {
+                throw new Error("sync");
+            });
+            const p2 = limiter.schedule(async () => {
+                log.push("task-2");
+                return "ok";
+            });
 
             await expect(p1).rejects.toThrow("sync");
             expect(await p2).toBe("ok");
@@ -327,8 +401,12 @@ describe("PromiseRateLimiter", () => {
         test("sync throw does not break subsequent tasks", async () => {
             const limiter = new PromiseRateLimiter(1);
 
-            const p1 = limiter.schedule(() => { throw new Error("sync-1"); });
-            const p2 = limiter.schedule(() => { throw new Error("sync-2"); });
+            const p1 = limiter.schedule(() => {
+                throw new Error("sync-1");
+            });
+            const p2 = limiter.schedule(() => {
+                throw new Error("sync-2");
+            });
             const p3 = limiter.schedule(async () => "success");
 
             await expect(p1).rejects.toThrow("sync-1");
@@ -344,10 +422,19 @@ describe("PromiseRateLimiter", () => {
             const order: string[] = [];
             const gate = deferred();
 
-            const p1 = limiter.schedule(async () => { order.push("A"); await gate.promise; });
-            const p2 = limiter.schedule(async () => { order.push("B"); });
-            const p3 = limiter.schedule(async () => { order.push("C"); });
-            const p4 = limiter.schedule(async () => { order.push("D"); });
+            const p1 = limiter.schedule(async () => {
+                order.push("A");
+                await gate.promise;
+            });
+            const p2 = limiter.schedule(async () => {
+                order.push("B");
+            });
+            const p3 = limiter.schedule(async () => {
+                order.push("C");
+            });
+            const p4 = limiter.schedule(async () => {
+                order.push("D");
+            });
 
             await flushPromises();
             expect(order).toEqual(["A"]);
@@ -360,7 +447,9 @@ describe("PromiseRateLimiter", () => {
         test("task is removed from the set before execution (no double-run)", async () => {
             const limiter = new PromiseRateLimiter(1);
             let runCount = 0;
-            await limiter.schedule(async () => { runCount++; });
+            await limiter.schedule(async () => {
+                runCount++;
+            });
             expect(runCount).toBe(1);
         });
     });
@@ -448,15 +537,15 @@ describe("PromiseRateLimiter", () => {
             await limiter.schedule(async () => "b");
 
             const log: string[] = [];
-            await limiter.schedule(async () => { log.push("started"); });
+            await limiter.schedule(async () => {
+                log.push("started");
+            });
             expect(log).toEqual(["started"]);
         });
 
         test("numActive decrements even when task rejects", async () => {
             const limiter = new PromiseRateLimiter(1);
-            await expect(
-                limiter.schedule(() => Promise.reject(new Error("fail"))),
-            ).rejects.toThrow("fail");
+            await expect(limiter.schedule(() => Promise.reject(new Error("fail")))).rejects.toThrow("fail");
 
             expect(await limiter.schedule(async () => "after-fail")).toBe("after-fail");
         });
@@ -490,10 +579,22 @@ describe("PromiseRateLimiter", () => {
             const limiter = new PromiseRateLimiter(1);
             const log: Array<{ type: string; value: any }> = [];
 
-            const p1 = limiter.schedule(async () => { log.push({ type: "resolve", value: 1 }); return 1; });
-            const p2 = limiter.schedule(async () => { log.push({ type: "reject", value: 2 }); throw new Error("err-2"); });
-            const p3 = limiter.schedule(async () => { log.push({ type: "resolve", value: 3 }); return 3; });
-            const p4 = limiter.schedule(async () => { log.push({ type: "reject", value: 4 }); throw new Error("err-4"); });
+            const p1 = limiter.schedule(async () => {
+                log.push({ type: "resolve", value: 1 });
+                return 1;
+            });
+            const p2 = limiter.schedule(async () => {
+                log.push({ type: "reject", value: 2 });
+                throw new Error("err-2");
+            });
+            const p3 = limiter.schedule(async () => {
+                log.push({ type: "resolve", value: 3 });
+                return 3;
+            });
+            const p4 = limiter.schedule(async () => {
+                log.push({ type: "reject", value: 4 });
+                throw new Error("err-4");
+            });
 
             expect(await p1).toBe(1);
             await expect(p2).rejects.toThrow("err-2");
@@ -517,7 +618,9 @@ describe("PromiseRateLimiter", () => {
 
             const outerP = limiter.schedule(async () => {
                 log.push("outer-start");
-                limiter.schedule(async () => { log.push("inner"); });
+                limiter.schedule(async () => {
+                    log.push("inner");
+                });
                 log.push("outer-end");
             });
 
@@ -558,24 +661,16 @@ describe("PromiseRateLimiter", () => {
         test("limiter can be reused after all tasks have completed", async () => {
             const limiter = new PromiseRateLimiter(1);
 
-            const batch1 = await Promise.all([
-                limiter.schedule(async () => "a"),
-                limiter.schedule(async () => "b"),
-            ]);
+            const batch1 = await Promise.all([limiter.schedule(async () => "a"), limiter.schedule(async () => "b")]);
             expect(batch1).toEqual(["a", "b"]);
 
-            const batch2 = await Promise.all([
-                limiter.schedule(async () => "c"),
-                limiter.schedule(async () => "d"),
-            ]);
+            const batch2 = await Promise.all([limiter.schedule(async () => "c"), limiter.schedule(async () => "d")]);
             expect(batch2).toEqual(["c", "d"]);
         });
 
         test("limiter can be reused after errors", async () => {
             const limiter = new PromiseRateLimiter(1);
-            await expect(
-                limiter.schedule(() => Promise.reject(new Error("oops"))),
-            ).rejects.toThrow("oops");
+            await expect(limiter.schedule(() => Promise.reject(new Error("oops")))).rejects.toThrow("oops");
             expect(await limiter.schedule(async () => "fine")).toBe("fine");
         });
     });
