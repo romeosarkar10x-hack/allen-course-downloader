@@ -9,7 +9,7 @@
         "commands": [
             {
                 "match": "\\.(js|ts|tsx|css|json|jsonc|yml|yaml|html)$",
-                "cmd": "pnpx prettier --write ${file}"
+                "cmd": "pnpx prettier --write ${file} --ignore-path .prettierignore"
             }
         ]
     },
