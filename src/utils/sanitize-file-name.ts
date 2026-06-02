@@ -1,7 +1,7 @@
 /**
  * Sanitizes pathname for windows, linux, etc.
  */
-export function sanitizeRelativePathname(pathname: string) {
+export function sanitizeFileName(pathname: string) {
     let sanitized = "";
 
     for (let i = 0; i < pathname.length; i++) {
