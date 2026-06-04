@@ -1,5 +1,7 @@
 import fs from "fs/promises";
 
+type DefaultState<T> = T | Promise<T> | (() => T | Promise<T>);
+
 export class PersistentState<T> {
     private fileHandlePromise: Promise<fs.FileHandle>;
     private statePromise: Promise<T>;
@@ -10,7 +12,7 @@ export class PersistentState<T> {
         public pathname: string,
         public serializer: (state: T) => Uint8Array | Promise<Uint8Array>,
         public deserializer: (serialized: Uint8Array) => T | Promise<T>,
-        defaultState: T | Promise<T>,
+        defaultState: DefaultState<T>,
     ) {
         this.fileHandlePromise = this.openFile();
         this.statePromise = this.initializeState(defaultState);
@@ -54,7 +56,15 @@ export class PersistentState<T> {
         }
     }
 
-    private async initializeState(defaultState: T | Promise<T>): Promise<T> {
+    private async getDefaultState(defaultState: DefaultState<T>): Promise<T> {
+        if (typeof defaultState === "function") {
+            return await (defaultState as () => T | Promise<T>)();
+        }
+
+        return await defaultState;
+    }
+
+    private async initializeState(defaultState: DefaultState<T>): Promise<T> {
         const fileHandle = await this.fileHandlePromise;
         let serialized: Uint8Array;
 
@@ -62,20 +72,20 @@ export class PersistentState<T> {
 
         try {
             if (fileStats.size === 0) {
-                return defaultState;
+                return await this.getDefaultState(defaultState);
             }
 
             serialized = await PersistentState.readFile(fileHandle);
         } catch (error) {
             console.error(`Failed to read file '${this.pathname}'`);
-            return defaultState;
+            return await this.getDefaultState(defaultState);
         }
 
         try {
             return await this.deserializer(serialized);
         } catch (error) {
             console.error(`Failed to deserialize state from file '${this.pathname}'`);
-            return defaultState;
+            return await this.getDefaultState(defaultState);
         }
     }
 
@@ -113,9 +123,37 @@ export class PersistentState<T> {
         }
     }
 
+    /* setState ordering race — disk and memory can both end up stale
+        This is the concurrency bug you're probably hunting for. The write chain is ordered by when each serializer finishes, not by call order, because the lastWrite chain is only established after await this.serializer(...):
+            serialized = await this.serializer(newStateAwaited);  // unordered point
+            this.lastWrite = this.write(serialized);              // chain set up here
+
+        Consider two un-awaited calls where the second value serializes faster:
+            s.setState(A);  // serializer(A) slow
+            s.setState(B);  // serializer(B) fast — called last, "should" win
+
+        serializer(B) finishes first → lastWrite = write(B) → disk = B.
+        serializer(A) finishes later → lastWrite = write(A) → chained after write(B) → disk = A (stale).
+        Meanwhile statePromise was set synchronously in source order, so in memory it's B.
+
+        End result: memory says B, disk says A. They've diverged, and the disk holds the older value. The write-vs-write chaining itself is correct (you read the old this.lastWrite synchronously before reassigning, which works), but it's gated by the wrong point.
+        The clean fix is to put the entire operation — snapshot, state update, serialize, write — inside the chain so call order is preserved:
+            setState(newState) {
+                const prev = this.lastWrite;
+                this.lastWrite = (async () => {
+                    try { await prev; } catch {}
+                    const state = await newState;
+                    const serialized = await this.serializer(state);
+                    await this.write(serialized);
+                    this.statePromise = Promise.resolve(state); // only after durable
+                })();
+                return this.lastWrite;
+            }
+        (If serializing under the lock is too slow, the alternative is a monotonically increasing version number: tag each write, and have write no-op if a newer version has already been written.)
+    */
     async setState(newState: T | Promise<T>): Promise<void> {
         const newStateAwaited = await newState;
-        this.statePromise = Promise.resolve(newState);
+        this.statePromise = Promise.resolve(newState); // Concurrency issue here...
 
         let serialized: Uint8Array;
 
