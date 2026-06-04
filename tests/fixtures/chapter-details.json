@@ -1,0 +1,2152 @@
+{
+    "status": 200,
+    "reason": "OK",
+    "data": {
+        "page_info": {
+            "id": "28042",
+            "page_id": "hvtpDmBOGp3G5xcp9VPUJ",
+            "page_meta": {
+                "type": "LIST",
+                "url": "",
+                "tab_meta": {},
+                "floating_meta": {
+                    "stack": "HORIZONTAL",
+                    "arrangement": "SPACE_BETWEEN"
+                },
+                "url_category": "CONTENT_PAGES"
+            },
+            "name": "Topic Content",
+            "data": {
+                "contains_html_content": false,
+                "description": "",
+                "title": "Topic Content"
+            },
+            "layout_params": {
+                "background_color": "#FAF0E6",
+                "page_layout": [
+                    {
+                        "data": {
+                            "widgetId": "RPtQ_o2sb5qrh9q6Opva7"
+                        },
+                        "id": "1",
+                        "ratio": 1,
+                        "type": "widget"
+                    },
+                    {
+                        "data": {
+                            "widgetId": "FtjVCfMgCkC9iQKpsMMz_"
+                        },
+                        "id": "2",
+                        "ratio": 1,
+                        "type": "widget"
+                    },
+                    {
+                        "columns": [
+                            {
+                                "data": {
+                                    "widgetId": "R0WgofXG7MUNYtGABaXgG"
+                                },
+                                "id": "5",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "MgnSbzM6EZCKadsfNZG5I"
+                                },
+                                "id": "7",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "TWO1DL6MrN22mlKmWv_VN"
+                                },
+                                "id": "8",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "CM-b3kMs3-3Z3PnGKiNGX"
+                                },
+                                "id": "9",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "ozoiC5YD3PWOnXR3OHyoj"
+                                },
+                                "id": "10",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "Usx0CBS1K2zHPtSYmPyMJ"
+                                },
+                                "id": "11",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "bLF1YJItS4hHeBv8zpvuN"
+                                },
+                                "id": "12",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "jruGCdS2mGKsfBNMLHfcJ"
+                                },
+                                "id": "13",
+                                "ratio": 1,
+                                "type": "widget"
+                            },
+                            {
+                                "data": {
+                                    "widgetId": "-s8w5lhAckiewxHbfhbCZ"
+                                },
+                                "id": "14",
+                                "ratio": 1,
+                                "type": "widget"
+                            }
+                        ],
+                        "container_style": {
+                            "container_type": "no-py-container",
+                            "is_no_gap": true
+                        },
+                        "grid_config": {
+                            "horizontal_gap": 24,
+                            "no_of_columns": 2,
+                            "vertical_gap": 24
+                        },
+                        "horizontal": false,
+                        "id": "4",
+                        "is_grid": true,
+                        "ratio": 1,
+                        "type": "section"
+                    },
+                    {
+                        "data": {
+                            "widgetId": "K4Egfg7c9lu37tfkwUIFz"
+                        },
+                        "id": "15",
+                        "ratio": 1,
+                        "type": "widget"
+                    }
+                ],
+                "usePageLayout": true
+            },
+            "tracking_params": {},
+            "seo_data": {
+                "seo_desc": "",
+                "tags": []
+            },
+            "user_location": "Bengaluru"
+        },
+        "page_content": {
+            "header_widgets": [],
+            "widgets": [
+                {
+                    "id": 31208,
+                    "const_widget_id": "RPtQ_o2sb5qrh9q6Opva7",
+                    "type": "BREADCRUMBS",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "RPtQ_o2sb5qrh9q6Opva7"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "breadcrumbs": [
+                            {
+                                "action": {
+                                    "data": {
+                                        "email": "",
+                                        "name": "",
+                                        "phone": "",
+                                        "query": null,
+                                        "type": "",
+                                        "uri": "/explore"
+                                    },
+                                    "tracking_params": null,
+                                    "type": "NAVIGATION"
+                                },
+                                "id": 1,
+                                "isActive": false,
+                                "label": "Explore"
+                            },
+                            {
+                                "action": {
+                                    "data": {
+                                        "email": "",
+                                        "name": "",
+                                        "phone": "",
+                                        "query": null,
+                                        "type": "",
+                                        "uri": "/library-web"
+                                    },
+                                    "tracking_params": null,
+                                    "type": "NAVIGATION"
+                                },
+                                "id": 2,
+                                "isActive": false,
+                                "label": "Study"
+                            },
+                            {
+                                "action": {
+                                    "data": {
+                                        "email": "",
+                                        "name": "",
+                                        "phone": "",
+                                        "query": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2,bt_6iTAx9qGKWOtlHNKHXtAy,bt_Eu5fNGJVdWnOsYx0Gln0c,bt_1q5nGW30RrJUQGMVBzP6e,bt_ZRcfokhD8PuAGgCo0r6Ig",
+                                            "selected_batch_list": "bt_ORA8IvlO0uJrgUzCpqDD2,bt_6iTAx9qGKWOtlHNKHXtAy,bt_4lsHiXc2Q4n7ixreMiqFf,bt_6LlBjESE33kt0khvPQdgu,bt_n5tA1oHiHB5X1y1XOkkZc,bt_3scoa5ObDiRg5C7BgcasI,bt_lgugkrexGcdNFoMB5B7T9,bt_fvy9VMozVEbyFtR6axQhi,bt_r1sCnVh70lmgIDWLjoPZT,bt_hC1SBV6mmRPc2HsHzTAbd,bt_GdnoJEv5jveY2NP6CKaUU,bt_Eu5fNGJVdWnOsYx0Gln0c,bt_1q5nGW30RrJUQGMVBzP6e,bt_2ZtJAkCb30rjG3BtWTjki,bt_nYFmT9pVTYBEsEit4Pcnv,bt_NuEXZHxrL8iq6cbuXzX2c,bt_9ZcSWPclJdOZLlV0j1b4y,bt_ZRcfokhD8PuAGgCo0r6Ig",
+                                            "selected_course_id": "cr_ifsxXemTSLnySt6Duju9v",
+                                            "stream": "STREAM_JEE_MAIN_ADVANCED",
+                                            "subject_id": "746",
+                                            "taxonomy_id": "1739171216OJ"
+                                        },
+                                        "type": "",
+                                        "uri": "/subject-details"
+                                    },
+                                    "tracking_params": null,
+                                    "type": "NAVIGATION"
+                                },
+                                "id": 3,
+                                "isActive": false,
+                                "label": "Chemistry"
+                            },
+                            {
+                                "action": null,
+                                "id": 4,
+                                "isActive": true,
+                                "label": "The D And F Block Elements"
+                            }
+                        ],
+                        "show_in_container": true
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 30858,
+                    "const_widget_id": "FtjVCfMgCkC9iQKpsMMz_",
+                    "type": "APP_GENERIC_HEADER_V2",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "FtjVCfMgCkC9iQKpsMMz_"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "back_icon": {
+                            "action": {
+                                "data": null,
+                                "tracking_params": null,
+                                "type": "BACK_NAVIGATION"
+                            },
+                            "icon_uri": "ARROW_LEFT"
+                        },
+                        "background_image": {
+                            "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                        },
+                        "cta": {
+                            "action": {
+                                "data": {
+                                    "email": "",
+                                    "name": "",
+                                    "phone": "",
+                                    "query": null,
+                                    "type": "",
+                                    "uri": "/doubts"
+                                },
+                                "tracking_params": null,
+                                "type": "NAVIGATION"
+                            },
+                            "icon_uri": "DOUBTS_V2",
+                            "label": "Ask a doubt"
+                        },
+                        "header_image": null,
+                        "highlight_line_color": {
+                            "hex_code": "",
+                            "name": "event_chemistry"
+                        },
+                        "right_image": null,
+                        "subtitles": [
+                            {
+                                "color": {
+                                    "hex_code": "",
+                                    "name": "typography_default_caption"
+                                },
+                                "text": "Class 12"
+                            },
+                            {
+                                "color": {
+                                    "hex_code": "",
+                                    "name": "typography_default_caption"
+                                },
+                                "text": "Chemistry"
+                            }
+                        ],
+                        "title": "The D And F Block Elements"
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 57978,
+                    "const_widget_id": "R0WgofXG7MUNYtGABaXgG",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "R0WgofXG7MUNYtGABaXgG"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "contents_list": [
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "d956ca60-9b8f-4d24-8e98-69afd55fadcb",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d \u0026 f Block elements",
+                                            "uri": "https://content.allen.in/d956ca60-9b8f-4d24-8e98-69afd55fadcb/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*d956ca60-9b8f-4d24-8e98-69afd55fadcb*~hmac=f2d881400b41313daea0a45725154f94c70cef65eeb92d8b7985890621179faa"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d \u0026 f Block elements",
+                                                "card_type": "Live Lecture Videos - Content",
+                                                "content_id": "d956ca60-9b8f-4d24-8e98-69afd55fadcb",
+                                                "section_name": "Live Lecture Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "d \u0026 f Block elements",
+                                    "cta": null,
+                                    "description": "",
+                                    "duration": "88:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 1,
+                                    "sub_topics": [
+                                        "Colour Of Ions In Aq. Solution",
+                                        "Complex Formation; Catalytic Properties",
+                                        "Electronic Configuration Of The d-Block Elements"
+                                    ],
+                                    "subtitle": "10 Mar, 2026",
+                                    "type": "LIVE_LECTURE_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "b8d4596d-24a0-4dd7-a0a2-f80013f1eed1",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d and f Block Elements 02",
+                                            "uri": "https://content.allen.in/b8d4596d-24a0-4dd7-a0a2-f80013f1eed1/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*b8d4596d-24a0-4dd7-a0a2-f80013f1eed1*~hmac=5953e7109792fa093180825942ba24bb3b3a179eac7629dfd8634bb8c438639f"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d and f Block Elements 02",
+                                                "card_type": "Live Lecture Videos - Content",
+                                                "content_id": "b8d4596d-24a0-4dd7-a0a2-f80013f1eed1",
+                                                "section_name": "Live Lecture Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "d and f Block Elements 02",
+                                    "cta": null,
+                                    "description": "",
+                                    "duration": "104:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 2,
+                                    "subtitle": "21 Apr, 2025",
+                                    "type": "LIVE_LECTURE_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "3fca97bc-2625-48c2-bbd0-7435af8cb3d2",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d \u0026 f Block elements 01",
+                                            "uri": "https://content.allen.in/3fca97bc-2625-48c2-bbd0-7435af8cb3d2/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*3fca97bc-2625-48c2-bbd0-7435af8cb3d2*~hmac=bd4403f3dfcacc751ce9310175b0aa049e1f9c1f152b10efbd29d30296c823a1"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d \u0026 f Block elements 01",
+                                                "card_type": "Live Lecture Videos - Content",
+                                                "content_id": "3fca97bc-2625-48c2-bbd0-7435af8cb3d2",
+                                                "section_name": "Live Lecture Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "d \u0026 f Block elements 01",
+                                    "cta": null,
+                                    "description": "",
+                                    "duration": "105:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 3,
+                                    "subtitle": "18 Apr, 2025",
+                                    "type": "LIVE_LECTURE_VIDEOS_CONTENT_TYPE"
+                                }
+                            ],
+                            "title": "Live Lecture Videos"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "background_color": {
+                                        "name": "background_secondary"
+                                    },
+                                    "corner_radius": 20,
+                                    "frame": {
+                                        "width": "MAX"
+                                    },
+                                    "padding": {
+                                        "top": 0
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_VIDEOS_WEB",
+                        "version": 5
+                    },
+                    "widget_meta": {}
+                },
+                {
+                    "id": 30864,
+                    "const_widget_id": "MgnSbzM6EZCKadsfNZG5I",
+                    "type": "SELECTION_CARD",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "MgnSbzM6EZCKadsfNZG5I"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "background_image": {
+                            "name": "",
+                            "url": "https://asset.allen-stage.in/09ec29ad-7cdb-480e-af41-86107408faad/original.webp"
+                        },
+                        "cta": {
+                            "action": {
+                                "data": {
+                                    "email": "",
+                                    "loader_config": {
+                                        "timeout_in_ms": 5000
+                                    },
+                                    "method": "POST",
+                                    "name": "",
+                                    "phone": "",
+                                    "query": {
+                                        "hide_timer": true,
+                                        "topics": [
+                                            {
+                                                "id": "746",
+                                                "node_type": 2,
+                                                "sub_nodes": [
+                                                    {
+                                                        "id": "1068",
+                                                        "node_type": 4,
+                                                        "taxonomy_id": "1739171216OJ"
+                                                    }
+                                                ],
+                                                "taxonomy_id": "1739171216OJ"
+                                            }
+                                        ]
+                                    },
+                                    "type": "",
+                                    "uri": "/custom-test"
+                                },
+                                "tracking_params": {
+                                    "current": {
+                                        "button_name": "Start Custom Practice",
+                                        "subject_id": "746",
+                                        "taxonomy_id": "1739171216OJ",
+                                        "topic_id": "1068"
+                                    },
+                                    "event_type": "button_clicked"
+                                },
+                                "type": "FETCH_API"
+                            },
+                            "icon_uri": "RIGHT_ARROW",
+                            "label": "Start Custom Practice"
+                        },
+                        "image_data": {
+                            "name": "",
+                            "url": "https://res.cloudinary.com/dpzpn3dkw/image/upload/w_800,f_auto,q_auto/v1736911401/se1pfdfudlrruicjzr29.png"
+                        },
+                        "options": [
+                            {
+                                "default": {
+                                    "display_value": "Previous Year Questions",
+                                    "value": "ADPL-PYQ"
+                                },
+                                "key": "source",
+                                "label": "Source",
+                                "list": [
+                                    {
+                                        "display_value": "Previous Year Questions",
+                                        "value": "ADPL-PYQ"
+                                    },
+                                    {
+                                        "display_value": "ALLEN Module",
+                                        "value": "ADPL-HW-NEET"
+                                    },
+                                    {
+                                        "display_value": "Important Questions",
+                                        "value": "ADPL-Papers-23-2"
+                                    }
+                                ]
+                            },
+                            {
+                                "default": {
+                                    "display_value": "Easy",
+                                    "value": "EASY"
+                                },
+                                "key": "difficulty",
+                                "label": "Difficulty",
+                                "list": [
+                                    {
+                                        "display_value": "Easy",
+                                        "value": "EASY"
+                                    },
+                                    {
+                                        "display_value": "Medium",
+                                        "value": "MEDIUM"
+                                    },
+                                    {
+                                        "display_value": "Hard",
+                                        "value": "HARD"
+                                    }
+                                ]
+                            },
+                            {
+                                "default": {
+                                    "display_value": "5",
+                                    "value": 5
+                                },
+                                "key": "question_count",
+                                "label": "No of questions",
+                                "list": [
+                                    {
+                                        "display_value": "5",
+                                        "value": 5
+                                    },
+                                    {
+                                        "display_value": "15",
+                                        "value": 15
+                                    },
+                                    {
+                                        "display_value": "30",
+                                        "value": 30
+                                    },
+                                    {
+                                        "display_value": "60",
+                                        "value": 60
+                                    }
+                                ]
+                            }
+                        ],
+                        "subtitle": "Create your own quiz, quickly.",
+                        "title": "Custom Practice"
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 100339,
+                    "const_widget_id": "TWO1DL6MrN22mlKmWv_VN",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "TWO1DL6MrN22mlKmWv_VN"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "contents_list": [
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "af1cc256-27c8-40a4-a492-14c767d73535",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "D Block Elements: Properties, Applications, and Electron Configurations",
+                                            "uri": "https://content.allen.in/af1cc256-27c8-40a4-a492-14c767d73535/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*af1cc256-27c8-40a4-a492-14c767d73535*~hmac=34184c376edae31b74e61988c8a006258f58293db6737487dbdb3b544700ec25"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "D Block Elements: Properties, Applications, and Electron Configurations",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "af1cc256-27c8-40a4-a492-14c767d73535",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "D Block Elements: Properties, Applications, and Electron Configurations",
+                                    "cta": null,
+                                    "description": "Explore the physical properties, applications, and unique electron configurations of D block elements in this comprehensive guide.",
+                                    "duration": "23:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 1,
+                                    "sub_topics": [
+                                        "Some Applications Of The d- And f-Block Elements",
+                                        "General Properties Of The d-Block Elements ( Physical Properties, Atomic And Ionic Size, Density )",
+                                        "Electronic Configuration Of The d-Block Elements"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "f2329e63-d585-4769-a1a1-bf86deacaf97",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Physical Properties of D Block Elements",
+                                            "uri": "https://content.allen.in/f2329e63-d585-4769-a1a1-bf86deacaf97/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*f2329e63-d585-4769-a1a1-bf86deacaf97*~hmac=c49ce25b360116eefea6bc4e78f96407f6c77b9f2306e3549189c60d738d2026"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Physical Properties of D Block Elements",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "f2329e63-d585-4769-a1a1-bf86deacaf97",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Physical Properties of D Block Elements",
+                                    "cta": null,
+                                    "description": "Explore the metallic properties, crystal structures, and trends in melting points and enthalpy of atomization for D block elements.",
+                                    "duration": "16:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 2,
+                                    "sub_topics": [
+                                        "General Properties Of The d-Block Elements ( Physical Properties, Atomic And Ionic Size, Density )"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "7c6daf18-b45f-4b0d-9a83-4181dd0c8566",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Atomic Size and Density Trends in D-Block Elements",
+                                            "uri": "https://content.allen.in/7c6daf18-b45f-4b0d-9a83-4181dd0c8566/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*7c6daf18-b45f-4b0d-9a83-4181dd0c8566*~hmac=c67fb2a83ada95cf18e09254f5e8cb5f8655c19a5a34ff187ea13d865476d543"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Atomic Size and Density Trends in D-Block Elements",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "7c6daf18-b45f-4b0d-9a83-4181dd0c8566",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Atomic Size and Density Trends in D-Block Elements",
+                                    "cta": null,
+                                    "description": "Explore how atomic size and density vary in d-block elements with factors affecting these trends.",
+                                    "duration": "17:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 3,
+                                    "sub_topics": [
+                                        "General Properties Of The d-Block Elements ( Physical Properties, Atomic And Ionic Size, Density )"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "a5e48a6f-eb2c-414d-a5d1-daec9d5d8587",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Ionisation Energies and Oxidation States of D-Block Elements",
+                                            "uri": "https://content.allen.in/a5e48a6f-eb2c-414d-a5d1-daec9d5d8587/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*a5e48a6f-eb2c-414d-a5d1-daec9d5d8587*~hmac=0b5b6f2fe116bbae487acaa4115cf7eedec0385d490f4b8cda7aaa1b1bd5391d"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Ionisation Energies and Oxidation States of D-Block Elements",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "a5e48a6f-eb2c-414d-a5d1-daec9d5d8587",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Ionisation Energies and Oxidation States of D-Block Elements",
+                                    "cta": null,
+                                    "description": "Explore key aspects of d-block elements including ionisation enthalpies and variable oxidation states, with a focus on trends and stability across periods and groups.",
+                                    "duration": "23:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 4,
+                                    "sub_topics": [
+                                        "Ionisation Enthapies",
+                                        "Variable Oxidation States; Comparison of Stability Of Oxidation States"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "3983cf27-13e1-4f65-b592-3da78b8eff43",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Electrode Potentials, Magnetism, and Colors of D-Block Elements",
+                                            "uri": "https://content.allen.in/3983cf27-13e1-4f65-b592-3da78b8eff43/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*3983cf27-13e1-4f65-b592-3da78b8eff43*~hmac=55b829ba6b7bda732407f4febee100f589d48897236e5a8995128ea089c8b4bc"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Electrode Potentials, Magnetism, and Colors of D-Block Elements",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "3983cf27-13e1-4f65-b592-3da78b8eff43",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Electrode Potentials, Magnetism, and Colors of D-Block Elements",
+                                    "cta": null,
+                                    "description": "Explore the trends in electrode potentials, magnetic behavior, and coloration of D-block elements, focusing on their stability and properties.",
+                                    "duration": "31:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 5,
+                                    "sub_topics": [
+                                        "Trends In Standard Electrode Potentials",
+                                        "Magnetic Properties",
+                                        "Colour Of Ions In Aq. Solution"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "4bd93648-5a43-40c4-be83-3355230d6e5c",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Properties of D-block Elements: Complexes, Catalysis, and Alloys",
+                                            "uri": "https://content.allen.in/4bd93648-5a43-40c4-be83-3355230d6e5c/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*4bd93648-5a43-40c4-be83-3355230d6e5c*~hmac=3d84d5003c66417ca2da2da96276fc6a5a38f225f3c41b745ea1645ced7158f6"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Properties of D-block Elements: Complexes, Catalysis, and Alloys",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "4bd93648-5a43-40c4-be83-3355230d6e5c",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Properties of D-block Elements: Complexes, Catalysis, and Alloys",
+                                    "cta": null,
+                                    "description": "Explore the distinctive characteristics of D-block elements, including their complex formation, catalytic properties, and the formation of interstitial compounds and alloys.",
+                                    "duration": "31:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 6,
+                                    "sub_topics": [
+                                        "Complex Formation; Catalytic Properties",
+                                        "Formation Of Interstitial Compounds",
+                                        "Alloys Formation"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "e98f5970-f12f-44f2-9a53-68e6ff3b15dc",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Preparation and Properties of Potassium Dichromate",
+                                            "uri": "https://content.allen.in/e98f5970-f12f-44f2-9a53-68e6ff3b15dc/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*e98f5970-f12f-44f2-9a53-68e6ff3b15dc*~hmac=1b834e85c855bb6d94b3935a3907df90b6914dad3c998c53ca7c1bc316e18c1d"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Preparation and Properties of Potassium Dichromate",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "e98f5970-f12f-44f2-9a53-68e6ff3b15dc",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Preparation and Properties of Potassium Dichromate",
+                                    "cta": null,
+                                    "description": "Explore the preparation, structure, and chemical properties of potassium dichromate, highlighting its role as a strong oxidizing agent.",
+                                    "duration": "23:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 7,
+                                    "sub_topics": [
+                                        "Some Important Compounds Of Transition Elements And Their (Physical And Chemical) Properties (K2CrO4, K2Cr2O7, KMnO4, K2MnO4)"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "e64163e1-9d89-493b-ad11-e9bfc27158f0",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "In-depth Exploration of Potassium Permanganate (KMnO4)",
+                                            "uri": "https://content.allen.in/e64163e1-9d89-493b-ad11-e9bfc27158f0/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*e64163e1-9d89-493b-ad11-e9bfc27158f0*~hmac=70adb2d5074659f5b154027474636f214ba79101129577986ba6e40ccf1fc3e4"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "In-depth Exploration of Potassium Permanganate (KMnO4)",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "e64163e1-9d89-493b-ad11-e9bfc27158f0",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "In-depth Exploration of Potassium Permanganate (KMnO4)",
+                                    "cta": null,
+                                    "description": "Learn the preparation methods, physical and chemical properties, and applications of potassium permanganate in detail.",
+                                    "duration": "19:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 8,
+                                    "sub_topics": [
+                                        "Some Important Compounds Of Transition Elements And Their (Physical And Chemical) Properties (K2CrO4, K2Cr2O7, KMnO4, K2MnO4)"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "9bf87c11-8c11-4b35-bd99-15cf70849642",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "F Block Elements: Characteristics and Applications",
+                                            "uri": "https://content.allen.in/9bf87c11-8c11-4b35-bd99-15cf70849642/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*9bf87c11-8c11-4b35-bd99-15cf70849642*~hmac=ec25c10782e40cf8c2d49d0a088ad8db71db3087c6f9abe3a816128b014dc4c0"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "F Block Elements: Characteristics and Applications",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "9bf87c11-8c11-4b35-bd99-15cf70849642",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "F Block Elements: Characteristics and Applications",
+                                    "cta": null,
+                                    "description": "Explore the F block elements, focusing on their general characteristics, including electronic configurations and applications in various fields.",
+                                    "duration": "12:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 9,
+                                    "sub_topics": [
+                                        "General Characteristics Of Lanthanoids; Chemical Reactions Of The Lanthanoids",
+                                        "Some Applications Of The d- And f-Block Elements"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "4bacdb85-63db-49bc-8965-7d9b3e282c22",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Lanthanoids: Electronic Configuration and Properties",
+                                            "uri": "https://content.allen.in/4bacdb85-63db-49bc-8965-7d9b3e282c22/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*4bacdb85-63db-49bc-8965-7d9b3e282c22*~hmac=a61a634e18d75a3cd9d9c1c6fc1467ad44ebb93bcb4870d434c2afad23e025ab"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Lanthanoids: Electronic Configuration and Properties",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "4bacdb85-63db-49bc-8965-7d9b3e282c22",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Lanthanoids: Electronic Configuration and Properties",
+                                    "cta": null,
+                                    "description": "Explore the characteristics and properties of lanthanoids, including electronic configurations, oxidation states, and lanthanoid contraction effects on size and reactivity.",
+                                    "duration": "16:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 10,
+                                    "sub_topics": [
+                                        "General Characteristics Of Lanthanoids; Chemical Reactions Of The Lanthanoids",
+                                        "The Lanthanoids (Electronic Configuration; Atomic And Ionic Sizes; Oxidation States)"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "f68fddba-afea-4e30-bd30-049a521614d7",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Lanthanides: Properties, Reactions, and Applications",
+                                            "uri": "https://content.allen.in/f68fddba-afea-4e30-bd30-049a521614d7/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*f68fddba-afea-4e30-bd30-049a521614d7*~hmac=92c0949dd59ee8e07c0d6bcb3dbb98060518a297b8ea9a7edb57a662990cc16a"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Lanthanides: Properties, Reactions, and Applications",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "f68fddba-afea-4e30-bd30-049a521614d7",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Lanthanides: Properties, Reactions, and Applications",
+                                    "cta": null,
+                                    "description": "Explore the properties and reactions of lanthanides, including metallic bonding, color, ionization enthalpy, magnetic properties, alloy formation, and their various applications.",
+                                    "duration": "16:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 11,
+                                    "sub_topics": [
+                                        "General Characteristics Of Lanthanoids; Chemical Reactions Of The Lanthanoids",
+                                        "Alloys Formation",
+                                        "Complex Formation; Catalytic Properties",
+                                        "Some Applications Of The d- And f-Block Elements"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "e0f42852-9e41-4f80-80cf-2d24f3e5944f",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Deep Dive into The Actinoids: Properties and Applications",
+                                            "uri": "https://content.allen.in/e0f42852-9e41-4f80-80cf-2d24f3e5944f/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*e0f42852-9e41-4f80-80cf-2d24f3e5944f*~hmac=97c291dfc6b451c127216f9ea0e333c7883d5329046b177d2fbb88d677005bb4"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Deep Dive into The Actinoids: Properties and Applications",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "e0f42852-9e41-4f80-80cf-2d24f3e5944f",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Deep Dive into The Actinoids: Properties and Applications",
+                                    "cta": null,
+                                    "description": "Understand the electronic configuration, properties, and applications of actinoids, while comparing with lanthanoids.",
+                                    "duration": "17:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 12,
+                                    "sub_topics": [
+                                        "The Actinoids (Electronic Configuration; Atomic And Ionic Sizes; Oxidation States)"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "17589c37-8572-4dd5-b76a-d9da07feb7f2",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "Understanding KMnO4, Oxidation States \u0026 Ion Colours",
+                                            "uri": "https://content.allen.in/17589c37-8572-4dd5-b76a-d9da07feb7f2/playlists/ALLEN/x264/master.m3u8?hdnts=exp=1780486430~acl=*17589c37-8572-4dd5-b76a-d9da07feb7f2*~hmac=d63c5b09c2518bbb9eaeefe694809fd2db9b4d740450d940322fca19d0a76cff"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Understanding KMnO4, Oxidation States \u0026 Ion Colours",
+                                                "card_type": "Concept Videos - Content",
+                                                "content_id": "17589c37-8572-4dd5-b76a-d9da07feb7f2",
+                                                "section_name": "Concept Videos",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "PLAY_VIDEO"
+                                    },
+                                    "content_title": "Understanding KMnO4, Oxidation States \u0026 Ion Colours",
+                                    "cta": null,
+                                    "description": "Explore in-depth analysis of KMnO4 reactions, stability of oxidation states, and the color properties of D-block elements.",
+                                    "duration": "25:00",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "https://thumbnail.allen.in/ae4f8e26-bcef-434a-b23a-087ceab9fb9e/original.webp"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "sequence": 13,
+                                    "sub_topics": [
+                                        "Some Important Compounds Of Transition Elements And Their (Physical And Chemical) Properties (K2CrO4, K2Cr2O7, KMnO4, K2MnO4)",
+                                        "Variable Oxidation States; Comparison of Stability Of Oxidation States",
+                                        "Colour Of Ions In Aq. Solution"
+                                    ],
+                                    "type": "RECORDED_VIDEOS_CONTENT_TYPE"
+                                }
+                            ],
+                            "title": "Concept Videos"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "background_color": {
+                                        "name": "background_secondary"
+                                    },
+                                    "corner_radius": 20,
+                                    "frame": {
+                                        "width": "MAX"
+                                    },
+                                    "padding": {
+                                        "top": 0
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_VIDEOS_WEB",
+                        "version": 6
+                    },
+                    "widget_meta": {
+                        "visibility_analytics": {
+                            "threshold": 100
+                        }
+                    }
+                },
+                {
+                    "id": 44381,
+                    "const_widget_id": "CM-b3kMs3-3Z3PnGKiNGX",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "CM-b3kMs3-3Z3PnGKiNGX"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "cards": [
+                                {
+                                    "card_action": {
+                                        "data": {
+                                            "content": {
+                                                "data": {
+                                                    "contents_list": [
+                                                        {
+                                                            "content_action": {
+                                                                "data": {
+                                                                    "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                                    "content_id": "72da680d-61cb-4811-a6d6-092e1ce55c19",
+                                                                    "file_name": "",
+                                                                    "nodeID": "1068",
+                                                                    "open_new_tab": "true",
+                                                                    "taxonomyID": "1739171216OJ",
+                                                                    "title": "Solutions RACE:- The f-Block Elements",
+                                                                    "uri": "https://lmm-bucket-private.allen-live.in/72da680d-61cb-4811-a6d6-092e1ce55c19/original.pdf?Expires=1780486430\u0026Signature=fpIKiubPFU11mzcYJTCqj~ZDoNz-NvtvIK75SjsCnQ~san3afgI-gFKwlv--sBAaWd7p0Gc1grrobTjueoQBP~YfB0VV-TypmtARK2M4Lbr8VrWN~QqfTWozg9WfUQnla2eshYtV6b7ycRofUynloRRw7TdgfMbH5VQqDH3ywo2UJpRYrS0IN0enFmxvUhsHUqfkBUzBuVO1Dgrfut67FfeBUKQoMUCDlfAZ4Q7SdmSy65GNYA0BsO2kMgZgkurvtrbQsgWBPuH9TPoWlBtIk4wtoWnbneu7z1V9sH~yW5wkMA0vWWdWljVt2~2dCFwNW3RMghMRBbAMeoSr1Ft7Dw__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                                                },
+                                                                "tracking_params": {
+                                                                    "current": {
+                                                                        "card_name": "Solutions RACE:- The f-Block Elements",
+                                                                        "card_type": "Additional Materials - RACE \u0026 Solutions - Content",
+                                                                        "content_id": "72da680d-61cb-4811-a6d6-092e1ce55c19",
+                                                                        "section_name": "Additional Materials-RACE \u0026 Solutions-BottomSheet",
+                                                                        "subject_id": "746",
+                                                                        "taxonomy_id": "1739171216OJ",
+                                                                        "topic_id": "1068"
+                                                                    },
+                                                                    "event_type": "card_clicked"
+                                                                },
+                                                                "type": "OPEN_PDF"
+                                                            },
+                                                            "content_title": "Solutions RACE:- The f-Block Elements",
+                                                            "cta": null,
+                                                            "description": "",
+                                                            "image_data": {
+                                                                "name": "",
+                                                                "url": "IC_BOOK_OPEN"
+                                                            },
+                                                            "is_locked": false,
+                                                            "new": "",
+                                                            "type": "RACE_CONTENT_TYPE"
+                                                        },
+                                                        {
+                                                            "content_action": {
+                                                                "data": {
+                                                                    "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                                    "content_id": "b96a7070-0d12-4cd9-9845-7e3604f2fbd8",
+                                                                    "file_name": "",
+                                                                    "nodeID": "1068",
+                                                                    "open_new_tab": "true",
+                                                                    "taxonomyID": "1739171216OJ",
+                                                                    "title": "Solutions RACE:- The d-Block Elements",
+                                                                    "uri": "https://lmm-bucket-private.allen-live.in/b96a7070-0d12-4cd9-9845-7e3604f2fbd8/original.pdf?Expires=1780486430\u0026Signature=kyJNzVbDDV3dv7m7Y0uQjwPKrF4Gko1dGGqk-Gnzl7zWJs9gCo9SGztRoZ~GfV-mPxsSBEKommLCg6Y6Po2g7iqmFKLz5ort2lh0jgJVzEc16SjeykkwEDr9W3iZWVBbnhYF0Hf~7HUFhIzhpUv2kDG5rCvNLsHqHGBe49QqhOQEIkheFCvvejIDMaE1QZQOKkAwyN8rhVsALpcmdLkOP7~1H9bZ9~u4YON1S92W7FkhmjATE2xirtDT5GZyWiy-ozEWyJaEJKDHADE2c09Eaz6u8jOhprCuHyhgsXFyxJv1qWbaTZBI24pPpcfUjmIb3OGWoIijP73vxxY5lz-1tg__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                                                },
+                                                                "tracking_params": {
+                                                                    "current": {
+                                                                        "card_name": "Solutions RACE:- The d-Block Elements",
+                                                                        "card_type": "Additional Materials - RACE \u0026 Solutions - Content",
+                                                                        "content_id": "b96a7070-0d12-4cd9-9845-7e3604f2fbd8",
+                                                                        "section_name": "Additional Materials-RACE \u0026 Solutions-BottomSheet",
+                                                                        "subject_id": "746",
+                                                                        "taxonomy_id": "1739171216OJ",
+                                                                        "topic_id": "1068"
+                                                                    },
+                                                                    "event_type": "card_clicked"
+                                                                },
+                                                                "type": "OPEN_PDF"
+                                                            },
+                                                            "content_title": "Solutions RACE:- The d-Block Elements",
+                                                            "cta": null,
+                                                            "description": "",
+                                                            "image_data": {
+                                                                "name": "",
+                                                                "url": "IC_BOOK_OPEN"
+                                                            },
+                                                            "is_locked": false,
+                                                            "new": "",
+                                                            "type": "RACE_CONTENT_TYPE"
+                                                        }
+                                                    ],
+                                                    "cta": null,
+                                                    "title": "RACE \u0026 Solutions"
+                                                },
+                                                "root": {
+                                                    "data": {
+                                                        "alignment": null,
+                                                        "children": [
+                                                            {
+                                                                "data": {
+                                                                    "value": "LIST"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "stack": "VERTICAL",
+                                                        "style": {
+                                                            "background_color": {
+                                                                "name": "background_secondary"
+                                                            },
+                                                            "corner_radius": 20,
+                                                            "frame": {
+                                                                "width": 470
+                                                            }
+                                                        },
+                                                        "style_type": "CONTAINER"
+                                                    },
+                                                    "template_type": "CONTAINER",
+                                                    "type": "CONTAINER"
+                                                },
+                                                "translation_key": "LIBRARY_MATERIAL_LIST_POPUP_WEB",
+                                                "version": 2
+                                            },
+                                            "is_retained": true,
+                                            "name": "POLYMORPHIC_BOTTOM_SHEET"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "RACE \u0026 Solutions",
+                                                "card_type": "Additional Materials - RACE \u0026 Solutions",
+                                                "section_name": "Additional Materials",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "SHOW_POPUP"
+                                    },
+                                    "card_title": "RACE \u0026 Solutions",
+                                    "cta": null,
+                                    "imageData": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "new": "",
+                                    "subtitle": "2 PDFs"
+                                },
+                                {
+                                    "card_action": {
+                                        "data": {
+                                            "content": {
+                                                "data": {
+                                                    "contents_list": [
+                                                        {
+                                                            "content_action": {
+                                                                "data": {
+                                                                    "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                                    "content_id": "e9275355-4a98-4693-84e7-e5dc042415f7",
+                                                                    "file_name": "",
+                                                                    "nodeID": "1068",
+                                                                    "open_new_tab": "true",
+                                                                    "taxonomyID": "1739171216OJ",
+                                                                    "title": "RPP_The D And F Block Elements Question",
+                                                                    "uri": "https://lmm-bucket-private.allen-live.in/e9275355-4a98-4693-84e7-e5dc042415f7/original.pdf?Expires=1780486430\u0026Signature=gwzzJl6QGSoR5HSxpenVliAh~QgWMgJBExIRCht4RQDyJi9N4HAnjviUnF-bVqmi3MGDCC6Z~m5IEHptJ567V5qUyq3MX9d9kAIRjgY7iZx-Ww10-XODkUSVvXWroLPhoQRIymQrbMLKGijbbX~J~tlwPwetbcITlPC1w7Z01ktILjlsrEZXxgj77M81EUID1KDs4wT2V1IazIjjqhyyrz2WmCLJlAwTHGpoqkVwX7RRUJoiAySga2nTQi15aDR7l4p-ahVU6KLSUo3yGsaPrJx4tiV6zNnBWk4Z17co-xz8PfQTfSFZSvrH9-VjHqnJYoAdhb8mOr~KsJQ0d0yKZw__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                                                },
+                                                                "tracking_params": {
+                                                                    "current": {
+                                                                        "card_name": "RPP_The D And F Block Elements Question",
+                                                                        "card_type": "Additional Materials - Exercises \u0026 Solutions - Content",
+                                                                        "content_id": "e9275355-4a98-4693-84e7-e5dc042415f7",
+                                                                        "section_name": "Additional Materials-Exercises \u0026 Solutions-BottomSheet",
+                                                                        "subject_id": "746",
+                                                                        "taxonomy_id": "1739171216OJ",
+                                                                        "topic_id": "1068"
+                                                                    },
+                                                                    "event_type": "card_clicked"
+                                                                },
+                                                                "type": "OPEN_PDF"
+                                                            },
+                                                            "content_title": "RPP_The D And F Block Elements Question",
+                                                            "cta": null,
+                                                            "description": "",
+                                                            "image_data": {
+                                                                "name": "",
+                                                                "url": "IC_BOOK_OPEN"
+                                                            },
+                                                            "is_locked": false,
+                                                            "new": "",
+                                                            "type": "EXERCISE_CONTENT_TYPE"
+                                                        },
+                                                        {
+                                                            "content_action": {
+                                                                "data": {
+                                                                    "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                                    "content_id": "16998d2a-d66b-4c9e-af05-efdac4bbc336",
+                                                                    "file_name": "",
+                                                                    "nodeID": "1068",
+                                                                    "open_new_tab": "true",
+                                                                    "taxonomyID": "1739171216OJ",
+                                                                    "title": "RPP_The D And F Block Elements Solution",
+                                                                    "uri": "https://lmm-bucket-private.allen-live.in/16998d2a-d66b-4c9e-af05-efdac4bbc336/original.pdf?Expires=1780486430\u0026Signature=SfFgxppvaepehxtD~PJgbxb8LU4bYB2jMWVeP7nqZeN5Uy7jnPf5ClZ-c75tZzhCJWNiQ5hogXSaDehqqiumF75Z4~iRVY2r4DjotsMgJr~6mOvZL3Vgopxpphc0C1WCGgX~NmQtzTRkBGgMleNfCXFvuauPNPcjDiVnbuIXk8AxZv7-KAB2ju45PVIEgVXqXHO5MbdxJHzQyf2Pb3oAwZhJAqo6J~nVOlIJcc6VwgQBHHaEZqL1W0PEC2NCFE06v2eP9yPd1o23oKXegNBSAp0WRnJ7Ffmm4IX08B9bjzMVpRJ3BYruTLHinpysT~8Sld9~DSBHDST2AlfmbwxfHw__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                                                },
+                                                                "tracking_params": {
+                                                                    "current": {
+                                                                        "card_name": "RPP_The D And F Block Elements Solution",
+                                                                        "card_type": "Additional Materials - Exercises \u0026 Solutions - Content",
+                                                                        "content_id": "16998d2a-d66b-4c9e-af05-efdac4bbc336",
+                                                                        "section_name": "Additional Materials-Exercises \u0026 Solutions-BottomSheet",
+                                                                        "subject_id": "746",
+                                                                        "taxonomy_id": "1739171216OJ",
+                                                                        "topic_id": "1068"
+                                                                    },
+                                                                    "event_type": "card_clicked"
+                                                                },
+                                                                "type": "OPEN_PDF"
+                                                            },
+                                                            "content_title": "RPP_The D And F Block Elements Solution",
+                                                            "cta": null,
+                                                            "description": "",
+                                                            "image_data": {
+                                                                "name": "",
+                                                                "url": "IC_BOOK_OPEN"
+                                                            },
+                                                            "is_locked": false,
+                                                            "new": "",
+                                                            "type": "EXERCISE_CONTENT_TYPE"
+                                                        },
+                                                        {
+                                                            "content_action": {
+                                                                "data": {
+                                                                    "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                                    "content_id": "71f64825-4841-4eb4-b72b-6a978d92f557",
+                                                                    "file_name": "",
+                                                                    "nodeID": "1068",
+                                                                    "open_new_tab": "true",
+                                                                    "taxonomyID": "1739171216OJ",
+                                                                    "title": "Solutions Exercise:- The d-Block Elements",
+                                                                    "uri": "https://lmm-bucket-private.allen-live.in/71f64825-4841-4eb4-b72b-6a978d92f557/original.pdf?Expires=1780486430\u0026Signature=W3tqQfcn6b21fzyuvnGQcG7mxac94tCHJpwWSSjmLE2j8QGKpoWxc~arCYBZSSrb~rMegmUC7O3gtjy~5GT4Z7s1DgYmdVhtH0MM-tOQvgvQvLuMWbYs4Q-nrcHpAhpZ9wZ7bHycS8eje1QslKsVU38nw~jd7RerWmFnTz-omzVHLYrvJf82McIrEspzczGp8C0bngs1fEIrTZtu7UxvJWZL4AjFG2WNVsD4SEv98S0kIVMk1PvJXEeRhomzimMo7CtkScjtGM5Oubn5twuxshU594-687cl6u6E-sgMeje0aWeK-BlaT0VN6BSBDO9YAHd-KecJWiJCa3M~BAoHsg__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                                                },
+                                                                "tracking_params": {
+                                                                    "current": {
+                                                                        "card_name": "Solutions Exercise:- The d-Block Elements",
+                                                                        "card_type": "Additional Materials - Exercises \u0026 Solutions - Content",
+                                                                        "content_id": "71f64825-4841-4eb4-b72b-6a978d92f557",
+                                                                        "section_name": "Additional Materials-Exercises \u0026 Solutions-BottomSheet",
+                                                                        "subject_id": "746",
+                                                                        "taxonomy_id": "1739171216OJ",
+                                                                        "topic_id": "1068"
+                                                                    },
+                                                                    "event_type": "card_clicked"
+                                                                },
+                                                                "type": "OPEN_PDF"
+                                                            },
+                                                            "content_title": "Solutions Exercise:- The d-Block Elements",
+                                                            "cta": null,
+                                                            "description": "",
+                                                            "image_data": {
+                                                                "name": "",
+                                                                "url": "IC_BOOK_OPEN"
+                                                            },
+                                                            "is_locked": false,
+                                                            "new": "",
+                                                            "type": "EXERCISE_CONTENT_TYPE"
+                                                        },
+                                                        {
+                                                            "content_action": {
+                                                                "data": {
+                                                                    "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                                    "content_id": "4453b0b0-e643-40a4-af98-2898379b14dd",
+                                                                    "file_name": "",
+                                                                    "nodeID": "1068",
+                                                                    "open_new_tab": "true",
+                                                                    "taxonomyID": "1739171216OJ",
+                                                                    "title": "Exercise:- The d-Block Elements",
+                                                                    "uri": "https://lmm-bucket-private.allen-live.in/4453b0b0-e643-40a4-af98-2898379b14dd/original.pdf?Expires=1780486430\u0026Signature=BwfOl~~oEtIy8p3mWBw8wdlRqYNTL9K6ay4x~x4TFbDxq6I2iGxYkUoud0HM8tFTkB9o4DGp7g02BgWsjDPaRtdVlodt6LBO5daRUiYzhZg8UpcXrpJ2n62jzcMR6aVsFlQakkxZq1OGIvhPlotgIyHV4PAqLLXnv6MMc3NyhAcGsrMHjnJSjtPAyAzlizLS3-DFxCCpfStnsh9kWIecpciIaJ7L5QIv6t~I9ohEeZDhB-pn2us5P70EurVySFYcMrbl3d-uwhRI6U4aDBFOsAWCAYHgOgtEoR46rqqf1UTGoGzUTmpUCe1ZkoZMW6~88VhZRAkhwYTou8gcKYK4Nw__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                                                },
+                                                                "tracking_params": {
+                                                                    "current": {
+                                                                        "card_name": "Exercise:- The d-Block Elements",
+                                                                        "card_type": "Additional Materials - Exercises \u0026 Solutions - Content",
+                                                                        "content_id": "4453b0b0-e643-40a4-af98-2898379b14dd",
+                                                                        "section_name": "Additional Materials-Exercises \u0026 Solutions-BottomSheet",
+                                                                        "subject_id": "746",
+                                                                        "taxonomy_id": "1739171216OJ",
+                                                                        "topic_id": "1068"
+                                                                    },
+                                                                    "event_type": "card_clicked"
+                                                                },
+                                                                "type": "OPEN_PDF"
+                                                            },
+                                                            "content_title": "Exercise:- The d-Block Elements",
+                                                            "cta": null,
+                                                            "description": "",
+                                                            "image_data": {
+                                                                "name": "",
+                                                                "url": "IC_BOOK_OPEN"
+                                                            },
+                                                            "is_locked": false,
+                                                            "new": "",
+                                                            "type": "EXERCISE_CONTENT_TYPE"
+                                                        }
+                                                    ],
+                                                    "cta": null,
+                                                    "title": "Exercises \u0026 Solutions"
+                                                },
+                                                "root": {
+                                                    "data": {
+                                                        "alignment": null,
+                                                        "children": [
+                                                            {
+                                                                "data": {
+                                                                    "value": "LIST"
+                                                                }
+                                                            }
+                                                        ],
+                                                        "stack": "VERTICAL",
+                                                        "style": {
+                                                            "background_color": {
+                                                                "name": "background_secondary"
+                                                            },
+                                                            "corner_radius": 20,
+                                                            "frame": {
+                                                                "width": 470
+                                                            }
+                                                        },
+                                                        "style_type": "CONTAINER"
+                                                    },
+                                                    "template_type": "CONTAINER",
+                                                    "type": "CONTAINER"
+                                                },
+                                                "translation_key": "LIBRARY_MATERIAL_LIST_POPUP_WEB",
+                                                "version": 2
+                                            },
+                                            "is_retained": true,
+                                            "name": "POLYMORPHIC_BOTTOM_SHEET"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "Exercises \u0026 Solutions",
+                                                "card_type": "Additional Materials - Exercises \u0026 Solutions",
+                                                "section_name": "Additional Materials",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "SHOW_POPUP"
+                                    },
+                                    "card_title": "Exercises \u0026 Solutions",
+                                    "cta": null,
+                                    "imageData": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "new": "",
+                                    "subtitle": "4 PDFs"
+                                }
+                            ],
+                            "title": "Additional Materials"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "background_color": {
+                                        "name": "background_secondary"
+                                    },
+                                    "corner_radius": 20,
+                                    "frame": {
+                                        "width": "MAX"
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_ADDITIONAL_MATERIAL_WEB",
+                        "version": 3
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 44382,
+                    "const_widget_id": "ozoiC5YD3PWOnXR3OHyoj",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "ozoiC5YD3PWOnXR3OHyoj"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "contents_list": [
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "bcc2b2c4-df7e-4c35-8315-bcb90b7e42bf",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d \u0026 f Block elements-01",
+                                            "uri": "https://lmm-bucket-private.allen-live.in/bcc2b2c4-df7e-4c35-8315-bcb90b7e42bf/original.pdf?Expires=1780486430\u0026Signature=SST0HvOTbkUNUuYTreGDlWfLGfhWzS~5oiOwmd4Z~os6nA~IuMq17yw1eujwYCIzlXsAeIjSejZ56v9hXjtuYcaHr9SqRNYCVTe4pjODhR22UVHusLEDTNHsxQqtz9nnG0ihT-8~I35CYwxG2h5Dg80kMhWwDj8YhonVPy8LOglFiJUoVNqpGBXMxX1pcwYusU~FjHv-37i~EG7YBAzIudmWqESjktUbbhgZBige0GwAwNLoDTMQxCzQirPFko9NwidIB2oAyOl7k3a9AKvwawCQ-~E~3SmGDY5hVWnWCOZoHFtCkFPLljaGVw5G-9DF4svpUVVaLvDIFqr5R~-YrA__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d \u0026 f Block elements-01",
+                                                "card_type": "Class Notes - Content",
+                                                "content_id": "bcc2b2c4-df7e-4c35-8315-bcb90b7e42bf",
+                                                "section_name": "Class Notes",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "OPEN_PDF"
+                                    },
+                                    "content_title": "d \u0026 f Block elements-01",
+                                    "cta": null,
+                                    "description": "",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "type": "CLASS_NOTE_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "a2405217-1520-4aa2-9c20-46bf92681492",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d and f Block Elements 02-01",
+                                            "uri": "https://lmm-bucket-private.allen-live.in/a2405217-1520-4aa2-9c20-46bf92681492/original.pdf?Expires=1780486430\u0026Signature=biIDUotD8qPzWRNep1g2HbfLUKYGe1YAH00JGeY7lCf7OA~SAy5ww-Ef54S04h-KdIAHJ9BIxK7BN4DZo-Yjhd08NPGxRxH6nij7IHOCzkIiqd3d~cgrqHCPwijE3UQT3yhl~YerRPp6uieTd-YpCBqdR8ot~3BYu81qBCkG6WdCRebRRAE7376wMvq6KB~j1WQR0LEcNzn2-34EfSI2cY3xcAEVFaaJ1W5-ei~hJbl0nQI9z-79OL7driNGyM4JoiFLYQKoizwK6wPFyBVZ7zLdshh25PpnKbWHiq66RzZQXhx0I6zvqM~WhMYqJzgNQcwbwpXTixfhbRuZSsBGlQ__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d and f Block Elements 02-01",
+                                                "card_type": "Class Notes - Content",
+                                                "content_id": "a2405217-1520-4aa2-9c20-46bf92681492",
+                                                "section_name": "Class Notes",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "OPEN_PDF"
+                                    },
+                                    "content_title": "d and f Block Elements 02-01",
+                                    "cta": null,
+                                    "description": "",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "type": "CLASS_NOTE_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "b23cfce3-176b-47a7-9457-f56968e87012",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d \u0026 f Block elements 01-01",
+                                            "uri": "https://lmm-bucket-private.allen-live.in/b23cfce3-176b-47a7-9457-f56968e87012/original.pdf?Expires=1780486430\u0026Signature=fmBkbwuHKYk6aJKQYLROdQmX1NzfxDPjwx69pxBWAkROfUJrlhEfrJ~OGwRt1HnPv3xVl5-Meyl12UkHcZXggXoB6jBVRb7OdhnDY8tI2U-b-TrwEPSDz~rl2jj48CqSWJkTw43IKsSIg-FXot1uQt0SC8N0UcCxOWLgXC3ngko9wyU6cdXBKdyNkdxH3hq88~D811GsJOYMllLYIFw6U1kKR0PvjzsQHjnK1P~Sa-RC5sUy8WxVLRZRe55ywtYyXSDz90CYlngW50WFOz-qrgaQ6q4eKinoNb9~X2HBxMF9Ip4ksa8B1bKEaHseY26-wZ1o1HEPAJiQrMx~qXqRNQ__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d \u0026 f Block elements 01-01",
+                                                "card_type": "Class Notes - Content",
+                                                "content_id": "b23cfce3-176b-47a7-9457-f56968e87012",
+                                                "section_name": "Class Notes",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "OPEN_PDF"
+                                    },
+                                    "content_title": "d \u0026 f Block elements 01-01",
+                                    "cta": null,
+                                    "description": "",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "type": "CLASS_NOTE_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "198760d8-4829-4228-a9c8-066bd5e74a33",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d \u0026 f Block elements 01-02",
+                                            "uri": "https://lmm-bucket-private.allen-live.in/198760d8-4829-4228-a9c8-066bd5e74a33/original.pdf?Expires=1780486430\u0026Signature=MM5jGKqg8v9Kibi~NjUhFB36gbs4kwmuWJpmT8CmfTbL0Glgj65bhR1eW648~ni3CFDTiJVWImaTFKRhEZO~jXdKPk-22C~tVCjv7FoYTVoGjPzXz0wZ4RvKvreELuPGHJBUAg7EqU5F~4S~74BRD9LPj3jcJosk39Z6DgyFKhAeOudTEtYqKfnjwgtF5z12fWompZO~Ov8dWW2oFLKnMKN5mMUaqY77N7H7~b55ikRndxm9mDdnegwmAyqJ0aJlx8cNGygE2Lx1jvK9~1DzjhwhD5rmRN5NVzlMt7k3WZAvRwqCxA7T-Tju9Gep2m6Ckcq4-MlgbNwAej5q7PMfXg__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d \u0026 f Block elements 01-02",
+                                                "card_type": "Class Notes - Content",
+                                                "content_id": "198760d8-4829-4228-a9c8-066bd5e74a33",
+                                                "section_name": "Class Notes",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "OPEN_PDF"
+                                    },
+                                    "content_title": "d \u0026 f Block elements 01-02",
+                                    "cta": null,
+                                    "description": "",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "type": "CLASS_NOTE_CONTENT_TYPE"
+                                },
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "c4ed00ab-9292-4ad0-b4c3-18163b138e35",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "d \u0026 f Block elements 01-03",
+                                            "uri": "https://lmm-bucket-private.allen-live.in/c4ed00ab-9292-4ad0-b4c3-18163b138e35/original.pdf?Expires=1780486430\u0026Signature=iUozSADiF6gwFMivHKEnKjcv~vW~dmiN9Mh2otgv3wOouMNtUy5Q13eCgnWeAJ92RL173pm2nSoawmd5ZMbmQHcoyxPt9IrUCnl~U1~RFitUU7qQYNfHC7ZZW8lAKtkvzqDHdlJQ3M0Q0sjPt8~NPZHXeu-lyU5yYHNYPPB6LYY-J~fRSerJmYb6nAJaWKVxcaFigJu22P6ubxloZne6GO4ecv5Wku~XWgEK00GEahm1gOxlx~cwoPVALRvSyoOZdjsB18q6St7-MOVKhg3IEuNmke6sT058~Qro4a~MWcP5U3OaLgMW30y4T2Hy~FS3YOxlTjrWnIKv0SVAehnSPA__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "d \u0026 f Block elements 01-03",
+                                                "card_type": "Class Notes - Content",
+                                                "content_id": "c4ed00ab-9292-4ad0-b4c3-18163b138e35",
+                                                "section_name": "Class Notes",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "OPEN_PDF"
+                                    },
+                                    "content_title": "d \u0026 f Block elements 01-03",
+                                    "cta": null,
+                                    "description": "",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "type": "CLASS_NOTE_CONTENT_TYPE"
+                                }
+                            ],
+                            "title": "Class Notes"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "background_color": {
+                                        "name": "background_secondary"
+                                    },
+                                    "corner_radius": 20,
+                                    "frame": {
+                                        "width": "MAX"
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_STUDY_MODULES_WEB",
+                        "version": 3
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 44389,
+                    "const_widget_id": "Usx0CBS1K2zHPtSYmPyMJ",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "Usx0CBS1K2zHPtSYmPyMJ"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "card": {
+                                "cta": {
+                                    "action": {
+                                        "data": {
+                                            "loader_config": {
+                                                "timeout_in_ms": 5000
+                                            },
+                                            "query": {
+                                                "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                                "node_id": "1068",
+                                                "taxonomy_id": "1739171216OJ"
+                                            },
+                                            "state": "REFRESHABLE",
+                                            "type": "webview",
+                                            "uri": "/content-platform/flash-cards"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "button_name": "Start Flashcards",
+                                                "current_screen_section": "Flashcards",
+                                                "no_of_cards": "108",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "button_clicked"
+                                        },
+                                        "type": "NAVIGATION"
+                                    },
+                                    "fullWidth": false,
+                                    "image_data": {
+                                        "url": ""
+                                    },
+                                    "label": "Start Flashcards"
+                                },
+                                "number_of_topics_remaining": "",
+                                "progress": 0,
+                                "subtitle": "",
+                                "title": ""
+                            },
+                            "image_data": {
+                                "name": "",
+                                "url": "https://res.cloudinary.com/dpzpn3dkw/image/upload/w_400,f_auto,q_auto/v1732867757/dvs150fwueqnzxywp1n9.svg?_upload_ref=ic_img_tool"
+                            },
+                            "sub_title": "6 Decks of cards",
+                            "title": "Flashcards"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "frame": {
+                                        "width": "MAX"
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_FLASHCARDS_CONTAINER_B1_WEB",
+                        "version": 0
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 107909,
+                    "const_widget_id": "bLF1YJItS4hHeBv8zpvuN",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "bLF1YJItS4hHeBv8zpvuN"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "contents_list": [
+                                {
+                                    "content_action": {
+                                        "data": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "content_id": "fc4b6b53-dccf-42c0-ad42-0019f0d30348",
+                                            "file_name": "",
+                                            "nodeID": "1068",
+                                            "open_new_tab": "true",
+                                            "taxonomyID": "1739171216OJ",
+                                            "title": "The d-Block Elements",
+                                            "uri": "https://lmm-bucket-private.allen-live.in/fc4b6b53-dccf-42c0-ad42-0019f0d30348/original.pdf?Expires=1780486430\u0026Signature=Yss-xB9PApUHzYHd8q9-VF1g-h7n2FVch7n0tNZk-s0E4~bNpPCWBPHXpLWAQvfvK-SQh3sn8WokIbjlRuOZCpoqxWi9K6ZjrdH2eTkJMLjV9ktuRUGTV6tM9yplU3oOiOMB38vLupaMpfZh2agbGjxm13Ila0a0jLDyyvVuwZwtLkryLKMLw~PvS7n09Ytv8oY-ephVgLiSmyPRO4en6cMI7y-RVNVnTLw2oSZrX4d0Y4qT5bpnKbeeRsaXbNvProNQTdW8XyyL0BocFQvNpnlF-8yGyGmLsUoD~1w2rwS3lC0CnCO8HhFan3BPGVbtOtjjrRGbyeQA0RFDgb3tng__\u0026Key-Pair-Id=K2YTV1M70NHTFY"
+                                        },
+                                        "tracking_params": {
+                                            "current": {
+                                                "card_name": "The d-Block Elements",
+                                                "card_type": "Study Modules - Content",
+                                                "content_id": "fc4b6b53-dccf-42c0-ad42-0019f0d30348",
+                                                "section_name": "Study Modules",
+                                                "subject_id": "746",
+                                                "taxonomy_id": "1739171216OJ",
+                                                "topic_id": "1068"
+                                            },
+                                            "event_type": "card_clicked"
+                                        },
+                                        "type": "OPEN_PDF"
+                                    },
+                                    "content_title": "The d-Block Elements",
+                                    "cta": null,
+                                    "description": "",
+                                    "image_data": {
+                                        "name": "",
+                                        "url": "IC_BOOK_OPEN"
+                                    },
+                                    "is_locked": false,
+                                    "new": "",
+                                    "type": "STUDY_MODULE_CONTENT_TYPE"
+                                }
+                            ],
+                            "title": "Study Modules"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "background_color": {
+                                        "name": "background_secondary"
+                                    },
+                                    "corner_radius": 20,
+                                    "frame": {
+                                        "width": "MAX"
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_STUDY_MODULES_WEB",
+                        "version": 3
+                    },
+                    "widget_meta": {
+                        "visibility_analytics": {
+                            "threshold": 100
+                        }
+                    }
+                },
+                {
+                    "id": 44747,
+                    "const_widget_id": "-s8w5lhAckiewxHbfhbCZ",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "-s8w5lhAckiewxHbfhbCZ"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "data": {
+                            "cta": {
+                                "action": {
+                                    "data": {
+                                        "loader_config": {
+                                            "timeout_in_ms": 5000
+                                        },
+                                        "query": {
+                                            "batch_id": "bt_ORA8IvlO0uJrgUzCpqDD2",
+                                            "node_id": "1068",
+                                            "taxonomy_id": "1739171216OJ"
+                                        },
+                                        "state": "REFRESHABLE",
+                                        "type": "webview",
+                                        "uri": "/content-platform/revision-notes"
+                                    },
+                                    "tracking_params": {
+                                        "current": {
+                                            "button_name": "Open Revision Notes",
+                                            "current_screen_section": "Revision Notes",
+                                            "taxonomy_id": "1739171216OJ",
+                                            "topic_id": "1068"
+                                        },
+                                        "event_type": "button_clicked"
+                                    },
+                                    "type": "NAVIGATION"
+                                },
+                                "fullWidth": false,
+                                "icon_uri": "RIGHT_ARROW",
+                                "image_data": {
+                                    "url": ""
+                                },
+                                "label": "Open Revision Notes"
+                            },
+                            "image_data": {
+                                "name": "",
+                                "url": "https://res.cloudinary.com/dpzpn3dkw/image/upload/w_400,f_auto,q_auto/v1736763688/hgmiflgm0jjfsehjh0eh.svg?_upload_ref=ic_img_tool\u0026__ar__=1.05"
+                            },
+                            "sub_title": "73 min read",
+                            "title": "Revision Notes"
+                        },
+                        "root": {
+                            "data": {
+                                "alignment": null,
+                                "children": [
+                                    {
+                                        "data": {
+                                            "value": "LIST"
+                                        }
+                                    }
+                                ],
+                                "stack": "VERTICAL",
+                                "style": {
+                                    "background_color": {
+                                        "hex_code": "",
+                                        "name": "background_secondary"
+                                    },
+                                    "corner_radius": 20,
+                                    "frame": {
+                                        "width": "MAX"
+                                    }
+                                },
+                                "style_type": "CONTAINER"
+                            },
+                            "template_type": "CONTAINER",
+                            "type": "CONTAINER"
+                        },
+                        "translation_folder": "",
+                        "translation_key": "LIBRARY_REVISION_NOTES_WEB",
+                        "version": 5
+                    },
+                    "widget_meta": null
+                },
+                {
+                    "id": 30877,
+                    "const_widget_id": "K4Egfg7c9lu37tfkwUIFz",
+                    "type": "POLYMORPHIC_WIDGET",
+                    "tracking_params": {
+                        "impression": {
+                            "const_widget_id": "K4Egfg7c9lu37tfkwUIFz"
+                        }
+                    },
+                    "layout_params": null,
+                    "data": {
+                        "widget": {
+                            "data": {
+                                "alignment": "TOP",
+                                "children": [],
+                                "stack": "HORIZONTAL",
+                                "style": {
+                                    "background_color": {
+                                        "name": "background_primary"
+                                    },
+                                    "frame": {
+                                        "width": "MAX"
+                                    },
+                                    "margin": {
+                                        "top": 40
+                                    }
+                                }
+                            },
+                            "type": "CONTAINER"
+                        }
+                    },
+                    "widget_meta": null
+                }
+            ],
+            "footer_widgets": [],
+            "floating_widgets": []
+        },
+        "has_nudge": false,
+        "ttl": 0
+    }
+}
