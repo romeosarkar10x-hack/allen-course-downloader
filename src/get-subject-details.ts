@@ -4,8 +4,28 @@ import { PRL } from "@/lib/prl";
 import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { SubjectDetailsResponseSchema } from "./schemas/subject-details";
+import type { ChapterContentNodeType, ContentNodeType } from "./types/node-types";
+import { getChapterDetails } from "./get-chapter-details";
 
-export function getSubjectDetails({ id }: { id: string }) {
+export function getSubjectDetails({ id, name }: { id: string; name: string }) {
+    async function appendChapterDetailsRecursively(content: ChapterContentNodeType): Promise<ContentNodeType> {
+        if ("$" in content) {
+            return { name: content.name, $: await Promise.all(content.$.map(appendChapterDetailsRecursively)) };
+        }
+
+        if ("$chapter" in content) {
+            const result = await getChapterDetails({ subjectID: content.subjectID, id: content.id, name });
+
+            if (result.isErr()) {
+                throw result.error;
+            }
+
+            return result.value;
+        }
+
+        return content;
+    }
+
     return EnvResultAsync.andThen(env => {
         const url = "https://api.allen-live.in/api/v1/pages/getPage";
 
@@ -32,6 +52,11 @@ export function getSubjectDetails({ id }: { id: string }) {
 
         return fromPromise(PRL.schedule(task), error => error as Error)
             .andThen(parseResponseJSON)
-            .andThen(zodParseAsync(SubjectDetailsResponseSchema));
+            .andThen(zodParseAsync(SubjectDetailsResponseSchema))
+            .andThen(subjectDetails => {
+                return fromPromise(appendChapterDetailsRecursively({ $: subjectDetails, name }), error => {
+                    return error as Error;
+                });
+            });
     });
 }
