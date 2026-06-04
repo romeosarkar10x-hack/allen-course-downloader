@@ -5,7 +5,7 @@ import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { ChapterDetailsResponseSchema } from "./schemas/chapter-details";
 
-export function getChapterDetails({ subjectID, id }: { subjectID: string; id: string }) {
+export function getChapterDetails({ subjectID, id, name }: { subjectID: string; id: string; name: string }) {
     return EnvResultAsync.andThen(env => {
         const url = "https://api.allen-live.in/api/v1/pages/getPage";
 
@@ -33,6 +33,10 @@ export function getChapterDetails({ subjectID, id }: { subjectID: string; id: st
 
         return fromPromise(PRL.schedule(task), error => error as Error)
             .andThen(parseResponseJSON)
-            .andThen(zodParseAsync(ChapterDetailsResponseSchema));
+            .andThen(zodParseAsync(ChapterDetailsResponseSchema))
+            .map(details => ({
+                $: details,
+                name,
+            }));
     });
 }
