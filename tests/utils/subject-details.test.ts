@@ -7,10 +7,7 @@ import { SubjectDetailsResponseSchema } from "@/schemas/subject-details";
 // Fixture helpers
 // ---------------------------------------------------------------------------
 
-const fixtureRaw = readFileSync(
-    join(import.meta.dirname, "../fixtures/subject-details.json"),
-    "utf-8",
-);
+const fixtureRaw = readFileSync(join(import.meta.dirname, "../fixtures/subject-details.json"), "utf-8");
 const fixture = JSON.parse(fixtureRaw);
 
 /** Deep-clone the fixture so each test gets a fresh, mutable copy. */
@@ -22,12 +19,14 @@ function cloneFixture(): typeof fixture {
 // Minimal valid builder helpers — keeps individual tests concise
 // ---------------------------------------------------------------------------
 
-function makeChapter(overrides: {
-    topic_id?: string;
-    topic_name?: string;
-    subject_id?: string;
-    uri?: string;
-} = {}) {
+function makeChapter(
+    overrides: {
+        topic_id?: string;
+        topic_name?: string;
+        subject_id?: string;
+        uri?: string;
+    } = {},
+) {
     return {
         action: {
             data: {
@@ -121,8 +120,7 @@ describe("SubjectDetailsResponseSchema", () => {
             const result = SubjectDetailsResponseSchema.parse(fixture);
             const allItems = result.flatMap(e => (e as { $: unknown[] }).$);
             const chapters = allItems.filter(
-                (item): item is { $chapter: true } =>
-                    typeof item === "object" && item !== null && "$chapter" in item,
+                (item): item is { $chapter: true } => typeof item === "object" && item !== null && "$chapter" in item,
             );
             expect(chapters.length).toBeGreaterThan(0);
             expect(chapters.every(c => c.$chapter === true)).toBe(true);
@@ -258,18 +256,14 @@ describe("SubjectDetailsResponseSchema", () => {
         });
 
         test("POLYMORPHIC_WIDGET with chapters_list survives filter", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithChaptersList([makeChapter()]),
-            ]);
+            const input = makeMinimalResponse([makePolymorphicWithChaptersList([makeChapter()])]);
             const result = SubjectDetailsResponseSchema.parse(input);
             expect(result.length).toBe(1);
         });
 
         test("POLYMORPHIC_WIDGET with cards survives filter", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithCards([
-                    makeCard("Chemistry Handbook", "https://example.com/handbook.pdf"),
-                ]),
+                makePolymorphicWithCards([makeCard("Chemistry Handbook", "https://example.com/handbook.pdf")]),
             ]);
             const result = SubjectDetailsResponseSchema.parse(input);
             expect(result.length).toBe(1);
@@ -279,9 +273,7 @@ describe("SubjectDetailsResponseSchema", () => {
     // -----------------------------------------------------------------------
     describe("ChapterSchema — chapters_list transformation", () => {
         test("chapter entry maps topic_id → id", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithChaptersList([makeChapter({ topic_id: "999" })]),
-            ]);
+            const input = makeMinimalResponse([makePolymorphicWithChaptersList([makeChapter({ topic_id: "999" })])]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [chapter] = entry.$ as [{ id: string }];
             expect(chapter.id).toBe("999");
@@ -297,18 +289,14 @@ describe("SubjectDetailsResponseSchema", () => {
         });
 
         test("chapter entry maps subject_id → subjectID", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithChaptersList([makeChapter({ subject_id: "42" })]),
-            ]);
+            const input = makeMinimalResponse([makePolymorphicWithChaptersList([makeChapter({ subject_id: "42" })])]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [chapter] = entry.$ as [{ subjectID: string }];
             expect(chapter.subjectID).toBe("42");
         });
 
         test("chapter entry always has $chapter=true", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithChaptersList([makeChapter()]),
-            ]);
+            const input = makeMinimalResponse([makePolymorphicWithChaptersList([makeChapter()])]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [chapter] = entry.$ as [{ $chapter: boolean }];
             expect(chapter.$chapter).toBe(true);
@@ -368,9 +356,7 @@ describe("SubjectDetailsResponseSchema", () => {
     describe("CardSchema — plain card_action transformation", () => {
         test("maps card_action.data.title → name", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithCards([
-                    makeCard("Chemistry Handbook", "https://example.com/file.pdf"),
-                ]),
+                makePolymorphicWithCards([makeCard("Chemistry Handbook", "https://example.com/file.pdf")]),
             ]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [card] = entry.$ as [{ name: string }];
@@ -379,9 +365,7 @@ describe("SubjectDetailsResponseSchema", () => {
 
         test("maps card_action.data.uri → url", () => {
             const uri = "https://example.com/file.pdf";
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards([makeCard("Handbook", uri)]),
-            ]);
+            const input = makeMinimalResponse([makePolymorphicWithCards([makeCard("Handbook", uri)])]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [card] = entry.$ as [{ url: string }];
             expect(card.url).toBe(uri);
@@ -422,9 +406,7 @@ describe("SubjectDetailsResponseSchema", () => {
         test("maps card_action.tracking_params.current.card_name → name", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards([
-                    makeCardWithContent("Booklets", [
-                        { title: "Chapter 1 PDF", uri: "https://example.com/ch1.pdf" },
-                    ]),
+                    makeCardWithContent("Booklets", [{ title: "Chapter 1 PDF", uri: "https://example.com/ch1.pdf" }]),
                 ]),
             ]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
@@ -449,18 +431,14 @@ describe("SubjectDetailsResponseSchema", () => {
         });
 
         test("empty contents_list maps to empty $", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards([makeCardWithContent("Empty", [])]),
-            ]);
+            const input = makeMinimalResponse([makePolymorphicWithCards([makeCardWithContent("Empty", [])])]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [card] = entry.$ as [{ $: unknown[] }];
             expect(card.$).toEqual([]);
         });
 
         test("valid CardWithContent with proper urls always parses successfully", () => {
-            const good = makeCardWithContent("Booklets", [
-                { title: "Doc", uri: "https://example.com/doc.pdf" },
-            ]);
+            const good = makeCardWithContent("Booklets", [{ title: "Doc", uri: "https://example.com/doc.pdf" }]);
             const input = makeMinimalResponse([makePolymorphicWithCards([good])]);
             expect(SubjectDetailsResponseSchema.safeParse(input).success).toBe(true);
         });
@@ -477,8 +455,8 @@ describe("SubjectDetailsResponseSchema", () => {
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [card] = entry.$ as [{ name: string; $: Array<{ name: string }> }];
             expect(card.name).toBe("My Section");
-            expect(card.$[0].name).toBe("File A");
-            expect(card.$[1].name).toBe("File B");
+            expect(card.$[0]!.name).toBe("File A");
+            expect(card.$[1]!.name).toBe("File B");
         });
     });
 
@@ -509,11 +487,11 @@ describe("SubjectDetailsResponseSchema", () => {
             ]);
             const result = SubjectDetailsResponseSchema.parse(input) as Array<{ $: unknown[] }>;
             // First entry from chapters_list — items have $chapter
-            const firstItems = result[0].$ as Array<{ $chapter?: boolean }>;
-            expect(firstItems[0].$chapter).toBe(true);
+            const firstItems = result[0]!.$ as Array<{ $chapter?: boolean }>;
+            expect(firstItems[0]!.$chapter).toBe(true);
             // Second entry from cards — items have name/url
-            const secondItems = result[1].$ as Array<{ name: string }>;
-            expect(secondItems[0].name).toBe("Handbook");
+            const secondItems = result[1]!.$ as Array<{ name: string }>;
+            expect(secondItems[0]!.name).toBe("Handbook");
         });
 
         test("unknown POLYMORPHIC data is filtered; known ones remain", () => {
@@ -568,10 +546,8 @@ describe("SubjectDetailsResponseSchema", () => {
     // -----------------------------------------------------------------------
     describe("output shape invariants", () => {
         test("each result entry has exactly a $ property (after transform)", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithChaptersList([makeChapter()]),
-            ]);
-            const [entry] = SubjectDetailsResponseSchema.parse(input) as [Record<string, unknown>];
+            const input = makeMinimalResponse([makePolymorphicWithChaptersList([makeChapter()])]);
+            const [entry] = SubjectDetailsResponseSchema.parse(input) as unknown as [Record<string, unknown>];
             expect(Object.keys(entry)).toContain("$");
         });
 
@@ -596,9 +572,7 @@ describe("SubjectDetailsResponseSchema", () => {
         test("CardWithContent $ items have exactly name and $", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards([
-                    makeCardWithContent("Booklets", [
-                        { title: "Doc", uri: "https://example.com/doc.pdf" },
-                    ]),
+                    makeCardWithContent("Booklets", [{ title: "Doc", uri: "https://example.com/doc.pdf" }]),
                 ]),
             ]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
@@ -609,14 +583,12 @@ describe("SubjectDetailsResponseSchema", () => {
         test("CardContent sub-items have exactly name and url", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards([
-                    makeCardWithContent("Booklets", [
-                        { title: "Doc", uri: "https://example.com/doc.pdf" },
-                    ]),
+                    makeCardWithContent("Booklets", [{ title: "Doc", uri: "https://example.com/doc.pdf" }]),
                 ]),
             ]);
             const [entry] = SubjectDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
             const [card] = entry.$ as [{ $: Array<Record<string, unknown>> }];
-            expect(Object.keys(card.$[0]).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(card.$[0]!).sort()).toEqual(["name", "url"].sort());
         });
     });
 });
