@@ -1,3 +1,4 @@
+import type { ChapterContentNodeType, ChapterLeafNodeType } from "@/types/node-types";
 import z from "zod";
 
 const CardContentSchema = z
@@ -89,7 +90,13 @@ const ChapterSchema = z
                     current: { topic_name, subject_id },
                 },
             },
-        }) => ({ id: topic_id, name: topic_name, subjectID: subject_id, $chapter: true }),
+        }) =>
+            ({
+                id: topic_id,
+                name: topic_name,
+                subjectID: subject_id,
+                $chapter: true,
+            }) as ChapterLeafNodeType,
     );
 
 const AppGenericHeaderV2Schema = z.object({
@@ -129,7 +136,12 @@ const PageContentSchema = z.object({
             .filter(element => element.type === "POLYMORPHIC_WIDGET")
             .map(element => element.data.data)
             .filter(element => "cards" in element || "chapters_list" in element)
-            .map(element => ({ $: "cards" in element ? element.cards : element.chapters_list.chapters })),
+            .map(
+                element =>
+                    ({
+                        $: "cards" in element ? element.cards : element.chapters_list.chapters,
+                    }) as ChapterContentNodeType,
+            ),
     ),
 });
 
