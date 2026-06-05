@@ -6,6 +6,7 @@ import { zodParseAsync } from "./utils/zod-parse-async";
 import { SubjectDetailsResponseSchema } from "./schemas/subject-details";
 import type { ChapterContentNodeType, ContentNodeType } from "./types/node-types";
 import { getChapterDetails } from "./get-chapter-details";
+import { commonHeaders } from "./constants";
 
 export function getSubjectDetails({ id, name }: { id: string; name: string }) {
     async function appendChapterDetailsRecursively(content: ChapterContentNodeType): Promise<ContentNodeType> {
@@ -43,10 +44,12 @@ export function getSubjectDetails({ id, name }: { id: string; name: string }) {
 
         const task = () =>
             fetch(url, {
+                method: "POST",
                 body: JSON.stringify(payload),
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${env.BEARER_TOKEN}`,
+                    ...commonHeaders,
                 },
             });
 

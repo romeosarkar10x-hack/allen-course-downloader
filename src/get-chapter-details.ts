@@ -4,6 +4,7 @@ import { PRL } from "@/lib/prl";
 import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { ChapterDetailsResponseSchema } from "./schemas/chapter-details";
+import { commonHeaders } from "./constants";
 
 export function getChapterDetails({ subjectID, id, name }: { subjectID: string; id: string; name: string }) {
     return EnvResultAsync.andThen(env => {
@@ -24,10 +25,12 @@ export function getChapterDetails({ subjectID, id, name }: { subjectID: string; 
 
         const task = () =>
             fetch(url, {
+                method: "POST",
                 body: JSON.stringify(payload),
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${env.BEARER_TOKEN}`,
+                    ...commonHeaders,
                 },
             });
 
