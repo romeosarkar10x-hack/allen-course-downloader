@@ -16,7 +16,7 @@ export function getChapterDetails({ subjectID, id, name }: { subjectID: string; 
         searchParams.append("selected_course_id", env.SELECTED_COURSE_ID);
         searchParams.append("stream", env.STREAM);
         searchParams.append("subject_id", subjectID);
-        searchParams.append("taxonomy", env.TAXONOMY);
+        searchParams.append("taxonomy_id", env.TAXONOMY);
         searchParams.append("topic_id", id);
 
         const payload = {

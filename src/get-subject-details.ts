@@ -36,7 +36,7 @@ export function getSubjectDetails({ id, name }: { id: string; name: string }) {
         searchParams.append("selected_course_id", env.SELECTED_COURSE_ID);
         searchParams.append("stream", env.STREAM);
         searchParams.append("subject_id", id);
-        searchParams.append("taxonomy", env.TAXONOMY);
+        searchParams.append("taxonomy_id", env.TAXONOMY);
 
         const payload = {
             page_url: "/subject-details?" + searchParams.toString(),
