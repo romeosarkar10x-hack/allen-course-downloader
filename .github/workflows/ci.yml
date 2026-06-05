@@ -1,0 +1,26 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    check-formatting:
+        uses: ./.github/workflows/check-formatting.yml
+
+    lint:
+        needs: check-formatting
+        uses: ./.github/workflows/lint.yml
+
+    type-check:
+        needs: lint
+        uses: ./.github/workflows/type-check.yml
+
+    unit-test:
+        needs: type-check
+        uses: ./.github/workflows/unit_test.yml
+        secrets: inherit
+        permissions:
+            id-token: write
+            pages: write
