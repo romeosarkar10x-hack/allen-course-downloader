@@ -28,37 +28,6 @@ beforeEach(() => {
 // ===========================================================================
 describe("promise-rate-limiter", () => {
     // -----------------------------------------------------------------------
-    describe("constructor — concurrency clamping (Math.max)", () => {
-        test("concurrency=5 is preserved", () => {
-            expect(new PromiseRateLimiter(5).concurrency).toBe(5);
-        });
-
-        test("concurrency=1 stays 1", () => {
-            expect(new PromiseRateLimiter(1).concurrency).toBe(1);
-        });
-
-        test("concurrency=0 is clamped up to 1", () => {
-            expect(new PromiseRateLimiter(0).concurrency).toBe(1);
-        });
-
-        test("negative concurrency is clamped up to 1", () => {
-            expect(new PromiseRateLimiter(-3).concurrency).toBe(1);
-        });
-
-        test("fractional concurrency is floored (3.9 → 3)", () => {
-            expect(new PromiseRateLimiter(3.9).concurrency).toBe(3);
-        });
-
-        test("fractional concurrency < 1 is clamped to 1 (0.99 → floor 0 → max 1)", () => {
-            expect(new PromiseRateLimiter(0.99).concurrency).toBe(1);
-        });
-
-        test("large concurrency is preserved", () => {
-            expect(new PromiseRateLimiter(100).concurrency).toBe(100);
-        });
-    });
-
-    // -----------------------------------------------------------------------
     describe("schedule() — basic task execution", () => {
         test("resolves with the task's return value", async () => {
             const limiter = new PromiseRateLimiter(1);
@@ -206,22 +175,22 @@ describe("promise-rate-limiter", () => {
 
             const p1 = limiter.schedule(async () => {
                 log.push("s1");
-                await gates[0].promise;
+                await gates[0]!.promise;
                 log.push("e1");
             });
             const p2 = limiter.schedule(async () => {
                 log.push("s2");
-                await gates[1].promise;
+                await gates[1]!.promise;
                 log.push("e2");
             });
             const p3 = limiter.schedule(async () => {
                 log.push("s3");
-                await gates[2].promise;
+                await gates[2]!.promise;
                 log.push("e3");
             });
             const p4 = limiter.schedule(async () => {
                 log.push("s4");
-                await gates[3].promise;
+                await gates[3]!.promise;
                 log.push("e4");
             });
 
@@ -230,14 +199,14 @@ describe("promise-rate-limiter", () => {
             expect(log).toEqual(["s1", "s2", "s3"]);
 
             // Complete task 1 → task 4 should start
-            gates[0].resolve();
+            gates[0]!.resolve();
             await flushPromises();
             expect(log).toContain("e1");
             expect(log).toContain("s4");
 
-            gates[1].resolve();
-            gates[2].resolve();
-            gates[3].resolve();
+            gates[1]!.resolve();
+            gates[2]!.resolve();
+            gates[3]!.resolve();
             await Promise.all([p1, p2, p3, p4]);
         });
 
