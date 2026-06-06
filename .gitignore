@@ -3,6 +3,8 @@ dist/
 build/
 /coverage
 
+/.claude
+
 /tmp
 out/
 
