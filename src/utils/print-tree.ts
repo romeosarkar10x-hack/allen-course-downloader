@@ -23,7 +23,7 @@ export type PrintTreeSymbols = {
     nodeLabelArrow: string;
 };
 
-export function printTree(root: TreeNode, symbols?: Partial<PrintTreeSymbols>) {
+export function printTree(root: TreeNode<{ name: string }>, symbols?: Partial<PrintTreeSymbols>) {
     const INDENT_ANCESTOR_CONTINUATION_LINE = symbols?.indentAncestorContinuationLine ?? "│";
     const LAST_CHILD_CORNER_CONNECTOR = symbols?.lastChildCornerConnector ?? "└";
     const MID_CHILD_TEE_CONNECTOR = symbols?.midChildTeeConnector ?? "├";
@@ -36,13 +36,11 @@ export function printTree(root: TreeNode, symbols?: Partial<PrintTreeSymbols>) {
 
     let stringified = "";
 
-    (function printRecursive(node: TreeNode, level, root, arrayIsLastChild: boolean[]) {
+    (function printRecursive(node: TreeNode<{ name: string }>, level, root, arrayIsLastChild: boolean[]) {
         let prefix = "";
 
         for (let i = 0; i < level - 1; i++) {
-            prefix +=
-                (arrayIsLastChild[i] ? " " : INDENT_ANCESTOR_CONTINUATION_LINE) +
-                " ".repeat(tabWidth);
+            prefix += (arrayIsLastChild[i] ? " " : INDENT_ANCESTOR_CONTINUATION_LINE) + " ".repeat(tabWidth);
         }
 
         if (level != 0) {
