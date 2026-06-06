@@ -111,12 +111,17 @@ const PolymorphicWidgetSchema = z.object({
     type: z.literal("POLYMORPHIC_WIDGET"),
     data: z.object({
         data: z.union([
-            z.object({
-                chapters_list: z.object({
-                    chapters: z.array(ChapterSchema),
-                }),
-                title: z.string(),
-            }),
+            z
+                .object({
+                    chapters_list: z.object({
+                        chapters: z.array(ChapterSchema),
+                        title: z.string(),
+                    }),
+                })
+                .transform(({ chapters_list: { chapters, title } }) => ({
+                    chapters,
+                    title,
+                })),
             z.object({
                 cards: z.array(z.union([CardSchema, CardWithContentSchema])),
                 title: z.string(),
