@@ -35,7 +35,9 @@
         "vitest": "^4.1.7"
     },
     "dependencies": {
+        "@types/lodash": "^4.17.24",
         "dotenv": "^16.6.1",
+        "lodash": "^4.18.1",
         "neverthrow": "^8.2.0",
         "zod": "^4.4.3"
     }
