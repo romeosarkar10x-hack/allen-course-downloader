@@ -59,29 +59,23 @@ export class PromisePool {
 
         this.tasks.delete(task);
 
-        try {
-            this.numActive++;
-            fireEvent("active");
+        this.numActive++;
+        fireEvent("active");
 
-            fn()
-                .then(value => {
-                    resolve(value);
-                    fireEvent("resolved");
-                })
-                .catch(reason => {
-                    reject(reason);
-                    fireEvent("rejected");
-                })
-                .finally(() => {
-                    this.numActive--;
-                    this.tick();
-                });
-        } catch (error) {
-            reject(error);
-            this.numActive--;
-            fireEvent("rejected");
-            this.tick();
-        }
+        Promise.resolve()
+            .then(fn)
+            .then(value => {
+                resolve(value);
+                fireEvent("resolved");
+            })
+            .catch(reason => {
+                reject(reason);
+                fireEvent("rejected");
+            })
+            .finally(() => {
+                this.numActive--;
+                this.tick();
+            });
     }
 
     schedule<T>(task: () => Promise<T>, metadata?: object): { id: number; promise: Promise<T> } {
