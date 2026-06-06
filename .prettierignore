@@ -1,5 +1,6 @@
 /dist
 
+/.claude
 /coverage
 
 /pnpm-lock.yaml
