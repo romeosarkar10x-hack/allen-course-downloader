@@ -96,7 +96,7 @@ const ChapterSchema = z
                 name: topic_name,
                 subjectID: subject_id,
                 $chapter: true,
-            }) as ChapterLeafNodeType,
+            }) satisfies ChapterLeafNodeType,
     );
 
 const AppGenericHeaderV2Schema = z.object({
@@ -115,9 +115,11 @@ const PolymorphicWidgetSchema = z.object({
                 chapters_list: z.object({
                     chapters: z.array(ChapterSchema),
                 }),
+                title: z.string(),
             }),
             z.object({
                 cards: z.array(z.union([CardSchema, CardWithContentSchema])),
+                title: z.string(),
             }),
             z.object(),
         ]),
@@ -139,8 +141,9 @@ const PageContentSchema = z.object({
             .map(
                 element =>
                     ({
+                        name: element.title,
                         $: "cards" in element ? element.cards : element.chapters_list.chapters,
-                    }) as ChapterContentNodeType,
+                    }) satisfies ChapterContentNodeType,
             ),
     ),
 });

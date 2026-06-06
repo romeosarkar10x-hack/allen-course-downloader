@@ -37,7 +37,7 @@ export class PromisePool {
                 try {
                     fn(eventType, id, metadata);
                 } catch {
-                    // Do nothing
+                    // Swallow exception
                 }
             });
         };
