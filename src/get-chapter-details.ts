@@ -1,6 +1,6 @@
 import { fromPromise } from "neverthrow";
 import { EnvResultAsync } from "./lib/env";
-import { PRL } from "@/lib/prl";
+import { PP } from "@/lib/pp";
 import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { ChapterDetailsResponseSchema } from "./schemas/chapter-details";
@@ -34,7 +34,7 @@ export function getChapterDetails({ subjectID, id, name }: { subjectID: string; 
                 },
             });
 
-        return fromPromise(PRL.schedule(task), error => error as Error)
+        return fromPromise(PP.schedule(task).promise, error => error as Error)
             .andThen(parseResponseJSON)
             .andThen(zodParseAsync(ChapterDetailsResponseSchema))
             .map(details => ({

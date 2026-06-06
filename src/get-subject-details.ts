@@ -1,6 +1,6 @@
 import { fromPromise, okAsync, ResultAsync } from "neverthrow";
 import { EnvResultAsync } from "./lib/env";
-import { PRL } from "@/lib/prl";
+import { PP } from "@/lib/pp";
 import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { SubjectDetailsResponseSchema } from "./schemas/subject-details";
@@ -50,7 +50,7 @@ export function getSubjectDetails({ id, name }: { id: string; name: string }) {
                 },
             });
 
-        return fromPromise(PRL.schedule(task), error => error as Error)
+        return fromPromise(PP.schedule(task).promise, error => error as Error)
             .andThen(parseResponseJSON)
             .andThen(zodParseAsync(SubjectDetailsResponseSchema))
             .andThen(subjectDetails => appendChapterDetailsRecursively({ $: subjectDetails, name }));
