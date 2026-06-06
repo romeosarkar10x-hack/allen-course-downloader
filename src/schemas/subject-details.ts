@@ -142,12 +142,12 @@ const PageContentSchema = z.object({
         array
             .filter(element => element.type === "POLYMORPHIC_WIDGET")
             .map(element => element.data.data)
-            .filter(element => "cards" in element || "chapters_list" in element)
+            .filter(element => "cards" in element || "chapters" in element)
             .map(
                 element =>
                     ({
                         name: element.title,
-                        $: "cards" in element ? element.cards : element.chapters_list.chapters,
+                        $: "cards" in element ? element.cards : element.chapters,
                     }) satisfies ChapterContentNodeType,
             ),
     ),
