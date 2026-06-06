@@ -1,4 +1,3 @@
-export type TreeNode = {
-    name: string;
-    $?: TreeNode[];
-};
+export type TreeNode<T extends object> = {
+    $?: TreeNode<T>[];
+} & T;
