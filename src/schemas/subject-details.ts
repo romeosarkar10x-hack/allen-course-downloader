@@ -156,7 +156,7 @@ const DataObjectSchema = z
 export const SubjectDetailsResponseSchema = z
     .object({
         status: z.number(),
-        reason: z.string(),
+        reason: z.literal("OK"),
         data: DataObjectSchema,
     })
     .transform(
