@@ -1,0 +1,4 @@
+#!/bin/sh
+pnpm run format:check
+pnpm run type-check
+pnpm run lint
