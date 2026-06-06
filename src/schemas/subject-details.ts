@@ -1,7 +1,7 @@
 import type { ChapterContentNodeType, ChapterLeafNodeType } from "@/types/node-types";
 import z from "zod";
 
-const CardContentSchema = z
+export const CardContentSchema = z
     .object({
         content_action: z.object({
             data: z.object({
@@ -18,7 +18,7 @@ const CardContentSchema = z
         }) => ({ name: title, url: uri }),
     );
 
-const CardSchema = z
+export const CardSchema = z
     .object({
         card_action: z.object({
             data: z.object({
@@ -35,7 +35,7 @@ const CardSchema = z
         }) => ({ name: title, url: uri }),
     );
 
-const CardWithContentSchema = z
+export const CardWithContentSchema = z
     .object({
         card_action: z.object({
             data: z.object({
@@ -63,7 +63,7 @@ const CardWithContentSchema = z
         }) => ({ name: card_name, $: contents_list }),
     );
 
-const ChapterSchema = z
+export const ChapterSchema = z
     .object({
         action: z.object({
             data: z.object({
@@ -99,15 +99,15 @@ const ChapterSchema = z
             }) satisfies ChapterLeafNodeType,
     );
 
-const AppGenericHeaderV2Schema = z.object({
+export const AppGenericHeaderV2Schema = z.object({
     type: z.literal("APP_GENERIC_HEADER_V2"),
 });
 
-const BreadCrumbsWidgetSchema = z.object({
+export const BreadCrumbsWidgetSchema = z.object({
     type: z.literal("BREADCRUMBS"),
 });
 
-const PolymorphicWidgetSchema = z.object({
+export const PolymorphicWidgetSchema = z.object({
     type: z.literal("POLYMORPHIC_WIDGET"),
     data: z.object({
         data: z.union([
@@ -131,13 +131,13 @@ const PolymorphicWidgetSchema = z.object({
     }),
 });
 
-const WidgetSchema = z.discriminatedUnion("type", [
+export const WidgetSchema = z.discriminatedUnion("type", [
     BreadCrumbsWidgetSchema,
     PolymorphicWidgetSchema,
     AppGenericHeaderV2Schema,
 ]);
 
-const PageContentSchema = z.object({
+export const PageContentSchema = z.object({
     widgets: z.array(WidgetSchema).transform(array =>
         array
             .filter(element => element.type === "POLYMORPHIC_WIDGET")
@@ -153,7 +153,7 @@ const PageContentSchema = z.object({
     ),
 });
 
-const DataObjectSchema = z
+export const DataObjectSchema = z
     .object({
         page_content: PageContentSchema,
     })
