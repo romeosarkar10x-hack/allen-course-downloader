@@ -1,6 +1,6 @@
 import z from "zod";
 
-const CardContentSchema = z
+export const CardContentSchema = z
     .object({
         content_action: z.object({
             data: z.object({
@@ -17,7 +17,7 @@ const CardContentSchema = z
         }) => ({ name: title, url: uri }),
     );
 
-const CardSchema = z
+export const CardSchema = z
     .object({
         card_action: z.object({
             data: z.object({
@@ -34,7 +34,7 @@ const CardSchema = z
         }) => ({ name: title, url: uri }),
     );
 
-const CardWithContentSchema = z
+export const CardWithContentSchema = z
     .object({
         card_action: z.object({
             data: z.object({
@@ -112,14 +112,15 @@ export const ContentSchema = z
         }) => ({ name: title, url: uri }),
     );
 
-const SelectionCardSchema = z.object({
+export const SelectionCardSchema = z.object({
     type: z.literal("SELECTION_CARD"),
 });
-const AppGenericHeaderV2Schema = z.object({
+
+export const AppGenericHeaderV2Schema = z.object({
     type: z.literal("APP_GENERIC_HEADER_V2"),
 });
 
-const BreadCrumbsWidgetSchema = z.object({
+export const BreadCrumbsWidgetSchema = z.object({
     type: z.literal("BREADCRUMBS"),
 });
 
@@ -149,7 +150,7 @@ export const WidgetSchema = z.discriminatedUnion("type", [
     SelectionCardSchema,
 ]);
 
-const PageContentSchema = z.object({
+export const PageContentSchema = z.object({
     widgets: z.array(WidgetSchema).transform(array =>
         array
             .filter(element => element.type === "POLYMORPHIC_WIDGET")
@@ -159,7 +160,7 @@ const PageContentSchema = z.object({
     ),
 });
 
-const DataObjectSchema = z
+export const DataObjectSchema = z
     .object({
         page_content: PageContentSchema,
     })
