@@ -34,7 +34,9 @@ export function getChapterDetails({ subjectID, id, name }: { subjectID: string; 
                 },
             });
 
-        return fromPromise(PP.schedule(task).promise, error => error as Error)
+        const taskMetadata = { fetch: { path: "/topic-details", subjectID, topicID: id } };
+
+        return fromPromise(PP.schedule(task, taskMetadata).promise, error => error as Error)
             .andThen(parseResponseJSON)
             .andThen(zodParseAsync(ChapterDetailsResponseSchema))
             .map(details => ({

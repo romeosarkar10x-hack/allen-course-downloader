@@ -50,7 +50,9 @@ export function getSubjectDetails({ id, name }: { id: string; name: string }) {
                 },
             });
 
-        return fromPromise(PP.schedule(task).promise, error => error as Error)
+        const taskMetadata = { fetch: { path: "/subject-details", subjectID: id } };
+
+        return fromPromise(PP.schedule(task, taskMetadata).promise, error => error as Error)
             .andThen(parseResponseJSON)
             .andThen(zodParseAsync(SubjectDetailsResponseSchema))
             .andThen(subjectDetails => appendChapterDetailsRecursively({ $: subjectDetails, name }));
