@@ -1,4 +1,4 @@
-import { fromPromise } from "neverthrow";
+import { fromPromise, okAsync, ResultAsync } from "neverthrow";
 import { EnvResultAsync } from "./lib/env";
 import { PRL } from "@/lib/prl";
 import { parseResponseJSON } from "./utils/parse-response-json";
@@ -9,22 +9,19 @@ import { getChapterDetails } from "./get-chapter-details";
 import { commonHeaders } from "./constants";
 
 export function getSubjectDetails({ id, name }: { id: string; name: string }) {
-    async function appendChapterDetailsRecursively(content: ChapterContentNodeType): Promise<ContentNodeType> {
+    function appendChapterDetailsRecursively(content: ChapterContentNodeType) {
         if ("$" in content) {
-            return { name: content.name, $: await Promise.all(content.$.map(appendChapterDetailsRecursively)) };
+            ResultAsync.combine(content.$.map(appendChapterDetailsRecursively)).map(result => ({
+                name: content.name,
+                $: result,
+            }));
         }
 
         if ("$chapter" in content) {
-            const result = await getChapterDetails({ subjectID: content.subjectID, id: content.id, name });
-
-            if (result.isErr()) {
-                throw result.error;
-            }
-
-            return result.value;
+            return getChapterDetails({ subjectID: content.subjectID, id: content.id, name });
         }
 
-        return content;
+        return okAsync(content);
     }
 
     return EnvResultAsync.andThen(env => {
@@ -56,10 +53,6 @@ export function getSubjectDetails({ id, name }: { id: string; name: string }) {
         return fromPromise(PRL.schedule(task), error => error as Error)
             .andThen(parseResponseJSON)
             .andThen(zodParseAsync(SubjectDetailsResponseSchema))
-            .andThen(subjectDetails => {
-                return fromPromise(appendChapterDetailsRecursively({ $: subjectDetails, name }), error => {
-                    return error as Error;
-                });
-            });
+            .andThen(subjectDetails => appendChapterDetailsRecursively({ $: subjectDetails, name }));
     });
 }
