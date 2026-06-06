@@ -1,5 +1,5 @@
 {
-    "name": "allen-playlist-downloader.js",
+    "name": "allen-course-downloader",
     "version": "1.0.0",
     "description": "Download all of your videos from `allen.in`.",
     "type": "module",
@@ -14,14 +14,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/romeosarkar10x-hack/allen-playlist-downloader.js.git"
+        "url": "git+https://github.com/romeosarkar10x-hack/allen-course-downloader.git"
     },
     "author": "Romeo Sarkar",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/romeosarkar10x-hack/allen-playlist-downloader.js/issues"
+        "url": "https://github.com/romeosarkar10x-hack/allen-course-downloader/issues"
     },
-    "homepage": "https://github.com/romeosarkar10x-hack/allen-playlist-downloader.js#readme",
+    "homepage": "https://github.com/romeosarkar10x-hack/allen-course-downloader#readme",
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@types/node": "^25.9.1",
