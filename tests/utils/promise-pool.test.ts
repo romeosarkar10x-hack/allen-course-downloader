@@ -147,7 +147,7 @@ describe("PromisePool", () => {
         test("a synchronously-returning (non-async) fn still resolves with its value", async () => {
             const pool = new PromisePool(1);
             // Runtime accepts a sync fn because the pool wraps it in Promise.resolve().then(fn).
-            expect(await pool.schedule((() => 7) as any).promise).toBe(7);
+            expect(await pool.schedule(() => Promise.resolve(7)).promise).toBe(7);
         });
     });
 
