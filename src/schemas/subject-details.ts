@@ -1,4 +1,4 @@
-import type { ChapterContentNodeType, ChapterLeafNodeType } from "@/types/node-types";
+import type { ChapterContentTreeNodeType, ChapterLeafNodeType } from "@/types/node-types";
 import z from "zod";
 
 export const CardContentSchema = z
@@ -148,7 +148,7 @@ export const PageContentSchema = z.object({
                     ({
                         name: element.title,
                         $: "cards" in element ? element.cards : element.chapters,
-                    }) satisfies ChapterContentNodeType,
+                    }) satisfies ChapterContentTreeNodeType,
             ),
     ),
 });
