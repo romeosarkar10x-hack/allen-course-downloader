@@ -29,7 +29,7 @@ export function getSubjectDetails({
 }) {
     function appendChapterDetailsRecursively(content: ChapterContentNodeType) {
         if ("$" in content) {
-            ResultAsync.combine(content.$.map(appendChapterDetailsRecursively)).map(result => ({
+            return ResultAsync.combine(content.$.map(appendChapterDetailsRecursively)).map(result => ({
                 name: content.name,
                 $: result,
             }));
@@ -39,7 +39,7 @@ export function getSubjectDetails({
             return getChapterDetails({
                 subjectID: content.subjectID,
                 id: content.id,
-                name,
+                name: content.name,
                 batchIDs,
                 selectedBatchList,
                 selectedCourseID,
