@@ -21,20 +21,20 @@ const S: PrintTreeSymbols = {
 };
 
 // Shorthand — every call goes through this so the symbol set is always explicit.
-const pt = (node: TreeNode, overrides?: Partial<PrintTreeSymbols>) => printTree(node, { ...S, ...overrides });
+const pt = (node: TreeNode<{ name: string }>, overrides?: Partial<PrintTreeSymbols>) => printTree(node, { ...S, ...overrides });
 
 // ---------------------------------------------------------------------------
 // Shared fixtures
 // ---------------------------------------------------------------------------
 
-const singleLeaf: TreeNode = { name: "Just a Leaf" };
+const singleLeaf: TreeNode<{ name: string }> = { name: "Just a Leaf" };
 
-const rootWithOneChild: TreeNode = {
+const rootWithOneChild: TreeNode<{ name: string }> = {
     name: "Root",
     $: [{ name: "Only Child" }],
 };
 
-const linearTree: TreeNode = {
+const linearTree: TreeNode<{ name: string }> = {
     name: "Root",
     $: [
         {
@@ -49,7 +49,7 @@ const linearTree: TreeNode = {
     ],
 };
 
-const binaryTree: TreeNode = {
+const binaryTree: TreeNode<{ name: string }> = {
     name: "Root",
     $: [
         {
@@ -63,12 +63,12 @@ const binaryTree: TreeNode = {
     ],
 };
 
-const wideTree: TreeNode = {
+const wideTree: TreeNode<{ name: string }> = {
     name: "Root",
     $: Array.from({ length: 15 }, (_, i) => ({ name: `Child ${i + 1}` })),
 };
 
-const mixedDepthTree: TreeNode = {
+const mixedDepthTree: TreeNode<{ name: string }> = {
     name: "Project",
     $: [
         { name: "Quick Task" },
@@ -103,7 +103,7 @@ const mixedDepthTree: TreeNode = {
     ],
 };
 
-function buildDeepTree(depth: number): TreeNode {
+function buildDeepTree(depth: number): TreeNode<{ name: string }> {
     if (depth === 0) return { name: "Level 10 Deep Leaf" };
     return { name: `Level ${10 - depth}`, $: [buildDeepTree(depth - 1)] };
 }
@@ -351,7 +351,7 @@ describe("print-tree", () => {
         });
 
         test("node labels appear verbatim in the output", () => {
-            const root: TreeNode = { name: "My Root", $: [{ name: "Child Node" }] };
+            const root: TreeNode<{ name: string }> = { name: "My Root", $: [{ name: "Child Node" }] };
             const output = pt(root);
             expect(output).toContain("My Root");
             expect(output).toContain("Child Node");
@@ -521,17 +521,17 @@ describe("print-tree", () => {
     // -----------------------------------------------------------------------
     describe("edge cases", () => {
         test("node with an empty string name renders the arrow with empty label", () => {
-            const node: TreeNode = { name: "" };
+            const node: TreeNode<{ name: string }> = { name: "" };
             expect(pt(node)).toBe(`${ROOT_TAIL}${ARROW} \n`);
         });
 
         test("node name containing special characters is rendered verbatim", () => {
-            const node: TreeNode = { name: "Hello │ World ├ ─ └ ┌" };
+            const node: TreeNode<{ name: string }> = { name: "Hello │ World ├ ─ └ ┌" };
             expect(pt(node)).toContain("Hello │ World ├ ─ └ ┌");
         });
 
         test("root with empty children array ($ = []) — uses rootNodeHasChildrenCorner but no children printed", () => {
-            const node: TreeNode = { name: "Empty Parent", $: [] };
+            const node: TreeNode<{ name: string }> = { name: "Empty Parent", $: [] };
             expect(pt(node)).toBe(`${ROOT_CORNER}${ARROW} Empty Parent\n`);
         });
 
