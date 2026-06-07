@@ -12,10 +12,7 @@ import {
 // Fixture helpers
 // ---------------------------------------------------------------------------
 
-const fixtureRaw = readFileSync(
-    join(import.meta.dirname, "../fixtures/chapter-details.json"),
-    "utf-8",
-);
+const fixtureRaw = readFileSync(join(import.meta.dirname, "../fixtures/chapter-details.json"), "utf-8");
 const fixture = JSON.parse(fixtureRaw);
 
 function cloneFixture(): typeof fixture {
@@ -55,10 +52,7 @@ function makeCardWithContent(cardName: string, contents: Array<{ title: string; 
     };
 }
 
-function makePolymorphicWithContentsList(
-    title: string,
-    contents: unknown[],
-): Record<string, unknown> {
+function makePolymorphicWithContentsList(title: string, contents: unknown[]): Record<string, unknown> {
     return {
         type: "POLYMORPHIC_WIDGET",
         data: { data: { contents_list: contents, title } },
@@ -90,9 +84,7 @@ function makeMinimalResponse(widgets: unknown[]) {
 // ===========================================================================
 describe("ContentSchema", () => {
     test("parses valid content and maps title→name, uri→url", () => {
-        const result = ContentSchema.parse(
-            makeContent("Video Title", "https://example.com/video.m3u8"),
-        );
+        const result = ContentSchema.parse(makeContent("Video Title", "https://example.com/video.m3u8"));
         expect(result).toEqual({ name: "Video Title", url: "https://example.com/video.m3u8" });
     });
 
@@ -105,15 +97,11 @@ describe("ContentSchema", () => {
     });
 
     test("rejects missing title", () => {
-        expect(
-            ContentSchema.safeParse({ content_action: { data: { uri: "https://x.com/" } } }).success,
-        ).toBe(false);
+        expect(ContentSchema.safeParse({ content_action: { data: { uri: "https://x.com/" } } }).success).toBe(false);
     });
 
     test("rejects missing uri", () => {
-        expect(
-            ContentSchema.safeParse({ content_action: { data: { title: "X" } } }).success,
-        ).toBe(false);
+        expect(ContentSchema.safeParse({ content_action: { data: { title: "X" } } }).success).toBe(false);
     });
 
     test("output has exactly name and url keys", () => {
@@ -132,9 +120,7 @@ describe("PolymorphicWidgetSchema", () => {
     });
 
     test("parses a widget with cards + title", () => {
-        const widget = makePolymorphicWithCards("Other Content", [
-            makeCard("Handbook", "https://example.com/hb.pdf"),
-        ]);
+        const widget = makePolymorphicWithCards("Other Content", [makeCard("Handbook", "https://example.com/hb.pdf")]);
         expect(PolymorphicWidgetSchema.safeParse(widget).success).toBe(true);
     });
 
@@ -147,9 +133,7 @@ describe("PolymorphicWidgetSchema", () => {
     });
 
     test("rejects wrong type literal", () => {
-        expect(
-            PolymorphicWidgetSchema.safeParse({ type: "BREADCRUMBS", data: { data: {} } }).success,
-        ).toBe(false);
+        expect(PolymorphicWidgetSchema.safeParse({ type: "BREADCRUMBS", data: { data: {} } }).success).toBe(false);
     });
 
     test("rejects missing type field", () => {
@@ -231,8 +215,8 @@ describe("ChapterDetailsResponseSchema", () => {
             const liveVideos = result.find(e => e.name === "Live Lecture Videos")!;
             expect(liveVideos).toBeDefined();
             expect(liveVideos.$.length).toBeGreaterThan(0);
-            expect(typeof liveVideos.$[0].name).toBe("string");
-            expect(typeof liveVideos.$[0].url).toBe("string");
+            expect(typeof liveVideos.$[0]!.name).toBe("string");
+            expect(typeof liveVideos.$[0]!.url).toBe("string");
         });
 
         test("first live lecture video name matches fixture data", () => {
@@ -241,7 +225,7 @@ describe("ChapterDetailsResponseSchema", () => {
                 name: string;
             }>;
             const liveVideos = result.find(e => e.name === "Live Lecture Videos")!;
-            expect(liveVideos.$[0].name).toBe("d & f Block elements");
+            expect(liveVideos.$[0]!.name).toBe("d & f Block elements");
         });
 
         test("safeParse on valid fixture returns success=true", () => {
@@ -321,53 +305,37 @@ describe("ChapterDetailsResponseSchema", () => {
         });
 
         test("only BREADCRUMBS → empty result", () => {
-            expect(
-                ChapterDetailsResponseSchema.parse(makeMinimalResponse([{ type: "BREADCRUMBS" }])),
-            ).toEqual([]);
+            expect(ChapterDetailsResponseSchema.parse(makeMinimalResponse([{ type: "BREADCRUMBS" }]))).toEqual([]);
         });
 
         test("only APP_GENERIC_HEADER_V2 → empty result", () => {
             expect(
-                ChapterDetailsResponseSchema.parse(
-                    makeMinimalResponse([{ type: "APP_GENERIC_HEADER_V2" }]),
-                ),
+                ChapterDetailsResponseSchema.parse(makeMinimalResponse([{ type: "APP_GENERIC_HEADER_V2" }])),
             ).toEqual([]);
         });
 
         test("only SELECTION_CARD → empty result", () => {
-            expect(
-                ChapterDetailsResponseSchema.parse(makeMinimalResponse([{ type: "SELECTION_CARD" }])),
-            ).toEqual([]);
+            expect(ChapterDetailsResponseSchema.parse(makeMinimalResponse([{ type: "SELECTION_CARD" }]))).toEqual([]);
         });
 
         test("POLYMORPHIC_WIDGET with unknown data shape → filtered out", () => {
-            expect(
-                ChapterDetailsResponseSchema.parse(
-                    makeMinimalResponse([makePolymorphicUnknownData()]),
-                ),
-            ).toEqual([]);
+            expect(ChapterDetailsResponseSchema.parse(makeMinimalResponse([makePolymorphicUnknownData()]))).toEqual([]);
         });
 
         test("POLYMORPHIC_WIDGET without data.data (exactOptional) → filtered out", () => {
-            expect(
-                ChapterDetailsResponseSchema.parse(makeMinimalResponse([makePolymorphicNoData()])),
-            ).toEqual([]);
+            expect(ChapterDetailsResponseSchema.parse(makeMinimalResponse([makePolymorphicNoData()]))).toEqual([]);
         });
 
         test("POLYMORPHIC_WIDGET with contents_list survives filter", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("Videos", [
-                    makeContent("V1", "https://example.com/v1.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("Videos", [makeContent("V1", "https://example.com/v1.m3u8")]),
             ]);
             expect(ChapterDetailsResponseSchema.parse(input).length).toBe(1);
         });
 
         test("POLYMORPHIC_WIDGET with cards survives filter", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithCards("Other", [
-                    makeCard("Handbook", "https://example.com/hb.pdf"),
-                ]),
+                makePolymorphicWithCards("Other", [makeCard("Handbook", "https://example.com/hb.pdf")]),
             ]);
             expect(ChapterDetailsResponseSchema.parse(input).length).toBe(1);
         });
@@ -384,9 +352,7 @@ describe("ChapterDetailsResponseSchema", () => {
 
         test("unknown widget type is rejected outright", () => {
             expect(
-                ChapterDetailsResponseSchema.safeParse(
-                    makeMinimalResponse([{ type: "UNKNOWN_TYPE" }]),
-                ).success,
+                ChapterDetailsResponseSchema.safeParse(makeMinimalResponse([{ type: "UNKNOWN_TYPE" }])).success,
             ).toBe(false);
         });
     });
@@ -399,31 +365,23 @@ describe("ChapterDetailsResponseSchema", () => {
                     makeContent("Vid A", "https://example.com/a.m3u8"),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ name: string }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ name: string }];
             expect(entry.name).toBe("Live Lecture Videos");
         });
 
         test("content item maps title → name", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("Section", [
-                    makeContent("My Video", "https://example.com/v.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("Section", [makeContent("My Video", "https://example.com/v.m3u8")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
-                { $: Array<{ name: string }> },
-            ];
-            expect(entry.$[0].name).toBe("My Video");
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ name: string }> }];
+            expect(entry.$[0]!.name).toBe("My Video");
         });
 
         test("content item maps uri → url", () => {
             const uri = "https://content.allen.in/abc/master.m3u8";
-            const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("Section", [makeContent("V", uri)]),
-            ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
-                { $: Array<{ url: string }> },
-            ];
-            expect(entry.$[0].url).toBe(uri);
+            const input = makeMinimalResponse([makePolymorphicWithContentsList("Section", [makeContent("V", uri)])]);
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ url: string }> }];
+            expect(entry.$[0]!.url).toBe(uri);
         });
 
         test("multiple content items in one section are all mapped", () => {
@@ -434,40 +392,34 @@ describe("ChapterDetailsResponseSchema", () => {
                     makeContent("C", "https://example.com/c.m3u8"),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: unknown[] }];
             expect(entry.$.length).toBe(3);
         });
 
         test("empty contents_list produces entry with empty $", () => {
             const input = makeMinimalResponse([makePolymorphicWithContentsList("Empty", [])]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: unknown[] }];
             expect(entry.$).toEqual([]);
         });
 
         test("content item output has exactly name and url keys", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("S", [
-                    makeContent("T", "https://example.com/t.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("S", [makeContent("T", "https://example.com/t.m3u8")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<Record<string, unknown>> },
             ];
-            expect(Object.keys(entry.$[0]).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(entry.$[0]!).sort()).toEqual(["name", "url"].sort());
         });
 
         test("two sections with contents_list produce two entries in order", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("First", [
-                    makeContent("V1", "https://example.com/v1.m3u8"),
-                ]),
-                makePolymorphicWithContentsList("Second", [
-                    makeContent("V2", "https://example.com/v2.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("First", [makeContent("V1", "https://example.com/v1.m3u8")]),
+                makePolymorphicWithContentsList("Second", [makeContent("V2", "https://example.com/v2.m3u8")]),
             ]);
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string }>;
-            expect(result[0].name).toBe("First");
-            expect(result[1].name).toBe("Second");
+            expect(result[0]!.name).toBe("First");
+            expect(result[1]!.name).toBe("Second");
         });
     });
 
@@ -475,35 +427,25 @@ describe("ChapterDetailsResponseSchema", () => {
     describe("cards branch — CardSchema transformation", () => {
         test("section name comes from widget title", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithCards("Other Content", [
-                    makeCard("Handbook", "https://example.com/hb.pdf"),
-                ]),
+                makePolymorphicWithCards("Other Content", [makeCard("Handbook", "https://example.com/hb.pdf")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ name: string }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ name: string }];
             expect(entry.name).toBe("Other Content");
         });
 
         test("plain card maps title → name", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithCards("Section", [
-                    makeCard("Chemistry Handbook", "https://example.com/hb.pdf"),
-                ]),
+                makePolymorphicWithCards("Section", [makeCard("Chemistry Handbook", "https://example.com/hb.pdf")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
-                { $: Array<{ name: string }> },
-            ];
-            expect(entry.$[0].name).toBe("Chemistry Handbook");
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ name: string }> }];
+            expect(entry.$[0]!.name).toBe("Chemistry Handbook");
         });
 
         test("plain card maps uri → url", () => {
             const uri = "https://example.com/chemistry.pdf";
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards("Section", [makeCard("X", uri)]),
-            ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
-                { $: Array<{ url: string }> },
-            ];
-            expect(entry.$[0].url).toBe(uri);
+            const input = makeMinimalResponse([makePolymorphicWithCards("Section", [makeCard("X", uri)])]);
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ url: string }> }];
+            expect(entry.$[0]!.url).toBe(uri);
         });
 
         test("multiple plain cards are all mapped", () => {
@@ -513,7 +455,7 @@ describe("ChapterDetailsResponseSchema", () => {
                     makeCard("B", "https://example.com/b.pdf"),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ $: unknown[] }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: unknown[] }];
             expect(entry.$.length).toBe(2);
         });
 
@@ -521,10 +463,10 @@ describe("ChapterDetailsResponseSchema", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("S", [makeCard("T", "https://example.com/t.pdf")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<Record<string, unknown>> },
             ];
-            expect(Object.keys(entry.$[0]).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(entry.$[0]!).sort()).toEqual(["name", "url"].sort());
         });
     });
 
@@ -533,27 +475,21 @@ describe("ChapterDetailsResponseSchema", () => {
         test("CardWithContent section name comes from widget title", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("Booklets", [
-                    makeCardWithContent("Chemistry Notes", [
-                        { title: "Doc A", uri: "https://example.com/a.pdf" },
-                    ]),
+                    makeCardWithContent("Chemistry Notes", [{ title: "Doc A", uri: "https://example.com/a.pdf" }]),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ name: string }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ name: string }];
             expect(entry.name).toBe("Booklets");
         });
 
         test("CardWithContent maps card_name → name on the card item", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("Section", [
-                    makeCardWithContent("My Sub-section", [
-                        { title: "Doc", uri: "https://example.com/doc.pdf" },
-                    ]),
+                    makeCardWithContent("My Sub-section", [{ title: "Doc", uri: "https://example.com/doc.pdf" }]),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
-                { $: Array<{ name: string }> },
-            ];
-            expect(entry.$[0].name).toBe("My Sub-section");
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ name: string }> }];
+            expect(entry.$[0]!.name).toBe("My Sub-section");
         });
 
         test("CardWithContent contents_list items mapped to $", () => {
@@ -565,50 +501,44 @@ describe("ChapterDetailsResponseSchema", () => {
                     ]),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<{ $: Array<{ name: string; url: string }> }> },
             ];
-            expect(entry.$[0].$).toHaveLength(2);
-            expect(entry.$[0].$[0]).toEqual({ name: "File A", url: "https://example.com/a.pdf" });
-            expect(entry.$[0].$[1]).toEqual({ name: "File B", url: "https://example.com/b.pdf" });
+            expect(entry.$[0]!.$).toHaveLength(2);
+            expect(entry.$[0]!.$[0]).toEqual({ name: "File A", url: "https://example.com/a.pdf" });
+            expect(entry.$[0]!.$[1]).toEqual({ name: "File B", url: "https://example.com/b.pdf" });
         });
 
         test("CardWithContent with empty contents_list produces $ = []", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("Section", [makeCardWithContent("Empty", [])]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
-                { $: Array<{ $: unknown[] }> },
-            ];
-            expect(entry.$[0].$).toEqual([]);
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ $: unknown[] }> }];
+            expect(entry.$[0]!.$).toEqual([]);
         });
 
         test("CardWithContent item output has exactly name and $ keys", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("S", [
-                    makeCardWithContent("Card", [
-                        { title: "F", uri: "https://example.com/f.pdf" },
-                    ]),
+                    makeCardWithContent("Card", [{ title: "F", uri: "https://example.com/f.pdf" }]),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<Record<string, unknown>> },
             ];
-            expect(Object.keys(entry.$[0]).sort()).toEqual(["$", "name"].sort());
+            expect(Object.keys(entry.$[0]!).sort()).toEqual(["$", "name"].sort());
         });
 
         test("CardContent sub-items have exactly name and url keys", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("S", [
-                    makeCardWithContent("C", [
-                        { title: "Doc", uri: "https://example.com/doc.pdf" },
-                    ]),
+                    makeCardWithContent("C", [{ title: "Doc", uri: "https://example.com/doc.pdf" }]),
                 ]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<{ $: Array<Record<string, unknown>> }> },
             ];
-            expect(Object.keys(entry.$[0].$[0]).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(entry.$[0]!.$[0]!).sort()).toEqual(["name", "url"].sort());
         });
     });
 
@@ -618,45 +548,35 @@ describe("ChapterDetailsResponseSchema", () => {
             const input = makeMinimalResponse([
                 { type: "BREADCRUMBS" },
                 { type: "APP_GENERIC_HEADER_V2" },
-                makePolymorphicWithContentsList("Videos", [
-                    makeContent("V1", "https://example.com/v1.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("Videos", [makeContent("V1", "https://example.com/v1.m3u8")]),
                 { type: "SELECTION_CARD" },
-                makePolymorphicWithCards("Handbooks", [
-                    makeCard("HB", "https://example.com/hb.pdf"),
-                ]),
+                makePolymorphicWithCards("Handbooks", [makeCard("HB", "https://example.com/hb.pdf")]),
             ]);
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string }>;
             expect(result.length).toBe(2);
-            expect(result[0].name).toBe("Videos");
-            expect(result[1].name).toBe("Handbooks");
+            expect(result[0]!.name).toBe("Videos");
+            expect(result[1]!.name).toBe("Handbooks");
         });
 
         test("unknown-data POLYMORPHIC is skipped; valid ones remain", () => {
             const input = makeMinimalResponse([
                 makePolymorphicUnknownData(),
-                makePolymorphicWithContentsList("Kept", [
-                    makeContent("V", "https://example.com/v.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("Kept", [makeContent("V", "https://example.com/v.m3u8")]),
                 makePolymorphicNoData(),
             ]);
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string }>;
             expect(result.length).toBe(1);
-            expect(result[0].name).toBe("Kept");
+            expect(result[0]!.name).toBe("Kept");
         });
 
         test("contents_list section followed by cards section preserves both names", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("Live Videos", [
-                    makeContent("V", "https://example.com/v.m3u8"),
-                ]),
-                makePolymorphicWithCards("Other Content", [
-                    makeCard("HB", "https://example.com/hb.pdf"),
-                ]),
+                makePolymorphicWithContentsList("Live Videos", [makeContent("V", "https://example.com/v.m3u8")]),
+                makePolymorphicWithCards("Other Content", [makeCard("HB", "https://example.com/hb.pdf")]),
             ]);
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string; $: unknown[] }>;
-            expect(result[0].name).toBe("Live Videos");
-            expect(result[1].name).toBe("Other Content");
+            expect(result[0]!.name).toBe("Live Videos");
+            expect(result[1]!.name).toBe("Other Content");
         });
 
         test("three contents_list sections produce three entries in order", () => {
@@ -674,31 +594,25 @@ describe("ChapterDetailsResponseSchema", () => {
     describe("output shape invariants", () => {
         test("each result entry has exactly $ and name keys", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("Videos", [
-                    makeContent("V", "https://example.com/v.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("Videos", [makeContent("V", "https://example.com/v.m3u8")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [Record<string, unknown>];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [Record<string, unknown>];
             expect(Object.keys(entry).sort()).toEqual(["$", "name"].sort());
         });
 
         test("$ is always an array", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("S", [
-                    makeContent("V", "https://example.com/v.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("S", [makeContent("V", "https://example.com/v.m3u8")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ $: unknown }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: unknown }];
             expect(Array.isArray(entry.$)).toBe(true);
         });
 
         test("name is always a string", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithContentsList("My Section", [
-                    makeContent("V", "https://example.com/v.m3u8"),
-                ]),
+                makePolymorphicWithContentsList("My Section", [makeContent("V", "https://example.com/v.m3u8")]),
             ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as [{ name: unknown }];
+            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ name: unknown }];
             expect(typeof entry.name).toBe("string");
         });
     });
