@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { describe, test, expectTypeOf } from "vitest";
 import type { TreeNode } from "@/types/tree-node";
 
@@ -6,7 +7,6 @@ import type { TreeNode } from "@/types/tree-node";
 type Named = { name: string };
 type NamedWithId = { name: string; id: number };
 type Sized = { size: number };
-type Tagged = { tag: string };
 type WithMeta = { name: string; meta: { created: number; updated: number } };
 type WithOptional = { name: string; desc?: string };
 type WithReadonly = { readonly name: string; value: number };
