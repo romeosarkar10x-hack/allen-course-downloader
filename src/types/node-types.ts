@@ -1,3 +1,4 @@
+import type { TreeNode } from "./tree-node";
 
 export type ContentLeafNodeType = {
     name: string;
@@ -11,17 +12,5 @@ export type ChapterLeafNodeType = {
     subjectID: string;
 };
 
-export type ContentNodeType =
-    | {
-          name: string;
-          $?: ContentNodeType[];
-      }
-    | ContentLeafNodeType;
-
-export type ChapterContentNodeType =
-    | {
-          name: string;
-          $?: ChapterContentNodeType[];
-      }
-    | ContentLeafNodeType
-    | ChapterLeafNodeType;
+export type ChapterContentTreeNodeType = TreeNode<{ name: string }, ContentLeafNodeType | ChapterLeafNodeType>;
+export type ContentTreeNodeType = TreeNode<{ name: string }, { name: string; url: string }>;
