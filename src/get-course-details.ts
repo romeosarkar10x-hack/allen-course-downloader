@@ -23,8 +23,8 @@ export function getCourseDetails({
     return ResultAsync.combine(
         subjects.map(({ name, id }) =>
             getSubjectDetails({
-                id,
-                name,
+                subjectID: id,
+                subjectName: name,
                 batchIDs,
                 selectedBatchList,
                 selectedCourseID,
