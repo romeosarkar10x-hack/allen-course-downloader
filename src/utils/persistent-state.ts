@@ -44,10 +44,16 @@ export class PersistentState<T> {
                 return await fs.open(this.pathname, "r+");
             }
         } catch (error) {
+            // The file exists but we couldn't open it for reading/writing. We deliberately
+            // throw here instead of falling back to "w"/"w+": those modes truncate the file
+            // on open, which would silently destroy the existing persisted state. Better to
+            // surface the error than to wipe the data we were trying to protect.
             console.error(`Failed to open file \`${this.pathname}\` for reading / writing`);
             throw error;
         }
 
+        // Only reached when the file does NOT exist. Safe to create it with "w" — there is no
+        // prior state to lose.
         try {
             return await fs.open(this.pathname, "w");
         } catch (error) {
