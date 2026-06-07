@@ -1,6 +1,3 @@
-/* export type RecursiveContentType<T> = {
-    $?: RecursiveContentType<T>[];
-} & T; */
 
 export type ContentLeafNodeType = {
     name: string;
