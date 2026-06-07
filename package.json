@@ -8,7 +8,7 @@
         "test": "vitest run --coverage",
         "format:check": "prettier \"**/*.{ts,json,yml,yaml}\" --check --debug-check --ignore-path .prettierignore",
         "format": "prettier \"**/*.{ts,json,yml,yaml}\" --write --ignore-path .prettierignore",
-        "lint": "eslint --flag unstable_native_nodejs_ts_config . -f json | node-jq -r '.[].filePath'",
+        "lint": "eslint --flag unstable_native_nodejs_ts_config .",
         "type-check": "tsc -p tsconfig.node.json && tsc -p tsconfig.test.json",
         "prepare": "git config core.hooksPath .githooks"
     },
