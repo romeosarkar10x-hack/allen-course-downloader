@@ -138,7 +138,7 @@ export const PolymorphicWidgetSchema = z.object({
                     cards: z.array(z.union([CardSchema, CardWithContentSchema])),
                     title: z.string(),
                 }),
-                z.object({}) as z.ZodType<{}>,
+                z.object(),
             ])
             .exactOptional(),
     }),
