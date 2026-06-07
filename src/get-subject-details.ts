@@ -83,6 +83,6 @@ export function getSubjectDetails({
         .andThen(parseResponseJSON)
         .andThen(zodParseAsync(SubjectDetailsResponseSchema))
         .map($ => ({ $, name: subjectName }))
-        .map(t => dedupeTree<{ name: string } | ChapterLeafNodeType | ContentLeafNodeType>(t))
+        .map(t => dedupeTree<{ name: string }, ChapterLeafNodeType | ContentLeafNodeType>(t))
         .andThen(appendChapterDetailsRecursively);
 }
