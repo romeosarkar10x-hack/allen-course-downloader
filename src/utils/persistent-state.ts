@@ -49,7 +49,7 @@ export class PersistentState<T> {
         }
 
         try {
-            return await fs.open(this.pathname, "w+");
+            return await fs.open(this.pathname, "w");
         } catch (error) {
             console.error(`Failed to open file \`${this.pathname}\` for writing`);
             throw error;
