@@ -7,9 +7,9 @@
 
 type TaskType = {
     id: number;
-    fn: () => Promise<any>;
-    resolve: (value: any) => void;
-    reject: (reason?: any) => void;
+    fn: () => Promise<unknown>;
+    resolve: (value: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
+    reject: (reason?: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
     metadata?: object;
 };
 
