@@ -8,21 +8,22 @@ describe("sort-tree", () => {
     describe("leaf node (no $ property)", () => {
         test("does not throw on a leaf node with no children", () => {
             const leaf: TreeNode<{ name: string }> = { name: "leaf" };
-            expect(() => sortTree(leaf, (a, b) => a.name.localeCompare(b.name))).not.toThrow();
+            expect(() => sortTree<{ name: string }>(leaf, (a, b) => a.name.localeCompare(b.name))).not.toThrow();
         });
 
         test("leaf node is unchanged after sort", () => {
             const leaf: TreeNode<{ name: string }> = { name: "leaf" };
-            sortTree(leaf, (a, b) => a.name.localeCompare(b.name));
+            sortTree<{ name: string }>(leaf, (a, b) => a.name.localeCompare(b.name));
             expect(leaf).toEqual({ name: "leaf" });
         });
 
-        // NOTE: When $ is explicitly set to `undefined`, the `"$" in node`
-        // guard evaluates to true but childNodes is undefined, causing a crash.
-        // This is a known implementation limitation of the source.
-        test("leaf with explicit undefined $ — crashes (known bug: '$ in node' is true but value is undefined)", () => {
+        // NOTE: The TreeNode type's leaf branch has `$?: never`, so TypeScript
+        // prevents constructing a node with `$: undefined` at compile time.
+        // A plain leaf (no `$` key) does not crash — the `"$" in node` guard
+        // correctly evaluates to false and the function is a no-op.
+        test("leaf without $ property does not throw", () => {
             const leaf: TreeNode<{ name: string }> = { name: "leaf" };
-            expect(() => sortTree(leaf, (a, b) => a.name.localeCompare(b.name))).toThrow(TypeError);
+            expect(() => sortTree<{ name: string }>(leaf, (a, b) => a.name.localeCompare(b.name))).not.toThrow();
         });
     });
 
@@ -270,8 +271,8 @@ describe("sort-tree", () => {
     // -----------------------------------------------------------------------
     describe("edge cases", () => {
         test("root is itself a leaf — no crash, no mutation of name", () => {
-            const root: TreeNode<{ name: string }> = { name: "solo" };
-            sortTree(root, (a, b) => a.name.localeCompare(b.name));
+            const root: TreeNode<{ name: string }, { name: string }> = { name: "solo" };
+            sortTree<{ name: string }>(root, (a, b) => a.name.localeCompare(b.name));
             expect(root.name).toBe("solo");
         });
 
@@ -317,6 +318,78 @@ describe("sort-tree", () => {
             sortTree(root, (a, b) => a.name.localeCompare(b.name));
             const after2 = root.$!.map(n => n.name);
             expect(after1).toEqual(after2);
+        });
+
+        test("extra properties on nodes are preserved after sorting", () => {
+            const root: TreeNode<{ name: string; priority: number }> = {
+                name: "root",
+                priority: 0,
+                $: [
+                    { name: "beta", priority: 2 },
+                    { name: "alpha", priority: 1 },
+                ],
+            };
+            sortTree(root, (a, b) => a.name.localeCompare(b.name));
+            expect(root.$![0]).toEqual({ name: "alpha", priority: 1 });
+            expect(root.$![1]).toEqual({ name: "beta", priority: 2 });
+        });
+
+        test("comparator sorting by a non-name numeric field", () => {
+            const root: TreeNode<{ name: string; order: number }> = {
+                name: "root",
+                order: 0,
+                $: [
+                    { name: "c", order: 3 },
+                    { name: "a", order: 1 },
+                    { name: "b", order: 2 },
+                ],
+            };
+            sortTree(root, (a, b) => a.order - b.order);
+            expect(root.$!.map(n => n.name)).toEqual(["a", "b", "c"]);
+        });
+
+        test("wide tree: every sibling group at every level is sorted", () => {
+            const root: TreeNode<{ name: string }> = {
+                name: "root",
+                $: [
+                    { name: "d", $: [{ name: "d2" }, { name: "d1" }] },
+                    { name: "b", $: [{ name: "b3" }, { name: "b1" }, { name: "b2" }] },
+                    { name: "c" },
+                    { name: "a", $: [{ name: "a2" }, { name: "a1" }] },
+                ],
+            };
+            sortTree(root, (a, b) => a.name.localeCompare(b.name));
+            expect(root.$!.map(n => n.name)).toEqual(["a", "b", "c", "d"]);
+            expect(root.$![0]!.$!.map(n => n.name)).toEqual(["a1", "a2"]);
+            expect(root.$![1]!.$!.map(n => n.name)).toEqual(["b1", "b2", "b3"]);
+            expect(root.$![3]!.$!.map(n => n.name)).toEqual(["d1", "d2"]);
+        });
+
+        test("deeply nested tree (5 levels) is sorted at every level", () => {
+            const root: TreeNode<{ name: string }> = {
+                name: "L0",
+                $: [{
+                    name: "L1-b",
+                    $: [{
+                        name: "L2-b",
+                        $: [{
+                            name: "L3-b",
+                            $: [{ name: "L4-b" }, { name: "L4-a" }],
+                        }, {
+                            name: "L3-a",
+                        }],
+                    }, {
+                        name: "L2-a",
+                    }],
+                }, {
+                    name: "L1-a",
+                }],
+            };
+            sortTree(root, (a, b) => a.name.localeCompare(b.name));
+            expect(root.$!.map(n => n.name)).toEqual(["L1-a", "L1-b"]);
+            expect(root.$![1]!.$!.map(n => n.name)).toEqual(["L2-a", "L2-b"]);
+            expect(root.$![1]!.$![1]!.$!.map(n => n.name)).toEqual(["L3-a", "L3-b"]);
+            expect(root.$![1]!.$![1]!.$![1]!.$!.map(n => n.name)).toEqual(["L4-a", "L4-b"]);
         });
     });
 });
