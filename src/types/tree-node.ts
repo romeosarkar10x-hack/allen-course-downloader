@@ -7,4 +7,4 @@ export type TreeNode<
     | ({
           $: TreeNode<InternalNode, LeafNode>[];
       } & OmitFromUnion<InternalNode, "$">)
-    | OmitFromUnion<LeafNode, "$">;
+    | (OmitFromUnion<LeafNode, "$"> & { $?: never });
