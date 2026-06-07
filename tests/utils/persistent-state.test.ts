@@ -25,10 +25,13 @@ type FakeHandle = {
     write: ReturnType<typeof vi.fn>;
     truncate: ReturnType<typeof vi.fn>;
     close: ReturnType<typeof vi.fn>;
+    stat: ReturnType<typeof vi.fn>;
 } & fs.FileHandle;
 
 function makeFakeHandle(content: Uint8Array = new Uint8Array()): FakeHandle {
     return {
+        // initializeState() calls fileHandle.stat() to short-circuit on empty files.
+        stat: vi.fn().mockResolvedValue({ size: content.byteLength }),
         readFile: vi.fn().mockResolvedValue(content),
         write: vi
             .fn()
@@ -133,42 +136,44 @@ describe("persistent-state", () => {
             expect(mockedOpen).toHaveBeenCalledOnce();
         });
 
-        test("falls back to 'w' when fileExists=true but r+ fails", async () => {
-            const handle = makeFakeHandle();
-            mockedOpen.mockRejectedValueOnce(new Error("EPERM")).mockResolvedValueOnce(handle);
+        test("throws when fileExists=true but r+ fails (never falls back to a truncating mode)", async () => {
+            // Safety guard: opening an existing file with "w"/"w+" would truncate it and
+            // destroy the persisted state, so r+ failure must throw — never retry with "w".
+            mockedOpen.mockRejectedValueOnce(new Error("EPERM"));
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-            await ps.getState();
-            await ps.close();
+            await expect(ps.getState()).rejects.toThrow("EPERM");
 
-            expect(mockedOpen).toHaveBeenCalledTimes(2);
-            expect(mockedOpen).toHaveBeenNthCalledWith(1, "/tmp/state.bin", "r+");
-            expect(mockedOpen).toHaveBeenNthCalledWith(2, "/tmp/state.bin", "w");
+            // Only "r+" is attempted; there is no fallback open for an existing file.
+            expect(mockedOpen).toHaveBeenCalledOnce();
+            expect(mockedOpen).toHaveBeenCalledWith("/tmp/state.bin", "r+");
         });
 
-        test("throws when 'w' open also fails", async () => {
-            mockedOpen.mockRejectedValueOnce(new Error("EPERM")).mockRejectedValueOnce(new Error("EACCES"));
+        test("throws when fileExists=false and 'w' open fails", async () => {
+            mockedAccess.mockRejectedValueOnce(new Error("ENOENT")); // F_OK fails → fileExists=false
+            mockedOpen.mockRejectedValueOnce(new Error("EACCES")); // "w" create fails
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-
             await expect(ps.getState()).rejects.toThrow("EACCES");
+
+            expect(mockedOpen).toHaveBeenCalledOnce();
+            expect(mockedOpen).toHaveBeenCalledWith("/tmp/state.bin", "w");
         });
 
         test("logs console.error on r+ failure", async () => {
-            const handle = makeFakeHandle();
-            mockedOpen.mockRejectedValueOnce(new Error("EPERM")).mockResolvedValueOnce(handle);
+            mockedOpen.mockRejectedValueOnce(new Error("EPERM"));
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-            await ps.getState();
-            await ps.close();
+            await expect(ps.getState()).rejects.toThrow("EPERM");
 
             expect(console.error).toHaveBeenCalledWith(
                 expect.stringContaining("Failed to open file `/tmp/state.bin` for reading / writing"),
             );
         });
 
-        test("logs console.error on 'w' failure too", async () => {
-            mockedOpen.mockRejectedValueOnce(new Error("EPERM")).mockRejectedValueOnce(new Error("EACCES"));
+        test("logs console.error on 'w' failure (fileExists=false)", async () => {
+            mockedAccess.mockRejectedValueOnce(new Error("ENOENT")); // F_OK fails → fileExists=false
+            mockedOpen.mockRejectedValueOnce(new Error("EACCES")); // "w" create fails
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
             await expect(ps.getState()).rejects.toThrow();
@@ -203,7 +208,7 @@ describe("persistent-state", () => {
         });
 
         test("accepts a plain T (non-Promise) as defaultState", async () => {
-            const handle = makeFakeHandle();
+            const handle = makeFakeHandle(encoder.encode("non-empty"));
             handle.readFile.mockRejectedValue(new Error("read error"));
             mockedOpen.mockResolvedValue(handle);
 
@@ -213,8 +218,34 @@ describe("persistent-state", () => {
             await ps.close();
         });
 
-        test("returns defaultState when readFile throws", async () => {
+        test("accepts a function (lazy factory) as defaultState", async () => {
+            // Empty file → getDefaultState() invokes the factory to produce the default.
             const handle = makeFakeHandle();
+            mockedOpen.mockResolvedValue(handle);
+
+            const factory = vi.fn(() => "lazy-default");
+            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, factory);
+            expect(await ps.getState()).toBe("lazy-default");
+            expect(factory).toHaveBeenCalledOnce();
+            await ps.close();
+        });
+
+        test("accepts an async function (lazy factory returning Promise<T>) as defaultState", async () => {
+            const handle = makeFakeHandle();
+            mockedOpen.mockResolvedValue(handle);
+
+            const ps = new PersistentState(
+                "/tmp/state.bin",
+                textSerializer,
+                textDeserializer,
+                async () => "async-lazy-default",
+            );
+            expect(await ps.getState()).toBe("async-lazy-default");
+            await ps.close();
+        });
+
+        test("returns defaultState when readFile throws", async () => {
+            const handle = makeFakeHandle(encoder.encode("non-empty"));
             handle.readFile.mockRejectedValue(new Error("read error"));
             mockedOpen.mockResolvedValue(handle);
 
@@ -230,7 +261,7 @@ describe("persistent-state", () => {
         });
 
         test("logs console.error when readFile throws", async () => {
-            const handle = makeFakeHandle();
+            const handle = makeFakeHandle(encoder.encode("non-empty"));
             handle.readFile.mockRejectedValue(new Error("read error"));
             mockedOpen.mockResolvedValue(handle);
 
