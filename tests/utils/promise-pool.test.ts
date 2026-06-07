@@ -920,11 +920,13 @@ describe("PromisePool", () => {
             const pool = new PromisePool(6);
             const N = 200;
             const settled = await Promise.allSettled(
-                Array.from({ length: N }, (_, i) =>
-                    pool.schedule(async () => {
-                        if (i % 2 === 0) return i;
-                        throw new Error(`fail-${i}`);
-                    }).promise,
+                Array.from(
+                    { length: N },
+                    (_, i) =>
+                        pool.schedule(async () => {
+                            if (i % 2 === 0) return i;
+                            throw new Error(`fail-${i}`);
+                        }).promise,
                 ),
             );
             expect(settled).toHaveLength(N);

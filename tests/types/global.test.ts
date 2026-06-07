@@ -82,15 +82,11 @@ describe("KeyOfUnion", () => {
 
     describe("three-member unions", () => {
         test("A | B | C returns all keys", () => {
-            expectTypeOf<KeyOfUnion<A | B | C>>().toEqualTypeOf<
-                "a" | "b" | "c" | "shared" | "extra"
-            >();
+            expectTypeOf<KeyOfUnion<A | B | C>>().toEqualTypeOf<"a" | "b" | "c" | "shared" | "extra">();
         });
 
         test("X | Y | Z returns all keys", () => {
-            expectTypeOf<KeyOfUnion<X | Y | Z>>().toEqualTypeOf<
-                "x" | "y" | "z" | "w"
-            >();
+            expectTypeOf<KeyOfUnion<X | Y | Z>>().toEqualTypeOf<"x" | "y" | "z" | "w">();
         });
 
         test("two disjoint + one empty", () => {
@@ -134,9 +130,7 @@ describe("KeyOfUnion", () => {
         });
 
         test("union with optional and required", () => {
-            expectTypeOf<KeyOfUnion<WithOptional | WithRequired>>().toEqualTypeOf<
-                "req" | "opt" | "other"
-            >();
+            expectTypeOf<KeyOfUnion<WithOptional | WithRequired>>().toEqualTypeOf<"req" | "opt" | "other">();
         });
 
         test("readonly properties are included", () => {
@@ -144,9 +138,7 @@ describe("KeyOfUnion", () => {
         });
 
         test("union with readonly and mutable", () => {
-            expectTypeOf<KeyOfUnion<ReadonlyType | MutableType>>().toEqualTypeOf<
-                "ro" | "rw" | "extra"
-            >();
+            expectTypeOf<KeyOfUnion<ReadonlyType | MutableType>>().toEqualTypeOf<"ro" | "rw" | "extra">();
         });
     });
 
@@ -154,33 +146,25 @@ describe("KeyOfUnion", () => {
 
     describe("complex value types", () => {
         test("nested object values — keys still extracted", () => {
-            expectTypeOf<KeyOfUnion<Deep | Flat>>().toEqualTypeOf<
-                "nested" | "top" | "flat"
-            >();
+            expectTypeOf<KeyOfUnion<Deep | Flat>>().toEqualTypeOf<"nested" | "top" | "flat">();
         });
 
         test("function-valued properties", () => {
             type FnA = { run: () => void; name: string };
             type FnB = { exec: (x: number) => string; name: string };
-            expectTypeOf<KeyOfUnion<FnA | FnB>>().toEqualTypeOf<
-                "run" | "exec" | "name"
-            >();
+            expectTypeOf<KeyOfUnion<FnA | FnB>>().toEqualTypeOf<"run" | "exec" | "name">();
         });
 
         test("array-valued properties", () => {
             type ArrA = { items: number[]; tag: string };
             type ArrB = { entries: string[]; tag: string };
-            expectTypeOf<KeyOfUnion<ArrA | ArrB>>().toEqualTypeOf<
-                "items" | "entries" | "tag"
-            >();
+            expectTypeOf<KeyOfUnion<ArrA | ArrB>>().toEqualTypeOf<"items" | "entries" | "tag">();
         });
 
         test("index-signature types", () => {
             type Indexed = { [k: string]: number };
             type Normal = { specific: string };
-            expectTypeOf<KeyOfUnion<Indexed | Normal>>().toEqualTypeOf<
-                string | number
-            >();
+            expectTypeOf<KeyOfUnion<Indexed | Normal>>().toEqualTypeOf<string | number>();
         });
     });
 
@@ -192,9 +176,7 @@ describe("KeyOfUnion", () => {
             type T2 = { b: 2 };
             type T3 = { c: 3 };
             type T4 = { d: 4 };
-            expectTypeOf<KeyOfUnion<T1 | T2 | T3 | T4>>().toEqualTypeOf<
-                "a" | "b" | "c" | "d"
-            >();
+            expectTypeOf<KeyOfUnion<T1 | T2 | T3 | T4>>().toEqualTypeOf<"a" | "b" | "c" | "d">();
         });
 
         test("five-member union with overlap", () => {
@@ -203,9 +185,7 @@ describe("KeyOfUnion", () => {
             type T3 = { c: 3; s: 0 };
             type T4 = { d: 4; s: 0 };
             type T5 = { e: 5; s: 0 };
-            expectTypeOf<KeyOfUnion<T1 | T2 | T3 | T4 | T5>>().toEqualTypeOf<
-                "a" | "b" | "c" | "d" | "e" | "s"
-            >();
+            expectTypeOf<KeyOfUnion<T1 | T2 | T3 | T4 | T5>>().toEqualTypeOf<"a" | "b" | "c" | "d" | "e" | "s">();
         });
     });
 
@@ -215,18 +195,14 @@ describe("KeyOfUnion", () => {
         test("extracts discriminant and all variant keys", () => {
             type Circle = { kind: "circle"; radius: number };
             type Rect = { kind: "rect"; width: number; height: number };
-            expectTypeOf<KeyOfUnion<Circle | Rect>>().toEqualTypeOf<
-                "kind" | "radius" | "width" | "height"
-            >();
+            expectTypeOf<KeyOfUnion<Circle | Rect>>().toEqualTypeOf<"kind" | "radius" | "width" | "height">();
         });
 
         test("three-variant discriminated union", () => {
             type Loading = { status: "loading" };
             type Success = { status: "success"; data: string };
             type Error = { status: "error"; error: string; code: number };
-            expectTypeOf<KeyOfUnion<Loading | Success | Error>>().toEqualTypeOf<
-                "status" | "data" | "error" | "code"
-            >();
+            expectTypeOf<KeyOfUnion<Loading | Success | Error>>().toEqualTypeOf<"status" | "data" | "error" | "code">();
         });
     });
 });
@@ -271,20 +247,14 @@ describe("OmitFromUnion", () => {
     describe("two-member unions — omit shared key", () => {
         test("omit 'shared' from A | B", () => {
             type Result = OmitFromUnion<A | B, "shared">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                Omit<A, "shared"> | Omit<B, "shared">
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<Omit<A, "shared"> | Omit<B, "shared">>();
             // More explicitly:
-            expectTypeOf<Result>().toEqualTypeOf<
-                { a: number } | { b: boolean }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ a: number } | { b: boolean }>();
         });
 
         test("omit 'top' from Deep | Flat", () => {
             type Result = OmitFromUnion<Deep | Flat, "top">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { nested: { deep: number } } | { flat: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ nested: { deep: number } } | { flat: number }>();
         });
     });
 
@@ -293,16 +263,12 @@ describe("OmitFromUnion", () => {
     describe("two-member unions — omit member-specific key", () => {
         test("omit 'a' from A | B — only affects A", () => {
             type Result = OmitFromUnion<A | B, "a">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { shared: string } | { b: boolean; shared: string }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ shared: string } | { b: boolean; shared: string }>();
         });
 
         test("omit 'b' from A | B — only affects B", () => {
             type Result = OmitFromUnion<A | B, "b">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { a: number; shared: string } | { shared: string }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ a: number; shared: string } | { shared: string }>();
         });
 
         test("omit 'x' from X | Y — only affects X", () => {
@@ -342,23 +308,17 @@ describe("OmitFromUnion", () => {
     describe("three-member unions", () => {
         test("omit shared key from A | B | C", () => {
             type Result = OmitFromUnion<A | B | C, "shared">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { a: number } | { b: boolean } | { c: string; extra: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ a: number } | { b: boolean } | { c: string; extra: number }>();
         });
 
         test("omit member-specific key from A | B | C", () => {
             type Result = OmitFromUnion<A | B | C, "extra">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                A | B | { c: string; shared: string }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<A | B | { c: string; shared: string }>();
         });
 
         test("omit multiple keys from X | Y | Z", () => {
             type Result = OmitFromUnion<X | Y | Z, "y" | "z">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { x: number } | {} | { w: number[] }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ x: number } | {} | { w: number[] }>();
         });
     });
 
@@ -378,9 +338,7 @@ describe("OmitFromUnion", () => {
         test("OmitFromUnion correctly distributes and omits 'a'", () => {
             type DistResult = OmitFromUnion<A | B, "a">;
             // { shared: string } | { b: boolean; shared: string }
-            expectTypeOf<DistResult>().toEqualTypeOf<
-                { shared: string } | { b: boolean; shared: string }
-            >();
+            expectTypeOf<DistResult>().toEqualTypeOf<{ shared: string } | { b: boolean; shared: string }>();
         });
 
         test("plain Omit on shared key", () => {
@@ -390,9 +348,7 @@ describe("OmitFromUnion", () => {
 
         test("OmitFromUnion on shared key preserves member-specific keys", () => {
             type DistResult = OmitFromUnion<A | B, "shared">;
-            expectTypeOf<DistResult>().toEqualTypeOf<
-                { a: number } | { b: boolean }
-            >();
+            expectTypeOf<DistResult>().toEqualTypeOf<{ a: number } | { b: boolean }>();
         });
     });
 
@@ -421,16 +377,12 @@ describe("OmitFromUnion", () => {
 
         test("union with mixed modifiers — omit shared", () => {
             type Result = OmitFromUnion<WithOptional | WithRequired, "req">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { opt?: number } | { other: boolean }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ opt?: number } | { other: boolean }>();
         });
 
         test("union of readonly + mutable — omit shared", () => {
             type Result = OmitFromUnion<ReadonlyType | MutableType, "rw">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { readonly ro: string } | { extra: string }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ readonly ro: string } | { extra: string }>();
         });
     });
 
@@ -443,9 +395,7 @@ describe("OmitFromUnion", () => {
 
         test("omit discriminant", () => {
             type Result = OmitFromUnion<Shape, "kind">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { radius: number } | { width: number; height: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ radius: number } | { width: number; height: number }>();
         });
 
         test("omit variant-specific key", () => {
@@ -457,16 +407,12 @@ describe("OmitFromUnion", () => {
 
         test("omit multiple variant-specific keys", () => {
             type Result = OmitFromUnion<Shape, "radius" | "width">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { kind: "circle" } | { kind: "rect"; height: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ kind: "circle" } | { kind: "rect"; height: number }>();
         });
 
         test("omit discriminant + variant key", () => {
             type Result = OmitFromUnion<Shape, "kind" | "radius">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                {} | { width: number; height: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{} | { width: number; height: number }>();
         });
     });
 
@@ -477,16 +423,12 @@ describe("OmitFromUnion", () => {
             type FnA = { run: () => void; name: string };
             type FnB = { exec: (x: number) => string; name: string };
             type Result = OmitFromUnion<FnA | FnB, "name">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { run: () => void } | { exec: (x: number) => string }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ run: () => void } | { exec: (x: number) => string }>();
         });
 
         test("nested objects preserved after omit", () => {
             type Result = OmitFromUnion<Deep | Flat, "top">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { nested: { deep: number } } | { flat: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ nested: { deep: number } } | { flat: number }>();
         });
     });
 
@@ -497,9 +439,7 @@ describe("OmitFromUnion", () => {
             // "a" is only in A, not B — but K extends KeyOfUnion<U> | string
             // so this is valid
             type Result = OmitFromUnion<A | B, "a">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { shared: string } | { b: boolean; shared: string }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ shared: string } | { b: boolean; shared: string }>();
         });
 
         test("K can be a KeyOfUnion result", () => {
@@ -515,9 +455,7 @@ describe("OmitFromUnion", () => {
         test("nested OmitFromUnion — omit in two steps", () => {
             type Step1 = OmitFromUnion<A | B | C, "shared">;
             type Step2 = OmitFromUnion<Step1, "extra">;
-            expectTypeOf<Step2>().toEqualTypeOf<
-                { a: number } | { b: boolean } | { c: string }
-            >();
+            expectTypeOf<Step2>().toEqualTypeOf<{ a: number } | { b: boolean } | { c: string }>();
         });
 
         test("KeyOfUnion of OmitFromUnion result", () => {
@@ -579,18 +517,14 @@ describe("OmitFromUnion", () => {
         test("union of literal-keyed objects", () => {
             type L1 = { status: "ok"; data: string };
             type L2 = { status: "err"; code: number };
-            expectTypeOf<KeyOfUnion<L1 | L2>>().toEqualTypeOf<
-                "status" | "data" | "code"
-            >();
+            expectTypeOf<KeyOfUnion<L1 | L2>>().toEqualTypeOf<"status" | "data" | "code">();
         });
 
         test("omit from literal-valued discriminant preserves literal type", () => {
             type L1 = { status: "ok"; data: string };
             type L2 = { status: "err"; code: number };
             type Result = OmitFromUnion<L1 | L2, "data" | "code">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { status: "ok" } | { status: "err" }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ status: "ok" } | { status: "err" }>();
         });
     });
 
@@ -600,17 +534,13 @@ describe("OmitFromUnion", () => {
         test("KeyOfUnion with intersection member", () => {
             type AB = A & B;
             type Result = KeyOfUnion<AB | C>;
-            expectTypeOf<Result>().toEqualTypeOf<
-                "a" | "b" | "shared" | "c" | "extra"
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<"a" | "b" | "shared" | "c" | "extra">();
         });
 
         test("OmitFromUnion with intersection member", () => {
             type AB = A & B;
             type Result = OmitFromUnion<AB | C, "shared">;
-            expectTypeOf<Result>().toEqualTypeOf<
-                { a: number; b: boolean } | { c: string; extra: number }
-            >();
+            expectTypeOf<Result>().toEqualTypeOf<{ a: number; b: boolean } | { c: string; extra: number }>();
         });
     });
 });

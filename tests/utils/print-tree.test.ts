@@ -21,7 +21,8 @@ const S: PrintTreeSymbols = {
 };
 
 // Shorthand — every call goes through this so the symbol set is always explicit.
-const pt = (node: TreeNode<{ name: string }>, overrides?: Partial<PrintTreeSymbols>) => printTree(node, { ...S, ...overrides });
+const pt = (node: TreeNode<{ name: string }>, overrides?: Partial<PrintTreeSymbols>) =>
+    printTree(node, { ...S, ...overrides });
 
 // ---------------------------------------------------------------------------
 // Shared fixtures

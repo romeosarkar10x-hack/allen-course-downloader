@@ -362,7 +362,15 @@ describe("student-details CourseDetailsSchema", () => {
     test("output has exactly the 7 expected keys (including session)", () => {
         const result = CourseDetailsSchema.parse(makeCourseDetail()) as Record<string, unknown>;
         expect(Object.keys(result).sort()).toEqual(
-            ["courseID", "courseName", "enrolledBatches", "unenrolledBatches", "startDate", "endDate", "session"].sort(),
+            [
+                "courseID",
+                "courseName",
+                "enrolledBatches",
+                "unenrolledBatches",
+                "startDate",
+                "endDate",
+                "session",
+            ].sort(),
         );
     });
 
@@ -523,9 +531,9 @@ describe("student-details DataObjectSchema", () => {
     });
 
     test("studentDetails spreads the transformed student_detail fields", () => {
-        const result = DataObjectSchema.parse(
-            makeDataObject({ first_name: "Srija", last_name: "Sarkar" }),
-        ) as { studentDetails: Record<string, unknown> };
+        const result = DataObjectSchema.parse(makeDataObject({ first_name: "Srija", last_name: "Sarkar" })) as {
+            studentDetails: Record<string, unknown>;
+        };
         expect(result.studentDetails.firstName).toBe("Srija");
         expect(result.studentDetails.lastName).toBe("Sarkar");
     });
@@ -542,7 +550,15 @@ describe("student-details DataObjectSchema", () => {
             studentDetails: { courses: Array<Record<string, unknown>> };
         };
         expect(Object.keys(result.studentDetails.courses[0]!).sort()).toEqual(
-            ["courseID", "courseName", "enrolledBatches", "unenrolledBatches", "startDate", "endDate", "session"].sort(),
+            [
+                "courseID",
+                "courseName",
+                "enrolledBatches",
+                "unenrolledBatches",
+                "startDate",
+                "endDate",
+                "session",
+            ].sort(),
         );
     });
 
@@ -589,9 +605,9 @@ describe("student-details DataObjectSchema", () => {
         expect(
             DataObjectSchema.safeParse({ student_detail: makeStudentDetail(), course_details: "nope" }).success,
         ).toBe(false);
-        expect(
-            DataObjectSchema.safeParse({ student_detail: makeStudentDetail(), course_details: {} }).success,
-        ).toBe(false);
+        expect(DataObjectSchema.safeParse({ student_detail: makeStudentDetail(), course_details: {} }).success).toBe(
+            false,
+        );
     });
 
     test("rejects an invalid student_detail (bad gender)", () => {

@@ -368,22 +368,31 @@ describe("sort-tree", () => {
         test("deeply nested tree (5 levels) is sorted at every level", () => {
             const root: TreeNode<{ name: string }> = {
                 name: "L0",
-                $: [{
-                    name: "L1-b",
-                    $: [{
-                        name: "L2-b",
-                        $: [{
-                            name: "L3-b",
-                            $: [{ name: "L4-b" }, { name: "L4-a" }],
-                        }, {
-                            name: "L3-a",
-                        }],
-                    }, {
-                        name: "L2-a",
-                    }],
-                }, {
-                    name: "L1-a",
-                }],
+                $: [
+                    {
+                        name: "L1-b",
+                        $: [
+                            {
+                                name: "L2-b",
+                                $: [
+                                    {
+                                        name: "L3-b",
+                                        $: [{ name: "L4-b" }, { name: "L4-a" }],
+                                    },
+                                    {
+                                        name: "L3-a",
+                                    },
+                                ],
+                            },
+                            {
+                                name: "L2-a",
+                            },
+                        ],
+                    },
+                    {
+                        name: "L1-a",
+                    },
+                ],
             };
             sortTree(root, (a, b) => a.name.localeCompare(b.name));
             expect(root.$!.map(n => n.name)).toEqual(["L1-a", "L1-b"]);
