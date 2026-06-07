@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { describe, test, expectTypeOf } from "vitest";
 import type { KeyOfUnion, OmitFromUnion } from "@/types/global";
 
