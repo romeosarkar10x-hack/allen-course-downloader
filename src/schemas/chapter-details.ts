@@ -1,3 +1,4 @@
+import type { ContentTreeNodeType } from "@/types/node-types";
 import z from "zod";
 
 export const CardContentSchema = z
@@ -156,7 +157,13 @@ export const PageContentSchema = z.object({
             .filter(element => element.type === "POLYMORPHIC_WIDGET")
             .flatMap(element => ("data" in element.data ? [element.data.data] : []))
             .filter(element => "cards" in element || "contents_list" in element)
-            .map(element => ({ $: "cards" in element ? element.cards : element.contents_list, name: element.title })),
+            .map(
+                element =>
+                    ({
+                        $: "cards" in element ? element.cards : element.contents_list,
+                        name: element.title,
+                    }) satisfies ContentTreeNodeType,
+            ),
     ),
 });
 
