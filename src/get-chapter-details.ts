@@ -4,6 +4,7 @@ import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { ChapterDetailsResponseSchema } from "./schemas/chapter-details";
 import { commonHeaders } from "./constants";
+import type { ContentTreeNodeType } from "./types/node-types";
 
 export function getChapterDetails({
     topicID,
@@ -57,8 +58,11 @@ export function getChapterDetails({
     return fromPromise(PP.schedule(task, taskMetadata).promise, error => error as Error)
         .andThen(parseResponseJSON)
         .andThen(zodParseAsync(ChapterDetailsResponseSchema))
-        .map(details => ({
-            $: details,
-            name: topicName,
-        }));
+        .map(
+            details =>
+                ({
+                    $: details,
+                    name: topicName,
+                }) satisfies ContentTreeNodeType,
+        );
 }
