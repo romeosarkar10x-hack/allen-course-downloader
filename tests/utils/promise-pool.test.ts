@@ -16,7 +16,7 @@ async function flushPromises(rounds = 50) {
 
 function deferred<T = void>() {
     let resolve!: (value?: T) => void;
-    let reject!: (reason?: any) => void;
+    let reject!: (reason?: any) => void; // eslint-disable-line @typescript-eslint/no-explicit-any
     const promise = new Promise<T>((res, rej) => {
         resolve = res as (value?: T) => void;
         reject = rej;
