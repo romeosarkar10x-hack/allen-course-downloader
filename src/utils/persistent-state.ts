@@ -6,7 +6,7 @@ export class PersistentState<T> {
     private fileHandlePromise: Promise<fs.FileHandle>;
     private statePromise: Promise<T>;
     private lastWrite: Promise<void> | null = null;
-    private lastSetState: Promise<void> | null = null;
+    // private lastSetState: Promise<void> | null = null;
 
     constructor(
         public pathname: string,
@@ -76,14 +76,14 @@ export class PersistentState<T> {
             }
 
             serialized = await PersistentState.readFile(fileHandle);
-        } catch (error) {
+        } catch {
             console.error(`Failed to read file '${this.pathname}'`);
             return await this.getDefaultState(defaultState);
         }
 
         try {
             return await this.deserializer(serialized);
-        } catch (error) {
+        } catch {
             console.error(`Failed to deserialize state from file '${this.pathname}'`);
             return await this.getDefaultState(defaultState);
         }
