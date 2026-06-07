@@ -3,10 +3,18 @@ import { PP } from "@/lib/pp";
 import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
 import { SubjectDetailsResponseSchema } from "./schemas/subject-details";
-import type { ChapterContentNodeType, ChapterLeafNodeType, ContentLeafNodeType } from "./types/node-types";
+import type {
+    ChapterContentTreeNodeType,
+    ChapterLeafNodeType,
+    ContentLeafNodeType,
+    ContentTreeNodeType,
+} from "./types/node-types";
 import { getChapterDetails } from "./get-chapter-details";
 import { commonHeaders } from "./constants";
 import { dedupeTree } from "./utils/dedupe-tree";
+
+type InferAsyncErrorType<T> = T extends ResultAsync<unknown, infer E> ? E : never;
+type GetChapterDetailsFunctionErrorType = InferAsyncErrorType<ReturnType<typeof getChapterDetails>>;
 
 export function getSubjectDetails({
     subjectID,
@@ -27,7 +35,9 @@ export function getSubjectDetails({
     selectedCourseID: string;
     bearerToken: string;
 }) {
-    function appendChapterDetailsRecursively(content: ChapterContentNodeType) {
+    function appendChapterDetailsRecursively(
+        content: ChapterContentTreeNodeType,
+    ): ResultAsync<ContentTreeNodeType, GetChapterDetailsFunctionErrorType> {
         if ("$" in content) {
             return ResultAsync.combine(content.$.map(appendChapterDetailsRecursively)).map(result => ({
                 name: content.name,
