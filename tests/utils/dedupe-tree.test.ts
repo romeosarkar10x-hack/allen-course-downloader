@@ -18,10 +18,6 @@ import type { TreeNode } from "@/types/tree-node";
 type Named = { name: string };
 type Valued = { v: unknown };
 
-function leaf<T extends object>(fields: T): TreeNode<T> {
-    return { ...fields };
-}
-
 function branch<T extends object>(fields: T, children: TreeNode<T>[]): TreeNode<T> {
     return { ...fields, $: children };
 }
@@ -150,12 +146,7 @@ describe("dedupe-tree", () => {
         });
 
         test("collapses all-identical children down to one", () => {
-            const node = branch<Named>({ name: "root" }, [
-                { name: "x" },
-                { name: "x" },
-                { name: "x" },
-                { name: "x" },
-            ]);
+            const node = branch<Named>({ name: "root" }, [{ name: "x" }, { name: "x" }, { name: "x" }, { name: "x" }]);
             expect(dedupeTree(node).$).toEqual([{ name: "x" }]);
         });
 
@@ -185,21 +176,15 @@ describe("dedupe-tree", () => {
         });
 
         test("does NOT dedupe children differing only in nested array order (isEqual is order-sensitive for arrays)", () => {
-            const node = branch<{ tags: string[] }>({ tags: [] }, [
-                { tags: ["a", "b"] },
-                { tags: ["b", "a"] },
-            ]);
+            const node = branch<{ tags: string[] }>({ tags: [] }, [{ tags: ["a", "b"] }, { tags: ["b", "a"] }]);
             expect(dedupeTree(node).$).toHaveLength(2);
         });
 
         test("dedupes children with same keys in different insertion order (isEqual is key-order-insensitive)", () => {
-            const node = branch<Record<string, number>>(
-                { name: 0 } as unknown as Record<string, number>,
-                [
-                    { a: 1, b: 2 } as TreeNode<Record<string, number>>,
-                    { b: 2, a: 1 } as TreeNode<Record<string, number>>,
-                ],
-            );
+            const node = branch<Record<string, number>>({ name: 0 } as unknown as Record<string, number>, [
+                { a: 1, b: 2 } as TreeNode<Record<string, number>>,
+                { b: 2, a: 1 } as TreeNode<Record<string, number>>,
+            ]);
             expect(dedupeTree(node).$).toHaveLength(1);
         });
     });
@@ -298,12 +283,8 @@ describe("dedupe-tree", () => {
         });
 
         test("children that remain distinct after subtree dedup are both kept", () => {
-            const childA = branch<{ id: string }>({ id: "p" }, [
-                { leaf: 1 } as unknown as TreeNode<{ id: string }>,
-            ]);
-            const childB = branch<{ id: string }>({ id: "p" }, [
-                { leaf: 2 } as unknown as TreeNode<{ id: string }>,
-            ]);
+            const childA = branch<{ id: string }>({ id: "p" }, [{ leaf: 1 } as unknown as TreeNode<{ id: string }>]);
+            const childB = branch<{ id: string }>({ id: "p" }, [{ leaf: 2 } as unknown as TreeNode<{ id: string }>]);
             const node = branch<{ id: string }>({ id: "root" }, [childA, childB]);
             expect(dedupeTree(node).$).toHaveLength(2);
         });
@@ -366,20 +347,18 @@ describe("dedupe-tree", () => {
     // -----------------------------------------------------------------------
     describe("non-`$` fields are never treated as child collections", () => {
         test("an array field NOT named `$` is left untouched (not recursed/deduped)", () => {
-            const node = branch<{ items: { name: string }[] }>(
-                { items: [{ name: "a" }, { name: "a" }] },
-                [{ items: [] }],
-            );
+            const node = branch<{ items: { name: string }[] }>({ items: [{ name: "a" }, { name: "a" }] }, [
+                { items: [] },
+            ]);
             const result = dedupeTree(node);
             // The duplicate inside `items` is preserved — only `$` is processed.
             expect(result.items).toEqual([{ name: "a" }, { name: "a" }]);
         });
 
         test("an object field shaped like a node is not recursed into", () => {
-            const node = branch<{ meta: { $: { name: string }[] } }>(
-                { meta: { $: [{ name: "d" }, { name: "d" }] } },
-                [{ meta: { $: [] } }],
-            );
+            const node = branch<{ meta: { $: { name: string }[] } }>({ meta: { $: [{ name: "d" }, { name: "d" }] } }, [
+                { meta: { $: [] } },
+            ]);
             const result = dedupeTree(node);
             expect(result.meta).toEqual({ $: [{ name: "d" }, { name: "d" }] });
         });
