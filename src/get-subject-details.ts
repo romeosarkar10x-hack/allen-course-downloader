@@ -9,8 +9,8 @@ import { commonHeaders } from "./constants";
 import { dedupeTree } from "./utils/dedupe-tree";
 
 export function getSubjectDetails({
-    id,
-    name,
+    subjectID,
+    subjectName,
     batchIDs,
     stream,
     selectedBatchList,
@@ -18,8 +18,8 @@ export function getSubjectDetails({
     taxonomy,
     bearerToken,
 }: {
-    id: string;
-    name: string;
+    subjectID: string;
+    subjectName: string;
     stream: string;
     batchIDs: string[];
     selectedBatchList: string[];
@@ -38,8 +38,8 @@ export function getSubjectDetails({
         if ("$chapter" in content) {
             return getChapterDetails({
                 subjectID: content.subjectID,
-                id: content.id,
-                name: content.name,
+                topicID: content.id,
+                topicName: content.name,
                 batchIDs,
                 selectedBatchList,
                 selectedCourseID,
@@ -59,7 +59,7 @@ export function getSubjectDetails({
     searchParams.append("selected_batch_list", selectedBatchList.join(","));
     searchParams.append("selected_course_id", selectedCourseID);
     searchParams.append("stream", stream);
-    searchParams.append("subject_id", id);
+    searchParams.append("subject_id", subjectID);
     searchParams.append("taxonomy_id", taxonomy);
 
     const payload = {
@@ -77,12 +77,12 @@ export function getSubjectDetails({
             },
         });
 
-    const taskMetadata = { fetch: { path: "/subject-details", subjectID: id, name } };
+    const taskMetadata = { fetch: { path: "/subject-details", subjectID, subjectName } };
 
     return fromPromise(PP.schedule(task, taskMetadata).promise, error => error as Error)
         .andThen(parseResponseJSON)
         .andThen(zodParseAsync(SubjectDetailsResponseSchema))
-        .map($ => ({ $, name }))
+        .map($ => ({ $, name: subjectName }))
         .map(t => dedupeTree<{ name: string } | ChapterLeafNodeType | ContentLeafNodeType>(t))
         .andThen(appendChapterDetailsRecursively);
 }

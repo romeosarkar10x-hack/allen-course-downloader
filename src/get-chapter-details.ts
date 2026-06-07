@@ -7,8 +7,8 @@ import { ChapterDetailsResponseSchema } from "./schemas/chapter-details";
 import { commonHeaders } from "./constants";
 
 export function getChapterDetails({
-    id,
-    name,
+    topicID,
+    topicName,
     subjectID,
     batchIDs,
     selectedBatchList,
@@ -17,8 +17,8 @@ export function getChapterDetails({
     taxonomy,
     bearerToken,
 }: {
-    id: string;
-    name: string;
+    topicID: string;
+    topicName: string;
     stream: string;
     taxonomy: string;
     batchIDs: string[];
@@ -36,7 +36,7 @@ export function getChapterDetails({
     searchParams.append("stream", stream);
     searchParams.append("subject_id", subjectID);
     searchParams.append("taxonomy_id", taxonomy);
-    searchParams.append("topic_id", id);
+    searchParams.append("topic_id", topicID);
 
     const payload = {
         page_url: "/topic-details?" + searchParams.toString(),
@@ -53,13 +53,13 @@ export function getChapterDetails({
             },
         });
 
-    const taskMetadata = { fetch: { path: "/topic-details", subjectID, topicID: id } };
+    const taskMetadata = { fetch: { path: "/topic-details", subjectID, topicID } };
 
     return fromPromise(PP.schedule(task, taskMetadata).promise, error => error as Error)
         .andThen(parseResponseJSON)
         .andThen(zodParseAsync(ChapterDetailsResponseSchema))
         .map(details => ({
             $: details,
-            name,
+            name: topicName,
         }));
 }
