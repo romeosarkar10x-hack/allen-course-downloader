@@ -1,6 +1,5 @@
 import { fromPromise } from "neverthrow";
 import { commonHeaders } from "./constants";
-import { EnvResultAsync } from "./lib/env";
 import { PP } from "./lib/pp";
 import { parseResponseJSON } from "./utils/parse-response-json";
 import { zodParseAsync } from "./utils/zod-parse-async";
