@@ -3,7 +3,6 @@ import fs from "fs/promises";
 type DefaultState<T> = T | Promise<T> | (() => T | Promise<T>);
 
 export class PersistentState<T> {
-    private fileHandlePromise: Promise<fs.FileHandle>;
     private statePromise: Promise<T>;
     private lastSetState: Promise<void> | null = null;
 
@@ -13,52 +12,7 @@ export class PersistentState<T> {
         public deserializer: (serialized: Uint8Array) => T | Promise<T>,
         defaultState: DefaultState<T>,
     ) {
-        this.fileHandlePromise = this.openFile();
         this.statePromise = this.initializeState(defaultState);
-    }
-
-    private async openFile() {
-        let fileExists = false;
-
-        try {
-            await fs.access(this.pathname, fs.constants.F_OK);
-            fileExists = true;
-        } catch {
-            console.warn(`File '${this.pathname}' does not exists`);
-            // Ignore error
-        }
-
-        try {
-            if (fileExists) {
-                await fs.access(this.pathname, fs.constants.R_OK | fs.constants.W_OK);
-            }
-        } catch (error) {
-            console.error(`File '${this.pathname}' exists but is not readable / writable by the current process`);
-            throw error;
-        }
-
-        try {
-            if (fileExists) {
-                // Can fail due to some non-permission reason like EMFILE (too many open files), transient fs error, the file got unlinked between access and open
-                return await fs.open(this.pathname, "r+");
-            }
-        } catch (error) {
-            // The file exists but we couldn't open it for reading/writing. We deliberately
-            // throw here instead of falling back to "w"/"w+": those modes truncate the file
-            // on open, which would silently destroy the existing persisted state. Better to
-            // surface the error than to wipe the data we were trying to protect.
-            console.error(`Failed to open file \`${this.pathname}\` for reading / writing`);
-            throw error;
-        }
-
-        // Only reached when the file does NOT exist. Safe to create it with "w" — there is no
-        // prior state to lose.
-        try {
-            return await fs.open(this.pathname, "w");
-        } catch (error) {
-            console.error(`Failed to open file \`${this.pathname}\` for writing`);
-            throw error;
-        }
     }
 
     private async getDefaultState(defaultState: DefaultState<T>): Promise<T> {
@@ -70,17 +24,16 @@ export class PersistentState<T> {
     }
 
     private async initializeState(defaultState: DefaultState<T>): Promise<T> {
-        const fileHandle = await this.fileHandlePromise;
         let serialized: Uint8Array;
 
-        const fileStats = await fileHandle.stat();
+        const fileStats = await fs.stat(this.pathname);
 
         try {
             if (fileStats.size === 0) {
                 return await this.getDefaultState(defaultState);
             }
 
-            serialized = new Uint8Array(await fileHandle.readFile());
+            serialized = new Uint8Array(await fs.readFile(this.pathname));
         } catch {
             console.error(`Failed to read file '${this.pathname}'`);
             return await this.getDefaultState(defaultState);
@@ -100,23 +53,9 @@ export class PersistentState<T> {
 
     private async write(serialized: Uint8Array) {
         try {
-            const fileHandle = await this.fileHandlePromise;
-            await fileHandle.truncate(0);
-
-            let numBytesToWrite = serialized.byteLength;
-            let totalNumBytesWritten = 0;
-
-            while (numBytesToWrite) {
-                const { bytesWritten: numBytesWritten } = await fileHandle.write(
-                    serialized,
-                    totalNumBytesWritten,
-                    numBytesToWrite,
-                    totalNumBytesWritten,
-                );
-
-                totalNumBytesWritten += numBytesWritten;
-                numBytesToWrite -= numBytesWritten;
-            }
+            const tmpFilePathname = this.pathname + ".tmp";
+            await fs.writeFile(tmpFilePathname, serialized);
+            await fs.rename(tmpFilePathname, this.pathname);
         } catch {}
     }
 
