@@ -63,6 +63,61 @@ async function flushPromises(rounds = 20) {
     }
 }
 
+/** An externally-resolvable promise, used to control serializer timing precisely. */
+function deferred<T = void>() {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: unknown) => void;
+    const promise = new Promise<T>((res, rej) => {
+        resolve = res;
+        reject = rej;
+    });
+    return { promise, resolve, reject };
+}
+
+/**
+ * A fake FileHandle that actually stores the bytes written to it, so a test can
+ * inspect what ended up "on disk" independently of the in-memory state. It honours
+ * truncate(0) + positional write() exactly as PersistentState.write() drives it.
+ */
+type StatefulHandle = FakeHandle & {
+    /** Snapshot of the current on-disk bytes. */
+    diskBytes(): Uint8Array;
+    /** Every chunk handed to write(), in the order it was written. */
+    writeCalls: Uint8Array[];
+};
+
+function makeStatefulHandle(initial: Uint8Array = new Uint8Array()): StatefulHandle {
+    let buffer = Uint8Array.from(initial);
+    const writeCalls: Uint8Array[] = [];
+
+    const handle = {
+        stat: vi.fn(async () => ({ size: buffer.byteLength })),
+        readFile: vi.fn(async () => Uint8Array.from(buffer)),
+        truncate: vi.fn(async (len = 0) => {
+            const next = new Uint8Array(len);
+            next.set(buffer.subarray(0, Math.min(len, buffer.byteLength)));
+            buffer = next;
+        }),
+        write: vi.fn(async (buf: Uint8Array, offset: number, length: number, position: number) => {
+            const chunk = Uint8Array.from(buf.subarray(offset, offset + length));
+            writeCalls.push(chunk);
+            const end = position + length;
+            if (end > buffer.byteLength) {
+                const grown = new Uint8Array(end);
+                grown.set(buffer);
+                buffer = grown;
+            }
+            buffer.set(chunk, position);
+            return { bytesWritten: length };
+        }),
+        close: vi.fn(async () => {}),
+    } as unknown as StatefulHandle;
+
+    handle.diskBytes = () => Uint8Array.from(buffer);
+    handle.writeCalls = writeCalls;
+    return handle;
+}
+
 // ===========================================================================
 describe("persistent-state", () => {
     // -----------------------------------------------------------------------
@@ -74,8 +129,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
             await ps.getState();
-            await ps.close();
-
             // First call: F_OK, second call: R_OK | W_OK
             expect(mockedAccess).toHaveBeenCalledTimes(2);
             expect(mockedAccess).toHaveBeenNthCalledWith(1, "/tmp/state.bin", fs.constants.F_OK);
@@ -91,8 +144,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, "");
             await expect(ps.getState()).resolves.toBe("");
-            await ps.close();
-
             // Only the F_OK access call is made; R_OK|W_OK is skipped
             expect(mockedAccess).toHaveBeenCalledOnce();
             expect(mockedAccess).toHaveBeenCalledWith("/tmp/state.bin", fs.constants.F_OK);
@@ -130,8 +181,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
             await ps.getState();
-            await ps.close();
-
             expect(mockedOpen).toHaveBeenCalledWith("/tmp/state.bin", "r+");
             expect(mockedOpen).toHaveBeenCalledOnce();
         });
@@ -203,8 +252,6 @@ describe("persistent-state", () => {
                 Promise.resolve("default"),
             );
             expect(await ps.getState()).toBe("persisted-value");
-
-            await ps.close();
         });
 
         test("accepts a plain T (non-Promise) as defaultState", async () => {
@@ -215,7 +262,6 @@ describe("persistent-state", () => {
             // Pass a raw string, not a Promise<string>
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, "plain-default");
             expect(await ps.getState()).toBe("plain-default");
-            await ps.close();
         });
 
         test("accepts a function (lazy factory) as defaultState", async () => {
@@ -227,7 +273,6 @@ describe("persistent-state", () => {
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, factory);
             expect(await ps.getState()).toBe("lazy-default");
             expect(factory).toHaveBeenCalledOnce();
-            await ps.close();
         });
 
         test("accepts an async function (lazy factory returning Promise<T>) as defaultState", async () => {
@@ -241,7 +286,6 @@ describe("persistent-state", () => {
                 async () => "async-lazy-default",
             );
             expect(await ps.getState()).toBe("async-lazy-default");
-            await ps.close();
         });
 
         test("returns defaultState when readFile throws", async () => {
@@ -256,8 +300,6 @@ describe("persistent-state", () => {
                 Promise.resolve("fallback"),
             );
             expect(await ps.getState()).toBe("fallback");
-
-            await ps.close();
         });
 
         test("logs console.error when readFile throws", async () => {
@@ -267,8 +309,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve("x"));
             await ps.getState();
-            await ps.close();
-
             expect(console.error).toHaveBeenCalledWith(expect.stringContaining("Failed to read file"));
         });
 
@@ -287,8 +327,6 @@ describe("persistent-state", () => {
                 Promise.resolve("safe-default"),
             );
             expect(await ps.getState()).toBe("safe-default");
-
-            await ps.close();
         });
 
         test("logs console.error when deserializer throws", async () => {
@@ -301,8 +339,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, badDeserializer, Promise.resolve("x"));
             await ps.getState();
-            await ps.close();
-
             expect(console.error).toHaveBeenCalledWith(expect.stringContaining("Failed to deserialize state"));
         });
 
@@ -314,7 +350,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, asyncDeserializer, Promise.resolve(""));
             expect(await ps.getState()).toBe("async-value-decoded");
-            await ps.close();
         });
     });
 
@@ -326,7 +361,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
             expect(await ps.getState()).toBe("current");
-            await ps.close();
         });
 
         test("returns updated state after setState()", async () => {
@@ -336,7 +370,6 @@ describe("persistent-state", () => {
             const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
             await ps.setState("new-value");
             expect(await ps.getState()).toBe("new-value");
-            await ps.close();
         });
     });
 
@@ -351,8 +384,6 @@ describe("persistent-state", () => {
 
             expect(handle.truncate).toHaveBeenCalledWith(0);
             expect(handle.write).toHaveBeenCalled();
-
-            await ps.close();
         });
 
         test("accepts a Promise<T> as the new state", async () => {
@@ -363,7 +394,6 @@ describe("persistent-state", () => {
             await ps.setState(Promise.resolve("from-promise"));
 
             expect(await ps.getState()).toBe("from-promise");
-            await ps.close();
         });
 
         test("serializer can be async (returns Promise<Uint8Array>)", async () => {
@@ -376,7 +406,6 @@ describe("persistent-state", () => {
             await ps.setState("async-serial");
 
             expect(handle.write).toHaveBeenCalled();
-            await ps.close();
         });
 
         test("throws (and re-throws) when serializer fails", async () => {
@@ -389,7 +418,6 @@ describe("persistent-state", () => {
 
             const ps = new PersistentState("/tmp/state.bin", badSerializer, textDeserializer, Promise.resolve(""));
             await expect(ps.setState("boom")).rejects.toThrow("serial failure");
-            await ps.close();
         });
 
         test("logs console.error when serializer fails", async () => {
@@ -403,8 +431,7 @@ describe("persistent-state", () => {
             const ps = new PersistentState("/tmp/state.bin", badSerializer, textDeserializer, Promise.resolve(""));
             await expect(ps.setState("boom")).rejects.toThrow();
 
-            expect(console.error).toHaveBeenCalledWith(expect.stringContaining("Failed to serialized state"));
-            await ps.close();
+            expect(console.error).toHaveBeenCalledWith(expect.stringContaining("Failed to serialize state"));
         });
 
         test("write loop handles partial writes (loops until all bytes written)", async () => {
@@ -425,7 +452,6 @@ describe("persistent-state", () => {
             await ps.setState("hello");
 
             expect(handle.write).toHaveBeenCalledTimes(2);
-            await ps.close();
         });
     });
 
@@ -466,8 +492,6 @@ describe("persistent-state", () => {
             resolveFirst();
 
             await Promise.all([p1, p2]);
-            await ps.close();
-
             // B must not start until A has fully finished
             expect(writeOrder).toEqual(["start-A", "end-A", "start-B"]);
         });
@@ -497,7 +521,6 @@ describe("persistent-state", () => {
 
             // p2 must succeed — the failed lastWrite error is caught and ignored
             await expect(p2).resolves.toBeUndefined();
-            await ps.close();
         });
 
         test("setState() updates statePromise immediately (before write resolves)", async () => {
@@ -525,86 +548,225 @@ describe("persistent-state", () => {
             // Unblock the write so we can clean up
             resolveWrite();
             await setStateP;
-            await ps.close();
         });
     });
 
     // -----------------------------------------------------------------------
-    describe("close()", () => {
-        test("closes the file handle when no setState() was called (lastWrite === null)", async () => {
-            const handle = makeFakeHandle(encoder.encode("data"));
+    // Regression tests for the "setState ordering race" once documented in
+    // persistent-state.ts: with un-awaited concurrent writes, the in-memory
+    // state and the on-disk bytes could diverge — with disk silently keeping the
+    // OLDER value — because the write chain was gated on serializer-completion
+    // order rather than call order. These verify that *call order* is the single
+    // source of truth for BOTH memory and disk.
+    describe("setState() ordering & durability under concurrency (race regression)", () => {
+        test("a later un-awaited setState wins on disk even when its serializer resolves first", async () => {
+            const gateA = deferred();
+            const gateB = deferred();
+            const serializer = async (s: string) => {
+                if (s === "A") await gateA.promise;
+                if (s === "B") await gateB.promise;
+                return encoder.encode(s);
+            };
+
+            const handle = makeStatefulHandle();
             mockedOpen.mockResolvedValue(handle);
 
-            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-            await ps.getState();
-            await ps.close();
-
-            expect(handle.close).toHaveBeenCalledOnce();
-        });
-
-        test("waits for the pending write to finish before closing", async () => {
-            const order: string[] = [];
-
-            let resolveWrite!: () => void;
-            const writeGate = new Promise<void>(res => (resolveWrite = res));
-
-            const handle = makeFakeHandle(new Uint8Array());
-            handle.write.mockImplementation(async (_buf: Uint8Array, _offset: number, length: number) => {
-                await writeGate;
-                order.push("write-done");
-                return { bytesWritten: length };
-            });
-            handle.close.mockImplementation(async () => {
-                order.push("file-closed");
-            });
-            mockedOpen.mockResolvedValue(handle);
-
-            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-
-            // setState sets this.lastWrite = this.write(serialized); close() awaits that same ref.
-            // Await the state to be initialised first so the file open has settled.
+            const ps = new PersistentState("/tmp/state.bin", serializer, textDeserializer, "");
             await ps.getState();
 
-            // Fire setState — this assigns this.lastWrite, but write() is blocked by writeGate
-            const setStateP = ps.setState("data");
-            // Give a micro-task tick so this.lastWrite is assigned before close() reads it
-            await Promise.resolve();
+            const pA = ps.setState("A"); // called first
+            const pB = ps.setState("B"); // called last → must win
 
-            const closeP = ps.close();
+            // Unblock B's serializer first. In the buggy version this raced B's write
+            // to disk ahead of A's, then A's later write clobbered it — leaving the
+            // stale "A" on disk while memory said "B".
+            gateB.resolve();
+            await flushPromises();
+            gateA.resolve();
 
-            resolveWrite();
-            await Promise.all([setStateP, closeP]);
+            await Promise.all([pA, pB]);
 
-            // close must come AFTER write
-            expect(order).toEqual(["write-done", "file-closed"]);
+            expect(await ps.getState()).toBe("B"); // memory
+            expect(decoder.decode(handle.diskBytes())).toBe("B"); // disk
         });
 
-        test("close() propagates error when lastWrite rejects", async () => {
-            const handle = makeFakeHandle(new Uint8Array());
-            handle.write.mockRejectedValue(new Error("write failed"));
+        test("with three un-awaited writes, the last call is the durable value regardless of serializer speed", async () => {
+            const gates = {
+                A: deferred(),
+                B: deferred(),
+                C: deferred(),
+            } as const;
+
+            const serializer = async (s: keyof typeof gates) => {
+                await gates[s].promise;
+                return encoder.encode(s);
+            };
+
+            const handle = makeStatefulHandle();
             mockedOpen.mockResolvedValue(handle);
 
-            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-            const setP = ps.setState("data");
-            await expect(setP).rejects.toThrow("write failed");
+            const ps = new PersistentState(
+                "/tmp/state.bin",
+                serializer,
+                textDeserializer as (serialized: Uint8Array) => keyof typeof gates,
+                "A",
+            );
+            await ps.getState();
 
-            // close() simply `await this.lastWrite` with no try/finally,
-            // so it rejects and does NOT call fileHandle.close().
-            await expect(ps.close()).rejects.toThrow("write failed");
+            const pA = ps.setState("A");
+            const pB = ps.setState("B");
+            const pC = ps.setState("C"); // last → must win
+
+            // Resolve the serializers in a scrambled order; the outcome must not depend on it.
+            gates.C.resolve();
+            gates.A.resolve();
+            gates.B.resolve();
+
+            await Promise.all([pA, pB, pC]);
+
+            expect(await ps.getState()).toBe("C");
+            expect(decoder.decode(handle.diskBytes())).toBe("C");
         });
 
-        test("close() does NOT call fileHandle.close() when lastWrite rejects (no try/finally)", async () => {
-            const handle = makeFakeHandle(new Uint8Array());
-            handle.write.mockRejectedValue(new Error("write failed"));
+        test("writes reach disk in call order, not serializer-completion order", async () => {
+            const gates = {
+                A: deferred(),
+                B: deferred(),
+                C: deferred(),
+            };
+            const serializer = async (s: keyof typeof gates) => {
+                await gates[s].promise;
+                return encoder.encode(s);
+            };
+
+            const handle = makeStatefulHandle();
             mockedOpen.mockResolvedValue(handle);
 
-            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, Promise.resolve(""));
-            const setP = ps.setState("data");
-            await expect(setP).rejects.toThrow();
+            const ps = new PersistentState(
+                "/tmp/state.bin",
+                serializer,
+                textDeserializer as (serialized: Uint8Array) => keyof typeof gates,
+                "A",
+            );
+            await ps.getState();
 
-            // Because close() has no finally block, handle.close is skipped on error
-            await expect(ps.close()).rejects.toThrow();
-            expect(handle.close).not.toHaveBeenCalled();
+            const pA = ps.setState("A");
+            const pB = ps.setState("B");
+            const pC = ps.setState("C");
+
+            // Let serializers finish in reverse order — writes must still be A, B, C.
+            gates.C.resolve();
+            gates.B.resolve();
+            gates.A.resolve();
+
+            await Promise.all([pA, pB, pC]);
+
+            const writtenOrder = handle.writeCalls.map(b => decoder.decode(b));
+            expect(writtenOrder).toEqual(["A", "B", "C"]);
+        });
+
+        test("a fresh instance (simulated restart) reads back the last-written value", async () => {
+            const gateA = deferred();
+            const gateB = deferred();
+            const serializer = async (s: string) => {
+                if (s === "A") await gateA.promise;
+                if (s === "B") await gateB.promise;
+                return encoder.encode(s);
+            };
+
+            const handle = makeStatefulHandle();
+            mockedOpen.mockResolvedValue(handle);
+
+            const ps = new PersistentState("/tmp/state.bin", serializer, textDeserializer, "");
+            await ps.getState();
+
+            const pA = ps.setState("A");
+            const pB = ps.setState("B");
+            gateB.resolve();
+            await flushPromises();
+            gateA.resolve();
+            await Promise.all([pA, pB]);
+            // Simulate a process restart: a brand-new instance reading the same on-disk bytes.
+            const reloadHandle = makeStatefulHandle(handle.diskBytes());
+            mockedOpen.mockResolvedValue(reloadHandle);
+
+            const reloaded = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, "DEFAULT");
+            // The user's last value ("B") must survive the restart — not the stale "A".
+            expect(await reloaded.getState()).toBe("B");
+        });
+
+        test("setState values that are Promises resolving out of order still persist in call order", async () => {
+            const handle = makeStatefulHandle();
+            mockedOpen.mockResolvedValue(handle);
+
+            const ps = new PersistentState("/tmp/state.bin", textSerializer, textDeserializer, "");
+            await ps.getState();
+
+            // First call's value resolves LATER; last call's value resolves immediately.
+            const slowA = new Promise<string>(res => setTimeout(() => res("A"), 20));
+            const fastB = Promise.resolve("B");
+
+            const pA = ps.setState(slowA);
+            const pB = ps.setState(fastB);
+
+            await Promise.all([pA, pB]);
+
+            expect(await ps.getState()).toBe("B");
+            expect(decoder.decode(handle.diskBytes())).toBe("B");
+        });
+
+        test("a serializer failure on a middle write does not corrupt ordering of the surrounding writes", async () => {
+            const serializer = (s: string) => {
+                if (s === "B") throw new Error("serialize B failed");
+                return encoder.encode(s);
+            };
+
+            const handle = makeStatefulHandle();
+            mockedOpen.mockResolvedValue(handle);
+
+            const ps = new PersistentState("/tmp/state.bin", serializer, textDeserializer, "");
+            await ps.getState();
+
+            const pA = ps.setState("A");
+            const pB = ps.setState("B"); // fails to serialize
+            const pC = ps.setState("C");
+
+            await expect(pA).resolves.toBeUndefined();
+            await expect(pB).rejects.toThrow("serialize B failed");
+            await expect(pC).resolves.toBeUndefined();
+
+            // B never made it to disk; A then C did, in order. Final state is C.
+            expect(await ps.getState()).toBe("C");
+            expect(decoder.decode(handle.diskBytes())).toBe("C");
+            expect(handle.writeCalls.map(b => decoder.decode(b))).toEqual(["A", "C"]);
+        });
+
+        test("many rapid un-awaited writes converge to the final value with intact bytes", async () => {
+            const handle = makeStatefulHandle();
+            mockedOpen.mockResolvedValue(handle);
+
+            // Randomised serializer latency to scramble completion order.
+            const serializer = async (s: string) => {
+                await new Promise(res => setTimeout(res, Math.floor(Math.random() * 5)));
+                return encoder.encode(s);
+            };
+
+            const ps = new PersistentState("/tmp/state.bin", serializer, textDeserializer, "");
+            await ps.getState();
+
+            const N = 25;
+            const promises: Promise<void>[] = [];
+            for (let i = 0; i < N; i++) {
+                promises.push(ps.setState(`v${i}`));
+            }
+            await Promise.all(promises);
+
+            const last = `v${N - 1}`;
+            expect(await ps.getState()).toBe(last); // memory converged
+            expect(decoder.decode(handle.diskBytes())).toBe(last); // disk converged, no torn bytes
+
+            // Every write landed exactly once, in call order.
+            expect(handle.writeCalls.map(b => decoder.decode(b))).toEqual(Array.from({ length: N }, (_, i) => `v${i}`));
         });
     });
 

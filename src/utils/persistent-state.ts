@@ -5,8 +5,7 @@ type DefaultState<T> = T | Promise<T> | (() => T | Promise<T>);
 export class PersistentState<T> {
     private fileHandlePromise: Promise<fs.FileHandle>;
     private statePromise: Promise<T>;
-    private lastWrite: Promise<void> | null = null;
-    // private lastSetState: Promise<void> | null = null;
+    private lastSetState: Promise<void> | null = null;
 
     constructor(
         public pathname: string,
@@ -105,79 +104,48 @@ export class PersistentState<T> {
 
     private async write(serialized: Uint8Array) {
         try {
-            await this.lastWrite;
-        } catch {
-            // Ignore error
-        }
+            const fileHandle = await this.fileHandlePromise;
+            await fileHandle.truncate(0);
 
-        const fileHandle = await this.fileHandlePromise;
-        await fileHandle.truncate(0);
+            let numBytesToWrite = serialized.byteLength;
+            let totalNumBytesWritten = 0;
 
-        let numBytesToWrite = serialized.byteLength;
-        let totalNumBytesWritten = 0;
+            while (numBytesToWrite) {
+                const { bytesWritten: numBytesWritten } = await fileHandle.write(
+                    serialized,
+                    totalNumBytesWritten,
+                    numBytesToWrite,
+                    totalNumBytesWritten,
+                );
 
-        while (numBytesToWrite) {
-            const { bytesWritten: numBytesWritten } = await fileHandle.write(
-                serialized,
-                totalNumBytesWritten,
-                numBytesToWrite,
-                totalNumBytesWritten,
-            );
-
-            totalNumBytesWritten += numBytesWritten;
-            numBytesToWrite -= numBytesWritten;
-        }
-    }
-
-    /* setState ordering race — disk and memory can both end up stale
-        This is the concurrency bug you're probably hunting for. The write chain is ordered by when each serializer finishes, not by call order, because the lastWrite chain is only established after await this.serializer(...):
-            serialized = await this.serializer(newStateAwaited);  // unordered point
-            this.lastWrite = this.write(serialized);              // chain set up here
-
-        Consider two un-awaited calls where the second value serializes faster:
-            s.setState(A);  // serializer(A) slow
-            s.setState(B);  // serializer(B) fast — called last, "should" win
-
-        serializer(B) finishes first → lastWrite = write(B) → disk = B.
-        serializer(A) finishes later → lastWrite = write(A) → chained after write(B) → disk = A (stale).
-        Meanwhile statePromise was set synchronously in source order, so in memory it's B.
-
-        End result: memory says B, disk says A. They've diverged, and the disk holds the older value. The write-vs-write chaining itself is correct (you read the old this.lastWrite synchronously before reassigning, which works), but it's gated by the wrong point.
-        The clean fix is to put the entire operation — snapshot, state update, serialize, write — inside the chain so call order is preserved:
-            setState(newState) {
-                const prev = this.lastWrite;
-                this.lastWrite = (async () => {
-                    try { await prev; } catch {}
-                    const state = await newState;
-                    const serialized = await this.serializer(state);
-                    await this.write(serialized);
-                    this.statePromise = Promise.resolve(state); // only after durable
-                })();
-                return this.lastWrite;
+                totalNumBytesWritten += numBytesWritten;
+                numBytesToWrite -= numBytesWritten;
             }
-        (If serializing under the lock is too slow, the alternative is a monotonically increasing version number: tag each write, and have write no-op if a newer version has already been written.)
-    */
-    async setState(newState: T | Promise<T>): Promise<void> {
-        const newStateAwaited = await newState;
-        this.statePromise = Promise.resolve(newState); // Concurrency issue here...
-
-        let serialized: Uint8Array;
-
-        try {
-            serialized = await this.serializer(newStateAwaited);
-        } catch (error) {
-            console.error(`Failed to serialized state`);
-            throw error;
-        }
-
-        this.lastWrite = this.write(serialized);
-        await this.lastWrite;
+        } catch {}
     }
 
-    async close(): Promise<void> {
-        const fileHandle = await this.fileHandlePromise;
-        await this.lastWrite;
-        await fileHandle.close();
+    async setState(newState: T | Promise<T>): Promise<void> {
+        this.lastSetState = (async () => {
+            try {
+                await this.lastSetState;
+            } catch {}
+
+            const newStateAwaited = await newState;
+            this.statePromise = Promise.resolve(newStateAwaited);
+
+            let serialized: Uint8Array;
+
+            try {
+                serialized = await this.serializer(newStateAwaited);
+            } catch (error) {
+                console.error(`Failed to serialize state`);
+                throw error;
+            }
+
+            await this.write(serialized);
+        })();
+
+        await this.lastSetState;
     }
 }
 
