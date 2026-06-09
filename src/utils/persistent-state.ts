@@ -46,11 +46,9 @@ export class PersistentState<T> {
     }
 
     private async write(serialized: Uint8Array) {
-        try {
-            const tmpFilePathname = this.pathname + ".tmp";
-            await fs.writeFile(tmpFilePathname, serialized);
-            await fs.rename(tmpFilePathname, this.pathname);
-        } catch {}
+        const tmpFilePathname = this.pathname + ".tmp";
+        await fs.writeFile(tmpFilePathname, serialized);
+        await fs.rename(tmpFilePathname, this.pathname);
     }
 
     async setState(newState: T | Promise<T>): Promise<void> {

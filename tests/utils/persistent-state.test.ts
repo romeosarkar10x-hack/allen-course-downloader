@@ -326,12 +326,7 @@ describe("persistent-state", () => {
             expect(writeOrder).toEqual(["start-A", "end-A", "start-B"]);
         });
 
-        // PRE-EXISTING FAILURE — do not "fix" this by touching the implementation.
-        // It documents the same behaviour the old suite flagged: write() swallows its
-        // own errors, so a failed write does NOT surface through setState(). The
-        // assertion that p1 rejects is therefore expected to fail against the current
-        // implementation. Left in place intentionally as a red flag for that behaviour.
-        test("a failed previous write is silently ignored and the next write still proceeds", async () => {
+        test("a failed write surfaces through setState() while the next write still proceeds", async () => {
             seed(new Uint8Array());
 
             let callCount = 0;
@@ -346,7 +341,7 @@ describe("persistent-state", () => {
             const p1 = ps.setState("first");
             const p2 = ps.setState("second");
 
-            // (Pre-existing failing expectation: write() swallows the error, so p1 resolves.)
+            // The failed write surfaces through its own setState() call.
             await expect(p1).rejects.toThrow("disk error");
 
             // p2 must succeed regardless.
