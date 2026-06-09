@@ -26,13 +26,7 @@ export class PersistentState<T> {
     private async initializeState(defaultState: DefaultState<T>): Promise<T> {
         let serialized: Uint8Array;
 
-        const fileStats = await fs.stat(this.pathname);
-
         try {
-            if (fileStats.size === 0) {
-                return await this.getDefaultState(defaultState);
-            }
-
             serialized = new Uint8Array(await fs.readFile(this.pathname));
         } catch {
             console.error(`Failed to read file '${this.pathname}'`);

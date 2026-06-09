@@ -116,24 +116,25 @@ describe("persistent-state", () => {
             expect(mockedReadFile).toHaveBeenCalledWith(PATH);
         });
 
-        test("returns defaultState for an empty (zero-byte) file without reading it", async () => {
+        test("reads and deserializes an empty (zero-byte) file (no empty-file short-circuit)", async () => {
             seed(new Uint8Array());
 
             const ps = new PersistentState(PATH, textSerializer, textDeserializer, Promise.resolve("default"));
-            expect(await ps.getState()).toBe("default");
-            // size === 0 short-circuits before any readFile.
-            expect(mockedReadFile).not.toHaveBeenCalled();
+            // The implementation no longer special-cases zero-byte files: the empty
+            // bytes are read and handed to the deserializer (here -> "").
+            expect(await ps.getState()).toBe("");
+            expect(mockedReadFile).toHaveBeenCalledWith(PATH);
         });
 
         test("accepts a plain T (non-Promise) as defaultState", async () => {
-            seed(new Uint8Array());
+            // No file on disk -> readFile throws -> defaultState is used.
 
             const ps = new PersistentState(PATH, textSerializer, textDeserializer, "plain-default");
             expect(await ps.getState()).toBe("plain-default");
         });
 
         test("accepts a function (lazy factory) as defaultState", async () => {
-            seed(new Uint8Array());
+            // No file on disk -> readFile throws -> defaultState factory is used.
 
             const factory = vi.fn(() => "lazy-default");
             const ps = new PersistentState(PATH, textSerializer, textDeserializer, factory);
@@ -142,7 +143,7 @@ describe("persistent-state", () => {
         });
 
         test("accepts an async function (lazy factory returning Promise<T>) as defaultState", async () => {
-            seed(new Uint8Array());
+            // No file on disk -> readFile throws -> async defaultState factory is used.
 
             const ps = new PersistentState(PATH, textSerializer, textDeserializer, async () => "async-lazy-default");
             expect(await ps.getState()).toBe("async-lazy-default");
