@@ -80,7 +80,7 @@ export class PersistentState<T> {
                 return await this.getDefaultState(defaultState);
             }
 
-            serialized = await PersistentState.readFile(fileHandle);
+            serialized = new Uint8Array(await fileHandle.readFile());
         } catch {
             console.error(`Failed to read file '${this.pathname}'`);
             return await this.getDefaultState(defaultState);
@@ -96,10 +96,6 @@ export class PersistentState<T> {
 
     async getState() {
         return await this.statePromise;
-    }
-
-    private static async readFile(fileHandle: fs.FileHandle): Promise<Uint8Array> {
-        return new Uint8Array(await fileHandle.readFile());
     }
 
     private async write(serialized: Uint8Array) {
