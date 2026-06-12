@@ -6,7 +6,7 @@ PP.addEventListener((eventType, id, metadata) => {
     console.log("Event:", eventType, "for id:", id, "metadata:", JSON.stringify(metadata));
 });
 
-getCourse()
+await getCourse()
     .map(course => {
         console.log("Course:", printTree(course));
     })
