@@ -24,3 +24,8 @@ jobs:
         permissions:
             id-token: write
             pages: write
+
+    dry-run:
+        needs: unit-test
+        uses: ./.github/workflows/dry-run.yml
+        secrets: inherit
