@@ -10,6 +10,7 @@
         "format": "prettier \"**/*.{ts,json,yml,yaml}\" --write --ignore-path .prettierignore",
         "lint": "eslint --flag unstable_native_nodejs_ts_config .",
         "type-check": "tsc -p tsconfig.node.json && tsc -p tsconfig.test.json",
+        "dry-run": "node esbuild.ts && node dist/dry-run.cjs",
         "prepare": "git config core.hooksPath .githooks"
     },
     "repository": {
