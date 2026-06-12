@@ -1,11 +1,11 @@
 /**
- * Sanitizes pathname for windows, linux, etc.
+ * Sanitizes file-name for windows, linux, etc.
  */
-export function sanitizeFileName(pathname: string) {
+export function sanitizeFileName(fileName: string) {
     let sanitized = "";
 
-    for (let i = 0; i < pathname.length; i++) {
-        const char = pathname[i]!;
+    for (let i = 0; i < fileName.length; i++) {
+        const char = fileName[i]!;
 
         if (!'<>:"*?|\\/'.includes(char) && (char.charCodeAt(0) <= " ".charCodeAt(0) || char.charCodeAt(0) <= 127)) {
             sanitized += char;
