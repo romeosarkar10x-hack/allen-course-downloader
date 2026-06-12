@@ -29,5 +29,5 @@ jobs:
               run: pnpm run dry-run
               env:
                   BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
-                  TAXONOMY: ${{ env.TAXONOMY }}
-                  SELECTED_COURSE_ID: ${{ env.SELECTED_COURSE_ID }}
+                  TAXONOMY: ${{ vars.TAXONOMY }}
+                  SELECTED_COURSE_ID: ${{ vars.SELECTED_COURSE_ID }}
