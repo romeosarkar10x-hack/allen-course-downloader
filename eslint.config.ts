@@ -19,6 +19,7 @@ export default defineConfig([
                     varsIgnorePattern: "^_",
                 },
             ],
+            "no-empty": ["error", { allowEmptyCatch: true }],
         },
     },
 ]);
