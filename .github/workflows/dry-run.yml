@@ -1,0 +1,29 @@
+name: Dry run
+
+on:
+    workflow_call:
+
+jobs:
+    dry-run:
+        runs-on: ubuntu-latest
+        environment: dry-run
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v6
+
+            - name: Setup node
+              uses: actions/setup-node@v6
+              with:
+                  node-version: latest
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: latest
+
+            - name: Install dependencies
+              run: pnpm install
+
+            - name: Dry run
+              run: pnpm run dry-run
