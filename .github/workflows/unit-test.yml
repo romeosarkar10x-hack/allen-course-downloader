@@ -57,3 +57,7 @@ jobs:
         steps:
             - name: Deploy to 'Github Pages'
               uses: actions/deploy-pages@v4
+              id: deploy
+
+            - name: Echo pages url
+              run: echo ${{ steps.deploy.outputs.page_url }}
