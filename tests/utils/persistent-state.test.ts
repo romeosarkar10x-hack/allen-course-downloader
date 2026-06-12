@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, test, expect, vi, beforeEach, type MockedFunction } from "vitest";
 import fs from "fs/promises";
 import { PersistentState } from "@/utils/persistent-state";
