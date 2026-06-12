@@ -37,6 +37,7 @@
     "dependencies": {
         "@types/lodash": "^4.17.24",
         "dotenv": "^16.6.1",
+        "esbuild": "^0.28.0",
         "lodash": "^4.18.1",
         "neverthrow": "^8.2.0",
         "zod": "^4.4.3"
