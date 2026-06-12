@@ -6,10 +6,7 @@ PP.addEventListener((eventType, id, metadata) => {
     console.log("Event:", eventType, "for id:", id, "metadata:", JSON.stringify(metadata));
 });
 
-await getCourse()
-    .map(course => {
-        console.log("Course:", printTree(course));
-    })
-    .mapErr(error => {
-        console.error(error);
-    });
+(async function dryRun() {
+    const course = (await getCourse())._unsafeUnwrap();
+    console.log(printTree(course));
+})();
