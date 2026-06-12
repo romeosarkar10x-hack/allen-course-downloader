@@ -61,3 +61,6 @@ jobs:
 
             - name: Echo pages url
               run: echo ${{ steps.deploy.outputs.page_url }}
+
+            - name: Echo coverage url
+              run: echo ${{ steps.deploy.outputs.page_url }}/coverage
