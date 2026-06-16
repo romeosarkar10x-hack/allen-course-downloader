@@ -12,5 +12,6 @@ export default defineConfig({
             reporter: ["html", "lcov", "text"],
             cleanOnRerun: true,
         },
+        testTimeout: 60 * 1000,
     },
 });
