@@ -4,7 +4,7 @@ type DefaultState<T> = T | Promise<T> | (() => T | Promise<T>);
 
 export class PersistentState<T> {
     private statePromise: Promise<T>;
-    private lastSetState: Promise<void> | null = null;
+    private lastSetState: Promise<T>;
 
     constructor(
         public pathname: string,
@@ -12,7 +12,7 @@ export class PersistentState<T> {
         public deserializer: (serialized: Uint8Array) => T | Promise<T>,
         defaultState: DefaultState<T>,
     ) {
-        this.statePromise = this.initializeState(defaultState);
+        this.lastSetState = this.statePromise = this.initializeState(defaultState);
     }
 
     private async getDefaultState(defaultState: DefaultState<T>): Promise<T> {
@@ -42,6 +42,7 @@ export class PersistentState<T> {
     }
 
     async getState() {
+        // return await this.lastSetState;
         return await this.statePromise;
     }
 
@@ -51,25 +52,40 @@ export class PersistentState<T> {
         await fs.rename(tmpFilePathname, this.pathname);
     }
 
-    async setState(newState: T | Promise<T>): Promise<void> {
+    async setState(action: T | Promise<T> | ((state: T) => T | Promise<T>)): Promise<void> {
         this.lastSetState = (async () => {
-            try {
-                await this.lastSetState;
-            } catch {}
+            let currentState: T;
 
-            const newStateAwaited = await newState;
-            this.statePromise = Promise.resolve(newStateAwaited);
+            try {
+                currentState = await this.lastSetState;
+            } catch {
+                currentState = await this.statePromise;
+            }
+
+            let newState: T;
+
+            if (typeof action === "function") {
+                newState = await (action as (state: T) => T | Promise<T>)(currentState);
+            } else {
+                newState = await action;
+            }
+
+            this.statePromise = Promise.resolve(newState);
 
             let serialized: Uint8Array;
 
             try {
-                serialized = await this.serializer(newStateAwaited);
+                serialized = await this.serializer(newState);
             } catch (error) {
-                console.error(`Failed to serialize state`);
-                throw error;
+                throw new Error(`Failed to serialize state`, { cause: error });
             }
 
-            await this.write(serialized);
+            try {
+                await this.write(serialized);
+            } catch (error) {
+                throw new Error(`Failed to write serialized state to file`, { cause: error });
+            }
+            return newState;
         })();
 
         await this.lastSetState;

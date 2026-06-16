@@ -266,27 +266,19 @@ describe("persistent-state", () => {
         test("throws (and re-throws) when serializer fails", async () => {
             seed(new Uint8Array());
 
+            const myError = new Error("Serial failure");
             const badSerializer = () => {
-                throw new Error("serial failure");
+                throw myError;
             };
 
             const ps = new PersistentState(PATH, badSerializer, textDeserializer, Promise.resolve(""));
-            await expect(ps.setState("boom")).rejects.toThrow("serial failure");
+            await expect(ps.setState("boom")).rejects.toSatisfy((error: Error) => {
+                expect(error.message).toBe("Failed to serialize state");
+                expect(error.cause).toEqual(myError);
+                return true;
+            });
             // Nothing reaches disk when serialization fails.
             expect(mockedWriteFile).not.toHaveBeenCalled();
-        });
-
-        test("logs console.error when serializer fails", async () => {
-            seed(new Uint8Array());
-
-            const badSerializer = () => {
-                throw new Error("serial failure");
-            };
-
-            const ps = new PersistentState(PATH, badSerializer, textDeserializer, Promise.resolve(""));
-            await expect(ps.setState("boom")).rejects.toThrow();
-
-            expect(console.error).toHaveBeenCalledWith(expect.stringContaining("Failed to serialize state"));
         });
     });
 
@@ -330,10 +322,11 @@ describe("persistent-state", () => {
         test("a failed write surfaces through setState() while the next write still proceeds", async () => {
             seed(new Uint8Array());
 
+            const myDiskError = new Error("Disk error");
             let callCount = 0;
             mockedWriteFile.mockImplementation(async (_p: any, data: any) => {
                 callCount++;
-                if (callCount === 1) throw new Error("disk error");
+                if (callCount === 1) throw myDiskError;
                 disk.set(_p, Uint8Array.from(data as Uint8Array));
             });
 
@@ -343,7 +336,11 @@ describe("persistent-state", () => {
             const p2 = ps.setState("second");
 
             // The failed write surfaces through its own setState() call.
-            await expect(p1).rejects.toThrow("disk error");
+            await expect(p1).rejects.toSatisfy(error => {
+                expect(error.message).toBe("Failed to write serialized state to file");
+                expect(error.cause).toEqual(myDiskError);
+                return true;
+            });
 
             // p2 must succeed regardless.
             await expect(p2).resolves.toBeUndefined();
@@ -509,8 +506,9 @@ describe("persistent-state", () => {
         });
 
         test("a serializer failure on a middle write does not corrupt ordering of the surrounding writes", async () => {
+            const mySerializeBError = new Error("Serialize B failed");
             const serializer = (s: string) => {
-                if (s === "B") throw new Error("serialize B failed");
+                if (s === "B") throw mySerializeBError;
                 return encoder.encode(s);
             };
 
@@ -523,7 +521,12 @@ describe("persistent-state", () => {
             const pC = ps.setState("C");
 
             await expect(pA).resolves.toBeUndefined();
-            await expect(pB).rejects.toThrow("serialize B failed");
+            await expect(pB).rejects.toSatisfy(error => {
+                expect(error.message).toBe("Failed to serialize state");
+                expect(error.cause).toEqual(mySerializeBError);
+                return true;
+            });
+
             await expect(pC).resolves.toBeUndefined();
 
             // B never made it to disk; A then C did, in order. Final state is C.
@@ -536,14 +539,13 @@ describe("persistent-state", () => {
             seed(new Uint8Array());
 
             const serializer = async (s: string) => {
-                await new Promise(res => setTimeout(res, Math.floor(Math.random() * 5)));
                 return encoder.encode(s);
             };
 
             const ps = new PersistentState(PATH, serializer, textDeserializer, "");
             await ps.getState();
 
-            const N = 25;
+            const N = 1000000;
             const promises: Promise<void>[] = [];
             for (let i = 0; i < N; i++) {
                 promises.push(ps.setState(`v${i}`));
@@ -557,5 +559,43 @@ describe("persistent-state", () => {
             // Every write landed exactly once, in call order.
             expect(writeCalls.map(b => decoder.decode(b))).toEqual(Array.from({ length: N }, (_, i) => `v${i}`));
         });
+
+        /* test("TODO: if the defaultValue rejects the promise, getState should fail with the same error", async () => {
+            const ps = new PersistentState<number>(
+                PATH,
+                n => Uint8Array.from(n.toString()),
+                serialized => Number(Buffer.from(serialized).toString()),
+                () => {
+                    return Promise.reject(-1);
+                },
+            );
+
+            try {
+                await ps.getState();
+            } catch (error) {
+                console.log(error);
+            }
+
+            /// console.log(ps.getState());
+        });
+
+        test("TODO: if the defaultValue function throws, same error should be propagated to getState", async () => {
+            const ps = new PersistentState<number>(
+                PATH,
+                n => Uint8Array.from(n.toString()),
+                serialized => Number(Buffer.from(serialized).toString()),
+                () => {
+                    return Promise.reject(-1);
+                },
+            );
+
+            try {
+                await ps.getState();
+            } catch (error) {
+                console.log(error);
+            }
+
+            /// console.log(ps.getState());
+        }); */
     });
 });
