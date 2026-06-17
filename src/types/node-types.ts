@@ -13,4 +13,4 @@ export type ChapterLeafNodeType = {
 };
 
 export type ChapterContentTreeNodeType = TreeNode<{ name: string }, ContentLeafNodeType | ChapterLeafNodeType>;
-export type ContentTreeNodeType = TreeNode<{ name: string }, { name: string; url: string }>;
+export type ContentTreeNodeType = TreeNode<{ name: string }, { name: string; url: string; id: string }>;
