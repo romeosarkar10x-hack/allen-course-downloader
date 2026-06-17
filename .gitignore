@@ -1,13 +1,13 @@
-node_modules/
-dist/
-build/
+/node_modules
+/dist
+/build
 /coverage
 
 /.claude
 
 /tmp
-out/
+
 
 /.env
 
-downloads/
+/downloads
