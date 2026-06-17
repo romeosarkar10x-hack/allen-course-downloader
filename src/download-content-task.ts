@@ -139,8 +139,8 @@ function mergeAudioAndVideo(audioFilePathname: string, videoFilePathname: string
 }
 
 function m3u8VideoDownload(url: string, pathname: string) {
-    const audioFilePathname = pathname + ".audio.mp4";
-    const videoFilePathname = pathname + ".video.mp4";
+    const audioFilePathname = pathname + ".tmp.__audio__.mp4";
+    const videoFilePathname = pathname + ".tmp.__video__.mp4";
 
     return getAudioAndVideoURLs(url)
         .andThen(({ audioPlaylistURL, videoPlaylistURL }) => {
