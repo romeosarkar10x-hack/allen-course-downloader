@@ -3,8 +3,8 @@ import { Parser } from "m3u8-parser";
 import { safeFetch } from "./utils/safe-fetch";
 import { parseResponseText } from "./utils/parse-response-text";
 import { errAsync, fromPromise, okAsync, ResultAsync } from "neverthrow";
-import { $ } from "zx";
 import { parseResponseBuffer } from "./utils/parse-response-buffer";
+import { spawn } from "node:child_process";
 
 export function downloadContentTask(url: string, filePathname: string) {
     return async function () {
@@ -125,17 +125,53 @@ function downloadFile(url: string | URL, filePathname: string) {
 }
 
 function mergeAudioAndVideo(audioFilePathname: string, videoFilePathname: string, outputFilePathname: string) {
-    return fromPromise(
-        $`ffmpeg -i ${audioFilePathname} -i ${videoFilePathname} -c copy ${outputFilePathname} -y`,
-        error => {
-            return new Error(
-                `Failed to run ffmpeg with audio file: ${audioFilePathname} and video file: ${videoFilePathname}`,
-                {
-                    cause: error,
-                },
-            );
-        },
-    ).map(() => {});
+    function run() {
+        const process = spawn("ffmpeg", [
+            "-i",
+            audioFilePathname,
+            "-i",
+            videoFilePathname,
+            "-c",
+            "copy",
+            "-hide_banner",
+            outputFilePathname,
+        ]);
+
+        return new Promise<void>((resolve, reject) => {
+            const stdoutChunks: Buffer[] = [];
+            const stderrChunks: Buffer[] = [];
+
+            process.stdout.on("data", (chunk: Buffer) => stdoutChunks.push(chunk));
+            process.stderr.on("data", (chunk: Buffer) => stderrChunks.push(chunk));
+
+            process.on("close", code => {
+                if (code === 0) {
+                    resolve();
+                    return;
+                }
+
+                const stdout = Buffer.concat(stdoutChunks).toString();
+                const stderr = Buffer.concat(stderrChunks).toString();
+                console.log("stdout:", stdout);
+                console.log("stderr:", stderr);
+
+                reject(
+                    new Error(`Command 'ffmpeg' exited with code ${code}`, {
+                        cause: {
+                            stdout,
+                            stderr,
+                        },
+                    }),
+                );
+            });
+
+            process.on("error", error => {
+                reject(new Error(`Error running command 'ffmpeg'`, { cause: error }));
+            });
+        });
+    }
+
+    return fromPromise(run(), (error: unknown) => error as Error);
 }
 
 function m3u8VideoDownload(url: string, pathname: string) {
