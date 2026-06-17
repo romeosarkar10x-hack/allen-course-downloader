@@ -11,9 +11,11 @@ export function downloadContentTask(url: string, filePathname: string) {
         const resultAsync = (function () {
             if (new URL(url).pathname.endsWith("master.m3u8")) {
                 return m3u8VideoDownload(url, filePathname);
-            } else {
-                return contentDownload(url, filePathname);
+            } else if (new URL(url).pathname.endsWith(".pdf")) {
+                return contentDownload(url, filePathname + ".pdf");
             }
+
+            throw new Error("Unknown content type");
         })();
 
         const result = await resultAsync;
