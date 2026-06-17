@@ -32,9 +32,6 @@ importers:
       zod:
         specifier: ^4.4.3
         version: 4.4.3
-      zx:
-        specifier: ^8.8.5
-        version: 8.8.5
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -1241,11 +1238,6 @@ packages:
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
-  zx@8.8.5:
-    resolution: {integrity: sha512-SNgDF5L0gfN7FwVOdEFguY3orU5AkfFZm9B5YSHog/UDHv+lvmd82ZAsOenOkQixigwH2+yyH198AwNdKhj+RA==}
-    engines: {node: '>= 12.17.0'}
-    hasBin: true
-
 snapshots:
 
   '@babel/helper-string-parser@7.29.7': {}
@@ -2243,5 +2235,3 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.4.3: {}
-
-  zx@8.8.5: {}
