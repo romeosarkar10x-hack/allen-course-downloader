@@ -420,9 +420,7 @@ describe("safeMkdir (unit, spied fs)", () => {
 
         it("calls fs.mkdir exactly once even though access failed", async () => {
             vi.spyOn(fs, "access").mockRejectedValueOnce(makeErrnoException("nope", "ENOENT"));
-            const mkdirSpy = vi
-                .spyOn(fs, "mkdir")
-                .mockRejectedValueOnce(makeErrnoException("also nope", "EPERM"));
+            const mkdirSpy = vi.spyOn(fs, "mkdir").mockRejectedValueOnce(makeErrnoException("also nope", "EPERM"));
 
             await safeMkdir("/path");
 

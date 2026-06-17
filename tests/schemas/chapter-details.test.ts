@@ -33,12 +33,7 @@ function makeContent(title: string, uri: string, id: string = randomUUID()) {
 }
 
 /** Live-lecture content item (matches LiveLectureVideosContentSchema). */
-function makeLiveLectureContent(
-    title: string,
-    uri: string,
-    subtitle = "10 Mar, 2026",
-    id: string = randomUUID(),
-) {
+function makeLiveLectureContent(title: string, uri: string, subtitle = "10 Mar, 2026", id: string = randomUUID()) {
     return {
         content_action: { data: { content_id: id, title, uri } },
         type: "LIVE_LECTURE_VIDEOS_CONTENT_TYPE",
@@ -103,9 +98,7 @@ describe("LiveLectureVideosContentSchema", () => {
     });
 
     test("rejects non-url uri", () => {
-        expect(
-            LiveLectureVideosContentSchema.safeParse(makeLiveLectureContent("X", "not-a-url")).success,
-        ).toBe(false);
+        expect(LiveLectureVideosContentSchema.safeParse(makeLiveLectureContent("X", "not-a-url")).success).toBe(false);
     });
 
     test("rejects missing content_action", () => {
