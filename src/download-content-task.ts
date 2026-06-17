@@ -113,7 +113,7 @@ function getMediaPlaylistURL(mediaPlaylistURL: string) {
 }
 
 function downloadFile(url: string | URL, filePathname: string) {
-    safeFetch(url)
+    return safeFetch(url)
         .andThen(parseResponseBuffer)
         .andThen(buffer => {
             return fromPromise(fs.writeFile(filePathname, new Uint8Array(buffer)), error => {
@@ -122,8 +122,6 @@ function downloadFile(url: string | URL, filePathname: string) {
                 });
             });
         });
-
-    return okAsync();
 }
 
 function mergeAudioAndVideo(audioFilePathname: string, videoFilePathname: string, outputFilePathname: string) {
