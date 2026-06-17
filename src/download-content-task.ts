@@ -152,7 +152,7 @@ function m3u8VideoDownload(url: string, pathname: string) {
         .andThen(({ audioURL, videoURL }) =>
             ResultAsync.combine([downloadFile(audioURL, audioFilePathname), downloadFile(videoURL, videoFilePathname)]),
         )
-        .andThen(mergeAudioAndVideo.bind(null, audioFilePathname, videoFilePathname, pathname))
+        .andThen(mergeAudioAndVideo.bind(null, audioFilePathname, videoFilePathname, pathname + ".mp4"))
         .andThen(() => ResultAsync.combine([deleteFile(audioFilePathname), deleteFile(videoFilePathname)]));
 }
 
