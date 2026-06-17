@@ -153,16 +153,36 @@ function m3u8VideoDownload(url: string, pathname: string) {
             ResultAsync.combine([downloadFile(audioURL, audioFilePathname), downloadFile(videoURL, videoFilePathname)]),
         )
         .andThen(mergeAudioAndVideo.bind(null, audioFilePathname, videoFilePathname, pathname))
-        .andThen(() =>
-            ResultAsync.combine([
-                fromPromise(
-                    fs.unlink(audioFilePathname),
-                    error => new Error(`Failed to delete audio file: ${audioFilePathname}`, { cause: error }),
-                ),
-                fromPromise(
-                    fs.unlink(videoFilePathname),
-                    error => new Error(`Failed to delete video file: ${videoFilePathname}`, { cause: error }),
-                ),
-            ]),
-        );
+        .andThen(() => ResultAsync.combine([deleteFile(audioFilePathname), deleteFile(videoFilePathname)]));
+}
+
+function deleteFile(pathname: string) {
+    async function unlink() {
+        const MAX_RETRIES = 5;
+        const TIMEOUT_MILLIS = 5000;
+
+        let numRetries = 0;
+        let e: unknown;
+
+        while (numRetries <= MAX_RETRIES) {
+            try {
+                await fs.unlink(pathname);
+                break;
+            } catch (error) {
+                if ((error as NodeJS.ErrnoException).code !== "EBUSY") {
+                    throw error;
+                }
+
+                e = error;
+                numRetries++;
+                await new Promise(r => setTimeout(r, TIMEOUT_MILLIS));
+            }
+        }
+
+        if (numRetries > MAX_RETRIES) {
+            throw new Error(`Failed to delete file: ${pathname}`, { cause: e });
+        }
+    }
+
+    return fromPromise(unlink(), error => error as Error);
 }
