@@ -36,7 +36,7 @@ function contentDownload(url: string, filePathname: string) {
         );
 }
 
-function getAudioAndVideoURLs(masterURL: string, filePathname: string) {
+function getAudioAndVideoURLs(masterURL: string) {
     return safeFetch(masterURL)
         .andThen(parseResponseText)
         .andThen(masterText => {
@@ -144,7 +144,7 @@ function m3u8VideoDownload(url: string, pathname: string) {
     const audioFilePathname = pathname + ".audio.mp4";
     const videoFilePathname = pathname + ".video.mp4";
 
-    return getAudioAndVideoURLs(url, pathname)
+    return getAudioAndVideoURLs(url)
         .andThen(({ audioPlaylistURL, videoPlaylistURL }) => {
             return ResultAsync.combine([
                 getMediaPlaylistURL(audioPlaylistURL),
