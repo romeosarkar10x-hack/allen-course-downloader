@@ -1,38 +1,30 @@
 import type { ContentTreeNodeType } from "@/types/node-types";
 import z from "zod";
 
+function toLocalDate(date: Date) {
+    const d = String(date.getDate());
+    const m = String(date.getMonth() + 1);
+    const y = String(date.getFullYear());
+
+    return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+}
+
 export const CardContentSchema = z
     .object({
         content_action: z.object({
             data: z.object({
                 title: z.string(),
                 uri: z.url(),
+                content_id: z.uuidv4(),
             }),
         }),
     })
     .transform(
         ({
             content_action: {
-                data: { title, uri },
+                data: { title, uri, content_id },
             },
-        }) => ({ name: title, url: uri }),
-    );
-
-export const CardSchema = z
-    .object({
-        card_action: z.object({
-            data: z.object({
-                title: z.string(),
-                uri: z.url(),
-            }),
-        }),
-    })
-    .transform(
-        ({
-            card_action: {
-                data: { title, uri },
-            },
-        }) => ({ name: title, url: uri }),
+        }) => ({ name: title, url: uri, id: content_id }),
     );
 
 export const CardWithContentSchema = z
@@ -63,43 +55,11 @@ export const CardWithContentSchema = z
         }) => ({ name: card_name, $: contents_list }),
     );
 
-/*
-const ChapterSchema = z
-    .object({
-        action: z.object({
-            data: z.object({
-                query: z.object({
-                    topic_id: z.string(),
-                }),
-                uri: z.string(),
-            }),
-            tracking_params: z.object({
-                current: z.object({
-                    topic_name: z.string(),
-                    subject_id: z.string(),
-                }),
-            }),
-        }),
-    })
-    .transform(
-        ({
-            action: {
-                data: {
-                    query: { topic_id },
-                },
-                tracking_params: {
-                    current: { topic_name, subject_id },
-                },
-            },
-        }) => ({ id: topic_id, name: topic_name, subjectID: subject_id, $chapter: true }),
-    );
-    
-    */
-
-export const ContentSchema = z
+export const GenericContentSchema = z
     .object({
         content_action: z.object({
             data: z.object({
+                content_id: z.uuidv4(),
                 title: z.string(),
                 uri: z.url(),
             }),
@@ -108,9 +68,30 @@ export const ContentSchema = z
     .transform(
         ({
             content_action: {
-                data: { title, uri },
+                data: { title, uri, content_id },
             },
-        }) => ({ name: title, url: uri }),
+        }) => ({ name: title, url: uri, id: content_id }),
+    );
+
+export const LiveLectureVideosContentSchema = z
+    .object({
+        content_action: z.object({
+            data: z.object({
+                content_id: z.uuidv4(),
+                title: z.string(),
+                uri: z.url(),
+            }),
+        }),
+        type: z.literal("LIVE_LECTURE_VIDEOS_CONTENT_TYPE"),
+        subtitle: z.string().transform(s => toLocalDate(new Date(s))),
+    })
+    .transform(
+        ({
+            subtitle,
+            content_action: {
+                data: { title, uri, content_id },
+            },
+        }) => ({ name: `${subtitle} ${title}`, url: uri, id: content_id }),
     );
 
 export const SelectionCardSchema = z.object({
@@ -131,11 +112,11 @@ export const PolymorphicWidgetSchema = z.object({
         data: z
             .union([
                 z.object({
-                    contents_list: z.array(ContentSchema),
+                    contents_list: z.array(z.union([LiveLectureVideosContentSchema, GenericContentSchema])),
                     title: z.string(),
                 }),
                 z.object({
-                    cards: z.array(z.union([CardSchema, CardWithContentSchema])),
+                    cards: z.array(CardWithContentSchema),
                     title: z.string(),
                 }),
                 z.object(),
@@ -188,3 +169,20 @@ export const ChapterDetailsResponseSchema = z
             },
         }) => widgets,
     );
+
+/* export const CardSchema = z
+    .object({
+        card_action: z.object({
+            data: z.object({
+                title: z.string(),
+                uri: z.url(),
+            }),
+        }),
+    })
+    .transform(
+        ({
+            card_action: {
+                data: { title, uri },
+            },
+        }) => ({ name: title, url: uri }),
+    ); */
