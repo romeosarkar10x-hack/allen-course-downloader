@@ -1,9 +1,11 @@
 import { describe, test, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
+import { randomUUID } from "node:crypto";
 import {
     ChapterDetailsResponseSchema,
-    ContentSchema,
+    GenericContentSchema,
+    LiveLectureVideosContentSchema,
     PolymorphicWidgetSchema,
     WidgetSchema,
 } from "@/schemas/chapter-details";
@@ -23,26 +25,35 @@ function cloneFixture(): typeof fixture {
 // Minimal builder helpers
 // ---------------------------------------------------------------------------
 
-function makeContent(title: string, uri: string) {
+/** Generic content item (matches GenericContentSchema). */
+function makeContent(title: string, uri: string, id: string = randomUUID()) {
     return {
-        content_action: { data: { title, uri } },
+        content_action: { data: { content_id: id, title, uri } },
     };
 }
 
-function makeCard(title: string, uri: string) {
+/** Live-lecture content item (matches LiveLectureVideosContentSchema). */
+function makeLiveLectureContent(
+    title: string,
+    uri: string,
+    subtitle = "10 Mar, 2026",
+    id: string = randomUUID(),
+) {
     return {
-        card_action: { data: { title, uri } },
+        content_action: { data: { content_id: id, title, uri } },
+        type: "LIVE_LECTURE_VIDEOS_CONTENT_TYPE",
+        subtitle,
     };
 }
 
-function makeCardWithContent(cardName: string, contents: Array<{ title: string; uri: string }>) {
+function makeCardWithContent(cardName: string, contents: Array<{ title: string; uri: string; id?: string }>) {
     return {
         card_action: {
             data: {
                 content: {
                     data: {
                         contents_list: contents.map(c => ({
-                            content_action: { data: { title: c.title, uri: c.uri } },
+                            content_action: { data: { content_id: c.id ?? randomUUID(), title: c.title, uri: c.uri } },
                         })),
                     },
                 },
@@ -82,31 +93,95 @@ function makeMinimalResponse(widgets: unknown[]) {
 }
 
 // ===========================================================================
-describe("ContentSchema", () => {
-    test("parses valid content and maps title→name, uri→url", () => {
-        const result = ContentSchema.parse(makeContent("Video Title", "https://example.com/video.m3u8"));
-        expect(result).toEqual({ name: "Video Title", url: "https://example.com/video.m3u8" });
+describe("LiveLectureVideosContentSchema", () => {
+    test("parses valid content and maps to name (subtitle-prefixed), url, id", () => {
+        const id = randomUUID();
+        const result = LiveLectureVideosContentSchema.parse(
+            makeLiveLectureContent("Video Title", "https://example.com/video.m3u8", "10 Mar, 2026", id),
+        );
+        expect(result).toEqual({ name: "2026-03-10 Video Title", url: "https://example.com/video.m3u8", id });
     });
 
     test("rejects non-url uri", () => {
-        expect(ContentSchema.safeParse(makeContent("X", "not-a-url")).success).toBe(false);
+        expect(
+            LiveLectureVideosContentSchema.safeParse(makeLiveLectureContent("X", "not-a-url")).success,
+        ).toBe(false);
     });
 
     test("rejects missing content_action", () => {
-        expect(ContentSchema.safeParse({}).success).toBe(false);
+        expect(LiveLectureVideosContentSchema.safeParse({}).success).toBe(false);
     });
 
     test("rejects missing title", () => {
-        expect(ContentSchema.safeParse({ content_action: { data: { uri: "https://x.com/" } } }).success).toBe(false);
+        const input = makeLiveLectureContent("X", "https://x.com/");
+        delete (input.content_action.data as Record<string, unknown>).title;
+        expect(LiveLectureVideosContentSchema.safeParse(input).success).toBe(false);
     });
 
     test("rejects missing uri", () => {
-        expect(ContentSchema.safeParse({ content_action: { data: { title: "X" } } }).success).toBe(false);
+        const input = makeLiveLectureContent("X", "https://x.com/");
+        delete (input.content_action.data as Record<string, unknown>).uri;
+        expect(LiveLectureVideosContentSchema.safeParse(input).success).toBe(false);
     });
 
-    test("output has exactly name and url keys", () => {
-        const result = ContentSchema.parse(makeContent("T", "https://example.com/f.mp4")) as Record<string, unknown>;
-        expect(Object.keys(result).sort()).toEqual(["name", "url"].sort());
+    test("rejects missing content_id", () => {
+        const input = makeLiveLectureContent("X", "https://x.com/");
+        delete (input.content_action.data as Record<string, unknown>).content_id;
+        expect(LiveLectureVideosContentSchema.safeParse(input).success).toBe(false);
+    });
+
+    test("rejects non-uuid content_id", () => {
+        expect(
+            LiveLectureVideosContentSchema.safeParse(
+                makeLiveLectureContent("X", "https://x.com/", "10 Mar, 2026", "not-a-uuid"),
+            ).success,
+        ).toBe(false);
+    });
+
+    test("rejects missing type literal", () => {
+        const input = makeLiveLectureContent("X", "https://x.com/");
+        delete (input as Record<string, unknown>).type;
+        expect(LiveLectureVideosContentSchema.safeParse(input).success).toBe(false);
+    });
+
+    test("rejects missing subtitle", () => {
+        const input = makeLiveLectureContent("X", "https://x.com/");
+        delete (input as Record<string, unknown>).subtitle;
+        expect(LiveLectureVideosContentSchema.safeParse(input).success).toBe(false);
+    });
+
+    test("output has exactly name, url and id keys", () => {
+        const result = LiveLectureVideosContentSchema.parse(
+            makeLiveLectureContent("T", "https://example.com/f.mp4"),
+        ) as Record<string, unknown>;
+        expect(Object.keys(result).sort()).toEqual(["id", "name", "url"].sort());
+    });
+});
+
+// ===========================================================================
+describe("GenericContentSchema", () => {
+    test("parses valid content and maps title→name, uri→url, content_id→id", () => {
+        const id = randomUUID();
+        const result = GenericContentSchema.parse(makeContent("Doc Title", "https://example.com/doc.pdf", id));
+        expect(result).toEqual({ name: "Doc Title", url: "https://example.com/doc.pdf", id });
+    });
+
+    test("rejects non-url uri", () => {
+        expect(GenericContentSchema.safeParse(makeContent("X", "not-a-url")).success).toBe(false);
+    });
+
+    test("rejects missing content_id", () => {
+        expect(
+            GenericContentSchema.safeParse({ content_action: { data: { title: "X", uri: "https://x.com/" } } }).success,
+        ).toBe(false);
+    });
+
+    test("output has exactly name, url and id keys", () => {
+        const result = GenericContentSchema.parse(makeContent("T", "https://example.com/f.pdf")) as Record<
+            string,
+            unknown
+        >;
+        expect(Object.keys(result).sort()).toEqual(["id", "name", "url"].sort());
     });
 });
 
@@ -120,7 +195,9 @@ describe("PolymorphicWidgetSchema", () => {
     });
 
     test("parses a widget with cards + title", () => {
-        const widget = makePolymorphicWithCards("Other Content", [makeCard("Handbook", "https://example.com/hb.pdf")]);
+        const widget = makePolymorphicWithCards("Other Content", [
+            makeCardWithContent("Handbook", [{ title: "Doc", uri: "https://example.com/hb.pdf" }]),
+        ]);
         expect(PolymorphicWidgetSchema.safeParse(widget).success).toBe(true);
     });
 
@@ -225,7 +302,7 @@ describe("ChapterDetailsResponseSchema", () => {
                 name: string;
             }>;
             const liveVideos = result.find(e => e.name === "Live Lecture Videos")!;
-            expect(liveVideos.$[0]!.name).toBe("d & f Block elements");
+            expect(liveVideos.$[0]!.name).toBe("2026-03-10 d & f Block elements");
         });
 
         test("safeParse on valid fixture returns success=true", () => {
@@ -335,7 +412,9 @@ describe("ChapterDetailsResponseSchema", () => {
 
         test("POLYMORPHIC_WIDGET with cards survives filter", () => {
             const input = makeMinimalResponse([
-                makePolymorphicWithCards("Other", [makeCard("Handbook", "https://example.com/hb.pdf")]),
+                makePolymorphicWithCards("Other", [
+                    makeCardWithContent("Handbook", [{ title: "Doc", uri: "https://example.com/hb.pdf" }]),
+                ]),
             ]);
             expect(ChapterDetailsResponseSchema.parse(input).length).toBe(1);
         });
@@ -358,7 +437,7 @@ describe("ChapterDetailsResponseSchema", () => {
     });
 
     // -----------------------------------------------------------------------
-    describe("contents_list branch — ContentSchema transformation", () => {
+    describe("contents_list branch — LiveLectureVideosContentSchema transformation", () => {
         test("section name comes from widget title", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithContentsList("Live Lecture Videos", [
@@ -402,14 +481,14 @@ describe("ChapterDetailsResponseSchema", () => {
             expect(entry.$).toEqual([]);
         });
 
-        test("content item output has exactly name and url keys", () => {
+        test("content item output has exactly name, url and id keys", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithContentsList("S", [makeContent("T", "https://example.com/t.m3u8")]),
             ]);
             const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<Record<string, unknown>> },
             ];
-            expect(Object.keys(entry.$[0]!).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(entry.$[0]!).sort()).toEqual(["id", "name", "url"].sort());
         });
 
         test("two sections with contents_list produce two entries in order", () => {
@@ -420,53 +499,6 @@ describe("ChapterDetailsResponseSchema", () => {
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string }>;
             expect(result[0]!.name).toBe("First");
             expect(result[1]!.name).toBe("Second");
-        });
-    });
-
-    // -----------------------------------------------------------------------
-    describe("cards branch — CardSchema transformation", () => {
-        test("section name comes from widget title", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards("Other Content", [makeCard("Handbook", "https://example.com/hb.pdf")]),
-            ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ name: string }];
-            expect(entry.name).toBe("Other Content");
-        });
-
-        test("plain card maps title → name", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards("Section", [makeCard("Chemistry Handbook", "https://example.com/hb.pdf")]),
-            ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ name: string }> }];
-            expect(entry.$[0]!.name).toBe("Chemistry Handbook");
-        });
-
-        test("plain card maps uri → url", () => {
-            const uri = "https://example.com/chemistry.pdf";
-            const input = makeMinimalResponse([makePolymorphicWithCards("Section", [makeCard("X", uri)])]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: Array<{ url: string }> }];
-            expect(entry.$[0]!.url).toBe(uri);
-        });
-
-        test("multiple plain cards are all mapped", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards("Section", [
-                    makeCard("A", "https://example.com/a.pdf"),
-                    makeCard("B", "https://example.com/b.pdf"),
-                ]),
-            ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [{ $: unknown[] }];
-            expect(entry.$.length).toBe(2);
-        });
-
-        test("plain card output has exactly name and url keys", () => {
-            const input = makeMinimalResponse([
-                makePolymorphicWithCards("S", [makeCard("T", "https://example.com/t.pdf")]),
-            ]);
-            const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
-                { $: Array<Record<string, unknown>> },
-            ];
-            expect(Object.keys(entry.$[0]!).sort()).toEqual(["name", "url"].sort());
         });
     });
 
@@ -493,20 +525,22 @@ describe("ChapterDetailsResponseSchema", () => {
         });
 
         test("CardWithContent contents_list items mapped to $", () => {
+            const idA = randomUUID();
+            const idB = randomUUID();
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("Section", [
                     makeCardWithContent("Notes", [
-                        { title: "File A", uri: "https://example.com/a.pdf" },
-                        { title: "File B", uri: "https://example.com/b.pdf" },
+                        { title: "File A", uri: "https://example.com/a.pdf", id: idA },
+                        { title: "File B", uri: "https://example.com/b.pdf", id: idB },
                     ]),
                 ]),
             ]);
             const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
-                { $: Array<{ $: Array<{ name: string; url: string }> }> },
+                { $: Array<{ $: Array<{ name: string; url: string; id: string }> }> },
             ];
             expect(entry.$[0]!.$).toHaveLength(2);
-            expect(entry.$[0]!.$[0]).toEqual({ name: "File A", url: "https://example.com/a.pdf" });
-            expect(entry.$[0]!.$[1]).toEqual({ name: "File B", url: "https://example.com/b.pdf" });
+            expect(entry.$[0]!.$[0]).toEqual({ name: "File A", url: "https://example.com/a.pdf", id: idA });
+            expect(entry.$[0]!.$[1]).toEqual({ name: "File B", url: "https://example.com/b.pdf", id: idB });
         });
 
         test("CardWithContent with empty contents_list produces $ = []", () => {
@@ -529,7 +563,7 @@ describe("ChapterDetailsResponseSchema", () => {
             expect(Object.keys(entry.$[0]!).sort()).toEqual(["$", "name"].sort());
         });
 
-        test("CardContent sub-items have exactly name and url keys", () => {
+        test("CardContent sub-items have exactly name, url and id keys", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithCards("S", [
                     makeCardWithContent("C", [{ title: "Doc", uri: "https://example.com/doc.pdf" }]),
@@ -538,7 +572,7 @@ describe("ChapterDetailsResponseSchema", () => {
             const [entry] = ChapterDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<{ $: Array<Record<string, unknown>> }> },
             ];
-            expect(Object.keys(entry.$[0]!.$[0]!).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(entry.$[0]!.$[0]!).sort()).toEqual(["id", "name", "url"].sort());
         });
     });
 
@@ -550,7 +584,9 @@ describe("ChapterDetailsResponseSchema", () => {
                 { type: "APP_GENERIC_HEADER_V2" },
                 makePolymorphicWithContentsList("Videos", [makeContent("V1", "https://example.com/v1.m3u8")]),
                 { type: "SELECTION_CARD" },
-                makePolymorphicWithCards("Handbooks", [makeCard("HB", "https://example.com/hb.pdf")]),
+                makePolymorphicWithCards("Handbooks", [
+                    makeCardWithContent("HB", [{ title: "Doc", uri: "https://example.com/hb.pdf" }]),
+                ]),
             ]);
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string }>;
             expect(result.length).toBe(2);
@@ -572,7 +608,9 @@ describe("ChapterDetailsResponseSchema", () => {
         test("contents_list section followed by cards section preserves both names", () => {
             const input = makeMinimalResponse([
                 makePolymorphicWithContentsList("Live Videos", [makeContent("V", "https://example.com/v.m3u8")]),
-                makePolymorphicWithCards("Other Content", [makeCard("HB", "https://example.com/hb.pdf")]),
+                makePolymorphicWithCards("Other Content", [
+                    makeCardWithContent("HB", [{ title: "Doc", uri: "https://example.com/hb.pdf" }]),
+                ]),
             ]);
             const result = ChapterDetailsResponseSchema.parse(input) as Array<{ name: string; $: unknown[] }>;
             expect(result[0]!.name).toBe("Live Videos");
