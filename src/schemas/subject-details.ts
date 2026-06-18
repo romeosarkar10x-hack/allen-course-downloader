@@ -7,15 +7,16 @@ export const CardContentSchema = z
             data: z.object({
                 title: z.string(),
                 uri: z.url(),
+                content_id: z.uuidv4(),
             }),
         }),
     })
     .transform(
         ({
             content_action: {
-                data: { title, uri },
+                data: { title, uri, content_id },
             },
-        }) => ({ name: title, url: uri }),
+        }) => ({ name: title, url: uri, id: content_id }),
     );
 
 export const CardSchema = z
@@ -24,15 +25,16 @@ export const CardSchema = z
             data: z.object({
                 title: z.string(),
                 uri: z.url(),
+                content_id: z.uuidv4(),
             }),
         }),
     })
     .transform(
         ({
             card_action: {
-                data: { title, uri },
+                data: { title, uri, content_id },
             },
-        }) => ({ name: title, url: uri }),
+        }) => ({ name: title, url: uri, id: content_id }),
     );
 
 export const CardWithContentSchema = z
