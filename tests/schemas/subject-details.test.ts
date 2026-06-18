@@ -30,12 +30,14 @@ function cloneFixture(): typeof fixture {
 // Minimal builder helpers (smallest valid shape each schema accepts)
 // ---------------------------------------------------------------------------
 
-function makeCardContent(title: string, uri: string) {
-    return { content_action: { data: { title, uri } } };
+const CONTENT_ID = "123e4567-e89b-42d3-a456-556642440000";
+
+function makeCardContent(title: string, uri: string, contentId: string = CONTENT_ID) {
+    return { content_action: { data: { title, uri, content_id: contentId } } };
 }
 
-function makeCard(title: string, uri: string) {
-    return { card_action: { data: { title, uri } } };
+function makeCard(title: string, uri: string, contentId: string = CONTENT_ID) {
+    return { card_action: { data: { title, uri, content_id: contentId } } };
 }
 
 function makeCardWithContent(cardName: string, contents: Array<{ title: string; uri: string }>) {
@@ -98,15 +100,15 @@ function makeMinimalResponse(widgets: unknown[]) {
 describe("subject-details CardContentSchema", () => {
     test("parses valid content and maps title→name, uri→url", () => {
         const result = CardContentSchema.parse(makeCardContent("Doc Title", "https://example.com/doc.pdf"));
-        expect(result).toEqual({ name: "Doc Title", url: "https://example.com/doc.pdf" });
+        expect(result).toEqual({ name: "Doc Title", url: "https://example.com/doc.pdf", id: CONTENT_ID });
     });
 
-    test("output has exactly name and url keys", () => {
+    test("output has exactly name, url and id keys", () => {
         const result = CardContentSchema.parse(makeCardContent("T", "https://example.com/f.pdf")) as Record<
             string,
             unknown
         >;
-        expect(Object.keys(result).sort()).toEqual(["name", "url"].sort());
+        expect(Object.keys(result).sort()).toEqual(["id", "name", "url"].sort());
     });
 
     test("rejects non-url uri", () => {
@@ -142,12 +144,12 @@ describe("subject-details CardContentSchema", () => {
 describe("subject-details CardSchema", () => {
     test("parses valid card and maps title→name, uri→url", () => {
         const result = CardSchema.parse(makeCard("Handbook", "https://example.com/hb.pdf"));
-        expect(result).toEqual({ name: "Handbook", url: "https://example.com/hb.pdf" });
+        expect(result).toEqual({ name: "Handbook", url: "https://example.com/hb.pdf", id: CONTENT_ID });
     });
 
-    test("output has exactly name and url keys", () => {
+    test("output has exactly name, url and id keys", () => {
         const result = CardSchema.parse(makeCard("T", "https://example.com/t.pdf")) as Record<string, unknown>;
-        expect(Object.keys(result).sort()).toEqual(["name", "url"].sort());
+        expect(Object.keys(result).sort()).toEqual(["id", "name", "url"].sort());
     });
 
     test("rejects non-url uri", () => {
@@ -184,8 +186,8 @@ describe("subject-details CardWithContentSchema", () => {
         ) as { name: string; $: Array<{ name: string; url: string }> };
         expect(result.name).toBe("Booklet");
         expect(result.$).toEqual([
-            { name: "Doc A", url: "https://example.com/a.pdf" },
-            { name: "Doc B", url: "https://example.com/b.pdf" },
+            { name: "Doc A", url: "https://example.com/a.pdf", id: CONTENT_ID },
+            { name: "Doc B", url: "https://example.com/b.pdf", id: CONTENT_ID },
         ]);
     });
 
@@ -480,7 +482,7 @@ describe("subject-details PageContentSchema", () => {
             widgets: [makePolymorphicWithCards("Other Content", [makeCard("Handbook", "https://example.com/hb.pdf")])],
         });
         expect(result[0]!.name).toBe("Other Content");
-        expect(result[0]!.$).toEqual([{ name: "Handbook", url: "https://example.com/hb.pdf" }]);
+        expect(result[0]!.$).toEqual([{ name: "Handbook", url: "https://example.com/hb.pdf", id: CONTENT_ID }]);
     });
 
     test("each entry has exactly name and $ keys", () => {
@@ -643,6 +645,7 @@ describe("subject-details SubjectDetailsResponseSchema", () => {
             expect(booklet!.$![0]).toEqual({
                 name: "The p-block elements_Question",
                 url: expect.stringContaining("https://"),
+                id: expect.any(String),
             });
             for (const leaf of booklet!.$!) {
                 expect(typeof leaf.name).toBe("string");
@@ -850,6 +853,7 @@ describe("subject-details SubjectDetailsResponseSchema", () => {
             expect(entry.$[0]).toEqual({
                 name: "Chemistry Handbook",
                 url: "https://example.com/hb.pdf",
+                id: CONTENT_ID,
             });
         });
 
@@ -867,8 +871,8 @@ describe("subject-details SubjectDetailsResponseSchema", () => {
             ];
             expect(entry.$[0]!.name).toBe("Booklet");
             expect(entry.$[0]!.$).toEqual([
-                { name: "File A", url: "https://example.com/a.pdf" },
-                { name: "File B", url: "https://example.com/b.pdf" },
+                { name: "File A", url: "https://example.com/a.pdf", id: CONTENT_ID },
+                { name: "File B", url: "https://example.com/b.pdf", id: CONTENT_ID },
             ]);
         });
 
@@ -882,7 +886,7 @@ describe("subject-details SubjectDetailsResponseSchema", () => {
             const [entry] = SubjectDetailsResponseSchema.parse(input) as unknown as [
                 { $: Array<Record<string, unknown>> },
             ];
-            expect(Object.keys(entry.$[0]!).sort()).toEqual(["name", "url"].sort());
+            expect(Object.keys(entry.$[0]!).sort()).toEqual(["id", "name", "url"].sort());
             expect(Object.keys(entry.$[1]!).sort()).toEqual(["$", "name"].sort());
         });
 
