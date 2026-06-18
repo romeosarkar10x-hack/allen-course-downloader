@@ -1,6 +1,11 @@
 import type { TreeNode } from "./tree-node";
 
+export type ContentInternalNodeType = {
+    name: string;
+};
+
 export type ContentLeafNodeType = {
+    id: string;
     name: string;
     url: string;
 };
@@ -12,5 +17,7 @@ export type ChapterLeafNodeType = {
     subjectID: string;
 };
 
-export type ChapterContentTreeNodeType = TreeNode<{ name: string }, ContentLeafNodeType | ChapterLeafNodeType>;
-export type ContentTreeNodeType = TreeNode<{ name: string }, { name: string; url: string; id: string }>;
+export type SubjectContentTreeNodeType = TreeNode<ContentLeafNodeType>;
+
+export type ChapterContentTreeNodeType = TreeNode<ContentInternalNodeType, ContentLeafNodeType | ChapterLeafNodeType>;
+export type ContentTreeNodeType = TreeNode<ContentInternalNodeType, ContentLeafNodeType>;
